@@ -1,0 +1,260 @@
+# Supply Chain Memory & Decision Agent -- dataset extension config
+# All tunables live here. Scale-independent structural parameters are derived
+# from the source data in Stage 0 (profile.py) and written to calibration.json.
+
+version: "1.1.0-ext"
+seed: 20250905
+source_version: "1.0.0"
+
+# ------------------------------------------------------------------ scales
+# Structured tables are always generated for the FULL source (fulfilled demand
+# must reconcile with every existing sale). Scale only changes how much
+# institutional memory / narrative / eval material is produced.
+scales:
+  small:
+    max_decisions: 70
+    max_narrated_stories: 45
+    target_docs: 300
+    eval_questions: 72
+    holdout_scenarios: 12
+    max_negotiations: 30
+  default:
+    max_decisions: 420
+    max_narrated_stories: 330
+    target_docs: 2500
+    eval_questions: 240
+    holdout_scenarios: 14
+    max_negotiations: 140
+
+# ------------------------------------------------------------------ calendar
+calendar:
+  holdout_start: auto          # auto = first day of the last quarter in the source window
+  week_start_day: 0            # 0 = Monday (ISO weeks)
+  hq_utc_offset: "-05:00"      # business-hours timestamps for narratives
+  business_hours: [8, 18]
+
+# ------------------------------------------------------------------ profiling
+profile:
+  late_threshold_days: auto    # auto = median of positive FG delays (rounded up)
+  rop_breach_min_days: 7
+
+# ------------------------------------------------------------------ plants
+plants:
+  count: 5
+  site_names: [Riverbend, Northgate, Lakeshore, Eastfield, Pinecrest, Harborview, Stonebridge, Maplewood]
+  # warehouse region -> plant country (default US)
+  region_country: {Canada: CA, Southwest: MX}
+  default_country: US
+  macro_region: {US: North America, CA: North America, MX: North America}
+  capacity_headroom: [1.15, 1.35]
+  # rough coordinates of warehouse regions, used for plant->DC transit days
+  region_xy: {West: [0, 0], Southwest: [1, -1], Midwest: [2, 0], Northeast: [4, 1], Southeast: [3, -1], Canada: [3, 2]}
+  transit_days_base: 1
+  transit_days_per_unit_distance: 0.8
+  run_days: [1, 2]
+  qa_release_days: [1, 2]
+
+# ------------------------------------------------------------------ products
+products:
+  brand_family_size: 40
+  abc_cutoffs: [0.80, 0.95]
+  # Category archetypes. Keys are matched against products.category values.
+  # Unknown categories fall back to keyword matching and then `default`.
+  category_archetypes:
+    finished_goods: {archetype: formulated_goods, make_prob: 0.85, gm_mean: 0.42, gm_sd: 0.06}
+    consumables:    {archetype: fibre_consumables, make_prob: 0.70, gm_mean: 0.36, gm_sd: 0.05}
+    packaging:      {archetype: converted_packaging, make_prob: 0.40, gm_mean: 0.28, gm_sd: 0.05}
+    components:     {archetype: molded_components, make_prob: 0.30, gm_mean: 0.31, gm_sd: 0.05}
+    spares:         {archetype: mro_spares, make_prob: 0.0, gm_mean: 0.45, gm_sd: 0.07}
+    default:        {archetype: formulated_goods, make_prob: 0.5, gm_mean: 0.35, gm_sd: 0.06}
+  archetype_keywords:
+    formulated_goods: [finish, good, liquid, detergent, care]
+    fibre_consumables: [consum, paper, tissue, wipe]
+    converted_packaging: [pack, bottle, carton]
+    molded_components: [compon, part, assembly]
+    mro_spares: [spare, mro, maint]
+  brand_stems:
+    formulated_goods: [Aurel, Brightline, Clearwave, Dawnfield, Everpure, Fairmist, Glenbrook, Halcyon, Ivory Crest, Juniper]
+    fibre_consumables: [Softwell, Cottonvale, Pureleaf, Snowmere, Velvet Isle, Willowby, Cloudnest, Featherly]
+    converted_packaging: [Packright, Formline, Sealtek, Boxwell, Clarion Pack, Ecofold]
+    molded_components: [Moldex, Precisa, Tritonix, Axial, Corefit, Lumen Parts]
+    mro_spares: [Servo, Fixline, Maxspare]
+
+# ------------------------------------------------------------------ raw materials / BOM
+raw_materials:
+  per_make_product: 0.09       # RM count = max(min_count, round(ratio * n_make_products))
+  min_count: 60
+  common_share: 0.10           # share of RMs that are "common" (appear in > coverage_min of make products)
+  common_coverage: [0.31, 0.45]
+  common_categories: [corrugate, packaging_film, label_stock, hot_melt_adhesive, pp_resin]
+  signature_rms_per_brand: [1, 2]
+  signature_categories: {formulated_goods: [fragrance, active, colorant], fibre_consumables: [sap, nonwoven, fragrance], converted_packaging: [colorant, ink], molded_components: [colorant, elastomer]}
+  bom_size: [4, 12]
+  bom_size_mode: 7
+  zipf_a: 1.1
+  single_source_share: 0.15
+  unqualified_secondary_prob: 0.45
+  substitute_group_prob: 0.55
+  bom_change_share: 0.05
+  bom_change_substitution_share: 0.45
+  bom_v1_effective_from: "2022-01-01"
+  hazmat_extra_lead_days: 3
+  # archetype -> weights over rm categories (used for the specific / filler part of BOMs)
+  archetype_rm_weights:
+    formulated_goods: {surfactant: 5, fragrance: 3, active: 3, solvent: 2, colorant: 1, hdpe_resin: 2, pet_resin: 2, pp_resin: 1, packaging_film: 1, label_stock: 1, corrugate: 1, carton_board: 1}
+    fibre_consumables: {pulp: 5, nonwoven: 4, sap: 3, elastic: 2, hot_melt_adhesive: 2, fragrance: 1, packaging_film: 2, corrugate: 1}
+    converted_packaging: {hdpe_resin: 4, pet_resin: 3, pp_resin: 3, colorant: 2, ink: 3, carton_board: 3, packaging_film: 2, hot_melt_adhesive: 1, corrugate: 1}
+    molded_components: {pp_resin: 4, hdpe_resin: 2, elastomer: 3, steel_strip: 3, colorant: 2, packaging_film: 1, corrugate: 1}
+  rm_categories:
+    surfactant:        {uom: kg,  cost: [1.2, 3.5],  qty: [0.4, 2.5],   scrap: [0.5, 2.0], hazmat: 0.5, names: [LAS 96%, SLES 70%, AES 28%, Cocamidopropyl Betaine, Alkyl Polyglucoside, Nonionic C12-15 7EO, Amine Oxide, Alpha Olefin Sulfonate]}
+    fragrance:         {uom: kg,  cost: [18, 60],    qty: [0.01, 0.08], scrap: [0.5, 1.5], hazmat: 0.8, names: [Fresh Linen Accord, Citrus Burst Oil, Lavender Field Blend, Ocean Breeze Accord, Vanilla Musk Base, Green Apple Top Note, Eucalyptus Mint Oil]}
+    active:            {uom: kg,  cost: [8, 45],     qty: [0.02, 0.2],  scrap: [0.5, 2.0], hazmat: 0.3, names: [Protease Enzyme Liquid, Zinc Pyrithione 48%, Sodium Percarbonate, Optical Brightener CBS, Niacinamide, Salicylic Acid, Chelant GLDA 40%]}
+    solvent:           {uom: kg,  cost: [0.9, 2.5],  qty: [0.1, 0.8],   scrap: [0.5, 1.5], hazmat: 0.9, names: [Propylene Glycol, Ethanol Denatured, Glycerin 99.5%, Isopropanol]}
+    colorant:          {uom: kg,  cost: [12, 40],    qty: [0.002, 0.02],scrap: [1.0, 3.0], hazmat: 0.1, names: [Blue Masterbatch, White TiO2 Masterbatch, Green Dye Solution, Amber Colorant, Black Carbon Masterbatch]}
+    hdpe_resin:        {uom: kg,  cost: [1.1, 1.8],  qty: [0.05, 0.4],  scrap: [1.5, 4.0], hazmat: 0.0, names: [HDPE Blow Grade, HDPE Injection Grade, PCR HDPE Natural]}
+    pet_resin:         {uom: kg,  cost: [1.0, 1.6],  qty: [0.04, 0.3],  scrap: [1.5, 4.0], hazmat: 0.0, names: [PET Bottle Grade IV 0.80, rPET Food Grade Flake]}
+    pp_resin:          {uom: kg,  cost: [1.0, 1.7],  qty: [0.02, 0.25], scrap: [1.5, 4.0], hazmat: 0.0, names: [PP Homopolymer Cap Grade, PP Random Copolymer, PP Impact Copolymer]}
+    packaging_film:    {uom: m2,  cost: [0.08, 0.3], qty: [0.3, 2.5],   scrap: [2.0, 5.0], hazmat: 0.0, names: [LDPE Shrink Film 60um, Stretch Wrap 23um, BOPP Laminate Film, Metallized PET Film]}
+    corrugate:         {uom: ea,  cost: [0.35, 1.2], qty: [0.05, 0.25], scrap: [1.0, 3.0], hazmat: 0.0, names: [RSC Shipper 32ECT, Display Tray Kraft, Die-cut Shipper 44ECT, Corrugated Divider]}
+    carton_board:      {uom: ea,  cost: [0.08, 0.35],qty: [1.0, 1.0],   scrap: [2.0, 5.0], hazmat: 0.0, names: [SBS Folding Carton, CRB Carton Blank, Coated Unbleached Kraft Carton]}
+    label_stock:       {uom: ea,  cost: [0.01, 0.06],qty: [1.0, 2.0],   scrap: [2.0, 6.0], hazmat: 0.0, names: [PS Label Stock White BOPP, Clear Film Label Stock, Paper Label Stock 60#]}
+    ink:               {uom: kg,  cost: [6, 18],     qty: [0.002, 0.01],scrap: [2.0, 5.0], hazmat: 0.4, names: [Process Cyan Ink, Process Black Ink, Water-based Varnish, UV Flexo White]}
+    hot_melt_adhesive: {uom: kg,  cost: [2.5, 6.0],  qty: [0.005, 0.05],scrap: [1.0, 3.0], hazmat: 0.0, names: [EVA Hot Melt Case Seal, Construction Adhesive HMPSA, Elastic Attach Adhesive]}
+    pulp:              {uom: kg,  cost: [0.6, 1.2],  qty: [0.3, 2.0],   scrap: [1.0, 3.0], hazmat: 0.0, names: [Fluff Pulp SBSK, Eucalyptus BEK, Recycled Pulp Deinked]}
+    nonwoven:          {uom: m2,  cost: [0.05, 0.2], qty: [0.5, 3.0],   scrap: [2.0, 5.0], hazmat: 0.0, names: [Spunbond PP 12gsm, SMS Nonwoven 15gsm, Airlaid 60gsm, Spunlace Viscose Blend]}
+    sap:               {uom: kg,  cost: [1.8, 3.2],  qty: [0.05, 0.4],  scrap: [0.5, 2.0], hazmat: 0.0, names: [SAP Sodium Polyacrylate, SAP Surface-crosslinked Grade]}
+    elastic:           {uom: m,   cost: [0.02, 0.08],qty: [0.5, 2.0],   scrap: [1.0, 3.0], hazmat: 0.0, names: [Spandex 680dtex, Elastic Film Laminate]}
+    elastomer:         {uom: kg,  cost: [3.0, 8.0],  qty: [0.005, 0.05],scrap: [1.5, 4.0], hazmat: 0.0, names: [TPE Overmold Grade, Silicone LSR 50A, EPDM Gasket Compound]}
+    steel_strip:       {uom: kg,  cost: [1.2, 2.4],  qty: [0.02, 0.3],  scrap: [2.0, 5.0], hazmat: 0.0, names: [Stainless Strip 301 Spring, Carbon Steel Strip 1075, Stainless Wire 302]}
+  # rm category -> which source supplier categories plausibly supply it
+  supplier_category_affinity:
+    surfactant: [finished_goods, consumables]
+    fragrance: [finished_goods]
+    active: [finished_goods]
+    solvent: [finished_goods, consumables]
+    colorant: [components, packaging]
+    hdpe_resin: [packaging, components]
+    pet_resin: [packaging]
+    pp_resin: [components, packaging]
+    packaging_film: [packaging]
+    corrugate: [packaging]
+    carton_board: [packaging]
+    label_stock: [packaging]
+    ink: [packaging]
+    hot_melt_adhesive: [consumables, packaging]
+    pulp: [consumables]
+    nonwoven: [consumables]
+    sap: [consumables]
+    elastic: [consumables]
+    elastomer: [components]
+    steel_strip: [components, spares]
+
+# ------------------------------------------------------------------ contracts / prices
+contracts:
+  term_choices: [[12, 0.55], [24, 0.45]]   # months, probability
+  annual_price_drift: [-0.02, 0.06]
+  price_spike_rms: 4             # RMs with mid-contract price spikes (incl. planted pattern)
+  price_spike_pct: [0.14, 0.30]
+  min_volume_share: [0.5, 0.8]   # of expected annual volume
+  force_majeure_prob: 0.7
+
+# ------------------------------------------------------------------ RM operations
+rm_ops:
+  review_days_fast: 7
+  review_days_slow: 14
+  fast_review_criticality: [A]
+  ss_days_base: 6
+  ss_days_by_criticality: {A: 3, B: 1, C: 0}
+  ss_planted_extra_days: 5
+  opening_cover_extra_days: 7
+  moq_weeks: 1.0
+  # causal delay model (RM POs)
+  early_prob: 0.06
+  late_prob_multiplier: 1.4       # p_late = (1 - reliability) * multiplier * context factors
+  late_gamma_shape: 1.6
+  late_scale_per_lead_day: 0.12   # gamma scale = this * lead_time_days (+1)
+  announce_prob: 0.65
+  notice_days: [2, 10]
+  second_slip_prob: 0.12
+  partial_prob_multiplier: 0.35
+  partial_fill: [0.55, 0.95]
+  quality_reject_prob: 0.02
+  quality_reject_frac: [0.02, 0.08]
+  cycle_count_per_year: 3
+  cycle_count_frac: [0.002, 0.01]
+  # cascades
+  cascade_target_share: 0.12      # of eligible late/partial make-product FG lines
+  cascade_min_prod_delay: 3
+  cascade_max_attempt_rms: 4
+  cascade_response_mix: {accept_delay: 0.38, expedite: 0.27, switch_supplier: 0.15, rm_transfer: 0.20}
+  expedite_premium_pct: [0.18, 0.35]    # of RM value
+  expedite_lead_days: [3, 6]
+  spot_price_premium: 0.12        # spot buys pay catalog price +12%
+  transfer_cost_per_unit_value: 0.04
+  ss_build_share: 0.30            # share of RM-plant combos with >=2 cascades that get a safety-stock build
+  ss_build_extra_days: [6, 12]
+  allocation_changes: 6           # catalog allocation shifts (reduce_allocation / switch_supplier) on poor performers
+
+# ------------------------------------------------------------------ demand
+demand:
+  forecast_lag_weeks: 2
+  mape_sigma: 0.34
+  category_bias: {formulated_goods: -0.04, fibre_consumables: 0.12, converted_packaging: 0.0, molded_components: -0.05, mro_spares: 0.0}
+  promo_quantile: 0.93
+  promo_prob: 0.55
+  promo_discount: [0.78, 0.9]
+  promo_bias: -0.22
+  promo_sigma_mult: 1.5
+  shock_bias: -0.30
+  shock_sigma_mult: 1.7
+  false_positive_rows_share: 0.30
+  price_drift_per_year: [0.01, 0.045]
+  stockout_lost_sales_weeks: 1.0
+  allocation_cut: [0.15, 0.40]
+  dc_disruptions: 10
+  demand_spikes: 14
+
+# ------------------------------------------------------------------ institutional memory
+memory:
+  context_dependent_min_share: 0.27
+  commitment_breach_min: 0.17
+  commitment_renegotiated_target: 0.10
+  expedite_cost_rate: 0.06        # FG expedite premium as share of PO line value
+  stockout_cost_rate_per_day: 0.004   # cost of a blocked/late FG unit-day as share of its sales value
+  holding_cost_rate_per_year: 0.20
+  outcome_horizon_days: 60
+  expedite_warehouse_multiplier: 2.0
+  transfer_cost_rate: 0.02
+  lost_margin_weight: 1.0
+  similar_window_days: 540
+  roles: [Supply Planner, Buyer, Plant Scheduler, Materials Manager, Logistics Lead, S&OP Manager, Category Manager, DC Operations Manager, Quality Lead, VP Supply Chain]
+
+# planted patterns (entities are chosen from the data at run time; ids are stable given the seed)
+patterns:
+  enabled: [P01_supplier_q4_slip, P02_country_feb_congestion, P03_price_spike_shortage, P04_small_po_promises, P05_expedite_warehouse_cost, P06_plant_quarter_start_maintenance, P07_substitute_scrap, P08_transfer_source_depletion, P09_recovery_commitments_breached, P10_forecast_bias_category, P11_leadtime_creep, P12_fg_recurring_month_lateness]
+  q4_slip_days: [7, 14]
+  feb_congestion_days: [5, 12]
+  feb_congestion_prob: 0.8
+  small_po_late_prob: [0.04, 0.65]
+  leadtime_creep_days_per_month: 1.2
+  substitute_scrap_multiplier: 4.0
+  recovery_breach_prob: 0.85
+
+# ------------------------------------------------------------------ narratives / eval
+narratives:
+  noise_share: 0.27
+  supersede_min_share: 0.11
+  min_words: 60
+  max_words: 250
+  llm:
+    provider: anthropic           # anthropic | openai | none
+    model: claude-sonnet-4-5
+    cache_dir: _cache/llm
+    max_concurrency: 4
+eval:
+  type_mix: {fact_recall: 0.14, temporal: 0.13, causal_why: 0.14, commitment_tracking: 0.13, precedent_analogy: 0.12, consequence_evaluation: 0.12, contradiction_supersession: 0.10, multi_hop: 0.12}
+  min_traps: 2
+
+output:
+  write_parquet: auto             # auto = only if pyarrow/fastparquet importable
+  sqlite_name: inventory_supply_chain_v1_1_ext.sqlite

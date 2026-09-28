@@ -1,0 +1,105 @@
+rm_id,rm_name,rm_category,uom,std_unit_cost,criticality,is_single_source,is_hazmat,substitute_group_id
+RM0001,RSC Shipper 32ECT,corrugate,ea,0.7277,B,0,0,
+RM0002,Display Tray Kraft,corrugate,ea,0.9329,A,0,0,SG009
+RM0003,LDPE Shrink Film 60um,packaging_film,m2,0.1942,A,0,0,SG021
+RM0004,Stretch Wrap 23um,packaging_film,m2,0.2414,A,0,0,
+RM0005,PS Label Stock White BOPP,label_stock,ea,0.0567,B,0,0,SG019
+RM0006,Clear Film Label Stock,label_stock,ea,0.0123,C,0,0,SG019
+RM0007,EVA Hot Melt Case Seal,hot_melt_adhesive,kg,2.692,B,0,0,SG015
+RM0008,Construction Adhesive HMPSA,hot_melt_adhesive,kg,5.0412,B,0,0,SG015
+RM0009,PP Homopolymer Cap Grade,pp_resin,kg,1.1993,B,0,0,SG023
+RM0010,PP Random Copolymer,pp_resin,kg,1.0236,B,0,0,SG023
+RM0011,Fresh Linen Accord,fragrance,kg,23.797,A,0,1,
+RM0012,Citrus Burst Oil,fragrance,kg,34.9503,A,1,1,SG013
+RM0013,Lavender Field Blend,fragrance,kg,45.7844,A,0,1,SG011
+RM0014,Ocean Breeze Accord,fragrance,kg,34.8718,B,0,1,
+RM0015,Vanilla Musk Base,fragrance,kg,28.2911,A,0,0,
+RM0016,Green Apple Top Note,fragrance,kg,40.4742,B,0,1,SG012
+RM0017,Eucalyptus Mint Oil,fragrance,kg,45.6246,B,0,1,
+RM0018,Fresh Linen Accord Grade B,fragrance,kg,34.5041,A,1,0,
+RM0019,Citrus Burst Oil Grade B,fragrance,kg,21.8517,A,0,1,SG011
+RM0020,Lavender Field Blend Grade B,fragrance,kg,34.9561,A,1,1,SG011
+RM0021,Ocean Breeze Accord Grade B,fragrance,kg,44.3964,A,0,1,
+RM0022,Vanilla Musk Base Grade B,fragrance,kg,37.345,A,1,1,SG012
+RM0023,Green Apple Top Note Grade B,fragrance,kg,39.5225,A,0,1,SG013
+RM0024,Blue Masterbatch,colorant,kg,24.78,C,0,0,SG008
+RM0025,White TiO2 Masterbatch,colorant,kg,25.7392,B,0,0,SG006
+RM0026,Green Dye Solution,colorant,kg,37.0932,B,0,0,
+RM0027,Amber Colorant,colorant,kg,37.8436,B,0,0,SG008
+RM0028,Black Carbon Masterbatch,colorant,kg,34.3497,C,0,0,SG005
+RM0029,Blue Masterbatch Grade B,colorant,kg,37.1553,B,0,0,SG007
+RM0030,White TiO2 Masterbatch Grade B,colorant,kg,33.1178,A,1,0,
+RM0031,Green Dye Solution Grade B,colorant,kg,12.3666,A,1,0,SG005
+RM0032,Amber Colorant Grade B,colorant,kg,36.4796,A,1,0,SG006
+RM0033,Black Carbon Masterbatch Grade B,colorant,kg,14.4719,C,0,0,SG007
+RM0034,Blue Masterbatch Grade C,colorant,kg,17.3114,B,0,0,
+RM0035,White TiO2 Masterbatch Grade C,colorant,kg,32.1151,B,0,0,
+RM0036,Green Dye Solution Grade C,colorant,kg,29.7606,B,0,0,SG005
+RM0037,Spunbond PP 12gsm,nonwoven,m2,0.0598,C,0,0,SG020
+RM0038,SMS Nonwoven 15gsm,nonwoven,m2,0.1005,B,0,0,
+RM0039,Airlaid 60gsm,nonwoven,m2,0.0851,B,0,0,
+RM0040,Spunlace Viscose Blend,nonwoven,m2,0.1079,B,0,0,
+RM0041,Spunbond PP 12gsm Grade B,nonwoven,m2,0.1949,B,0,0,
+RM0042,SMS Nonwoven 15gsm Grade B,nonwoven,m2,0.0913,B,0,0,
+RM0043,Airlaid 60gsm Grade B,nonwoven,m2,0.191,B,0,0,SG020
+RM0044,Spunlace Viscose Blend Grade B,nonwoven,m2,0.0727,B,0,0,
+RM0045,Protease Enzyme Liquid,active,kg,25.3516,B,0,0,SG001
+RM0046,Zinc Pyrithione 48%,active,kg,11.6256,A,1,0,SG003
+RM0047,Sodium Percarbonate,active,kg,43.985,B,0,0,SG003
+RM0048,Optical Brightener CBS,active,kg,33.3363,B,0,0,SG002
+RM0049,Niacinamide,active,kg,12.9995,A,0,0,SG001
+RM0050,Salicylic Acid,active,kg,44.116,A,1,1,
+RM0051,Chelant GLDA 40%,active,kg,30.328,A,0,1,SG002
+RM0052,Protease Enzyme Liquid Grade B,active,kg,31.6265,B,0,0,
+RM0053,SAP Sodium Polyacrylate,sap,kg,1.9674,C,0,0,SG024
+RM0054,SAP Surface-crosslinked Grade,sap,kg,2.079,B,0,0,
+RM0055,SAP Sodium Polyacrylate Grade B,sap,kg,2.3165,A,1,0,SG024
+RM0056,SAP Surface-crosslinked Grade Grade B,sap,kg,2.2469,B,0,0,
+RM0057,SAP Sodium Polyacrylate Grade C,sap,kg,2.0952,B,0,0,
+RM0058,SAP Surface-crosslinked Grade Grade C,sap,kg,2.6729,A,0,0,
+RM0059,SAP Sodium Polyacrylate Grade D,sap,kg,2.0418,C,0,0,SG024
+RM0060,HDPE Blow Grade,hdpe_resin,kg,1.2238,B,0,0,SG014
+RM0061,HDPE Injection Grade,hdpe_resin,kg,1.707,B,0,0,SG014
+RM0062,PCR HDPE Natural,hdpe_resin,kg,1.7651,B,0,0,
+RM0063,HDPE Blow Grade Grade B,hdpe_resin,kg,1.6285,B,0,0,
+RM0064,LAS 96%,surfactant,kg,2.5901,A,0,0,SG027
+RM0065,SLES 70%,surfactant,kg,1.7902,A,1,0,SG027
+RM0066,AES 28%,surfactant,kg,2.1655,A,0,0,
+RM0067,Cocamidopropyl Betaine,surfactant,kg,2.6876,A,0,0,SG027
+RM0068,Fluff Pulp SBSK,pulp,kg,0.7415,B,0,0,
+RM0069,Eucalyptus BEK,pulp,kg,0.9207,B,0,0,
+RM0070,Recycled Pulp Deinked,pulp,kg,0.6164,A,0,0,
+RM0071,Fluff Pulp SBSK Grade B,pulp,kg,0.8658,A,1,0,
+RM0072,Process Cyan Ink,ink,kg,8.1029,A,1,0,SG018
+RM0073,Process Black Ink,ink,kg,7.1694,C,0,0,SG017
+RM0074,Water-based Varnish,ink,kg,15.4314,C,0,0,SG018
+RM0075,UV Flexo White,ink,kg,6.5819,A,1,1,SG017
+RM0076,PP Impact Copolymer,pp_resin,kg,1.3102,B,0,0,
+RM0077,PP Homopolymer Cap Grade Grade B,pp_resin,kg,1.3732,C,0,0,SG022
+RM0078,PP Random Copolymer Grade B,pp_resin,kg,1.4717,C,0,0,SG022
+RM0079,PP Impact Copolymer Grade B,pp_resin,kg,1.3928,C,0,0,SG022
+RM0080,BOPP Laminate Film,packaging_film,m2,0.1861,C,0,0,SG021
+RM0081,Metallized PET Film,packaging_film,m2,0.1778,B,0,0,
+RM0082,LDPE Shrink Film 60um Grade B,packaging_film,m2,0.1813,B,0,0,
+RM0083,Stretch Wrap 23um Grade B,packaging_film,m2,0.1336,C,0,0,SG021
+RM0084,TPE Overmold Grade,elastomer,kg,3.4489,C,0,0,SG010
+RM0085,Silicone LSR 50A,elastomer,kg,4.7694,B,0,0,
+RM0086,EPDM Gasket Compound,elastomer,kg,6.6527,B,0,0,
+RM0087,TPE Overmold Grade Grade B,elastomer,kg,3.8371,C,0,0,SG010
+RM0088,PET Bottle Grade IV 0.80,pet_resin,kg,1.4564,B,0,0,
+RM0089,rPET Food Grade Flake,pet_resin,kg,1.5814,B,0,0,
+RM0090,PET Bottle Grade IV 0.80 Grade B,pet_resin,kg,1.2399,A,1,0,
+RM0091,Die-cut Shipper 44ECT,corrugate,ea,0.8394,B,0,0,
+RM0092,Corrugated Divider,corrugate,ea,0.8858,A,1,0,SG009
+RM0093,SBS Folding Carton,carton_board,ea,0.1566,C,0,0,SG004
+RM0094,CRB Carton Blank,carton_board,ea,0.1169,B,0,0,SG004
+RM0095,Elastic Attach Adhesive,hot_melt_adhesive,kg,2.5879,C,0,0,SG016
+RM0096,EVA Hot Melt Case Seal Grade B,hot_melt_adhesive,kg,5.2262,C,0,0,SG016
+RM0097,Propylene Glycol,solvent,kg,1.2296,B,0,1,SG025
+RM0098,Ethanol Denatured,solvent,kg,1.1552,B,0,0,SG025
+RM0099,Spandex 680dtex,elastic,m,0.0324,B,0,0,
+RM0100,Elastic Film Laminate,elastic,m,0.0459,B,0,0,
+RM0101,Stainless Strip 301 Spring,steel_strip,kg,1.3367,C,0,0,SG026
+RM0102,Carbon Steel Strip 1075,steel_strip,kg,2.287,C,0,0,SG026
+RM0103,Paper Label Stock 60#,label_stock,ea,0.0571,B,0,0,
+RM0104,PS Label Stock White BOPP Grade B,label_stock,ea,0.0155,B,0,0,

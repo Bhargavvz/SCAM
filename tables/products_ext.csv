@@ -1,0 +1,2501 @@
+product_id,sourcing_mode,plant_id,brand_family,abc_class,unit_price,gross_margin_pct
+IP00001,buy,,Moldex Pro,A,704.66,23.4
+IP00002,buy,,Formline,A,537.08,19.8
+IP00003,make,P05,Halcyon,A,1260.57,38.7
+IP00004,make,P04,Snowmere Pro,A,919.08,38.8
+IP00005,buy,,Maxspare Eco,B,681.85,45.3
+IP00006,buy,,Corefit,B,318.64,36.7
+IP00007,make,P04,Formline,A,697.58,32.3
+IP00008,make,P01,Dawnfield,A,1082.82,31.8
+IP00009,make,P04,Snowmere Pro,A,627.03,35.4
+IP00010,buy,,Maxspare Max,C,61.22,46.6
+IP00011,buy,,Axial,C,152.86,24.7
+IP00012,buy,,Clarion Pack Pro,A,1122.53,32.8
+IP00013,buy,,Glenbrook,A,1260.66,45.5
+IP00014,make,P04,Willowby,A,664.82,33.0
+IP00015,buy,,Fixline,C,43.69,46.3
+IP00016,make,P01,Corefit,A,1230.39,37.9
+IP00017,buy,,Clarion Pack Pro,B,695.55,29.6
+IP00018,buy,,Halcyon,C,211.97,39.1
+IP00019,make,P05,Softwell Pro,A,1109.4,41.4
+IP00020,buy,,Fixline Pro,A,919.79,43.0
+IP00021,make,P01,Tritonix,B,361.38,36.8
+IP00022,buy,,Clarion Pack,B,472.87,27.5
+IP00023,buy,,Aurel Pro,A,1433.46,44.3
+IP00024,make,P04,Willowby,B,611.46,33.1
+IP00025,buy,,Servo,A,1540.49,59.0
+IP00026,buy,,Precisa,A,826.63,28.8
+IP00027,make,P04,Ecofold,A,869.53,25.4
+IP00028,buy,,Halcyon,A,1060.54,44.9
+IP00029,make,P03,Cottonvale,C,10.4,33.1
+IP00030,buy,,Servo Max,C,204.44,37.4
+IP00031,buy,,Moldex Pro,A,568.71,30.2
+IP00032,buy,,Boxwell,B,481.56,16.0
+IP00033,make,P01,Juniper,A,637.51,47.4
+IP00034,buy,,Cottonvale Pro,A,751.05,42.6
+IP00035,buy,,Servo Max,A,1261.85,40.6
+IP00036,buy,,Moldex,C,361.42,31.8
+IP00037,make,P03,Sealtek Pro,A,752.01,30.2
+IP00038,make,P02,Fairmist,B,630.59,32.0
+IP00039,make,P03,Cottonvale,A,926.88,43.5
+IP00040,buy,,Servo Eco,A,934.46,47.3
+IP00041,buy,,Axial Pro,A,1144.44,35.2
+IP00042,buy,,Clarion Pack,B,374.4,25.9
+IP00043,make,P01,Dawnfield,A,1502.17,51.2
+IP00044,make,P01,Velvet Isle,A,736.85,36.5
+IP00045,buy,,Maxspare Pro,A,1108.0,54.0
+IP00046,buy,,Axial,C,32.76,26.0
+IP00047,buy,,Sealtek Pro,A,752.92,29.0
+IP00048,make,P04,Everpure,A,1010.72,38.8
+IP00049,make,P01,Pureleaf Pro,B,563.38,31.3
+IP00050,buy,,Fixline Pro,A,873.07,49.2
+IP00051,make,P01,Tritonix,B,382.05,32.2
+IP00052,buy,,Clarion Pack,A,858.63,27.1
+IP00053,make,P02,Brightline Pro,B,859.74,42.2
+IP00054,make,P04,Snowmere Pro,A,695.99,34.2
+IP00055,buy,,Servo Eco,C,23.75,47.0
+IP00056,buy,,Precisa,B,465.08,40.0
+IP00057,buy,,Ecofold Pro,B,503.46,23.2
+IP00058,make,P02,Clearwave,C,131.63,45.9
+IP00059,make,P01,Pureleaf Pro,A,760.69,30.5
+IP00060,buy,,Servo Pro,A,834.31,49.6
+IP00061,make,P01,Corefit,B,527.24,29.8
+IP00062,make,P04,Formline,A,1024.95,27.1
+IP00063,make,P04,Everpure,B,821.79,46.4
+IP00064,make,P04,Willowby,A,832.16,40.7
+IP00065,buy,,Maxspare Pro,B,798.89,37.0
+IP00066,buy,,Lumen Parts,C,96.11,33.7
+IP00067,buy,,Ecofold,B,633.38,22.4
+IP00068,make,P05,Halcyon,C,151.99,42.3
+IP00069,make,P01,Velvet Isle,A,1163.87,35.9
+IP00070,buy,,Servo Pro,A,875.27,46.1
+IP00071,make,P01,Corefit Pro,A,874.95,29.7
+IP00072,buy,,Sealtek Pro,A,689.32,29.5
+IP00073,make,P02,Fairmist,B,504.54,34.1
+IP00074,make,P05,Softwell Pro,A,756.94,43.4
+IP00075,buy,,Servo Pro,A,1110.46,41.2
+IP00076,buy,,Lumen Parts,C,107.95,16.6
+IP00077,buy,,Packright,C,189.84,19.4
+IP00078,buy,,Everpure,A,665.55,45.8
+IP00079,make,P02,Cottonvale Pro,B,222.73,31.8
+IP00080,buy,,Servo Pro,A,1088.43,42.2
+IP00081,buy,,Corefit Pro,C,215.93,24.1
+IP00082,make,P03,Packright,B,347.32,29.8
+IP00083,make,P01,Juniper,A,422.61,45.6
+IP00084,buy,,Softwell,C,271.67,37.0
+IP00085,buy,,Fixline Eco,A,1654.63,51.0
+IP00086,make,P04,Axial Pro,B,605.99,28.1
+IP00087,make,P02,Ecofold Pro,A,1112.22,38.2
+IP00088,buy,,Juniper,A,1334.53,41.9
+IP00089,buy,,Pureleaf,A,427.74,31.4
+IP00090,buy,,Maxspare Pro,B,420.02,52.2
+IP00091,buy,,Lumen Parts Pro,B,818.34,36.7
+IP00092,buy,,Packright Pro,A,918.86,20.1
+IP00093,make,P02,Clearwave,A,918.06,45.5
+IP00094,buy,,Willowby,A,815.02,32.7
+IP00095,buy,,Servo Eco,B,503.68,45.9
+IP00096,make,P01,Corefit,B,595.85,25.7
+IP00097,make,P02,Sealtek,A,562.9,30.0
+IP00098,make,P02,Fairmist,B,651.19,41.2
+IP00099,make,P01,Pureleaf Pro,B,599.7,37.0
+IP00100,buy,,Fixline Pro,C,128.21,39.8
+IP00101,buy,,Lumen Parts Pro,B,447.56,37.8
+IP00102,buy,,Boxwell,C,184.17,30.5
+IP00103,make,P05,Ivory Crest,A,996.67,44.7
+IP00104,make,P01,Featherly,C,269.48,30.1
+IP00105,buy,,Servo Max,A,759.25,44.2
+IP00106,buy,,Corefit,C,186.4,28.9
+IP00107,buy,,Ecofold Pro,A,556.23,21.3
+IP00108,make,P02,Fairmist,B,427.74,32.8
+IP00109,make,P02,Cottonvale Pro,C,2.21,32.0
+IP00110,buy,,Maxspare,A,1009.64,44.6
+IP00111,make,P05,Precisa Pro,A,866.66,30.0
+IP00112,buy,,Clarion Pack Pro,C,88.9,33.6
+IP00113,make,P02,Fairmist,A,1035.01,47.3
+IP00114,make,P04,Snowmere,B,444.66,24.3
+IP00115,buy,,Fixline Pro,B,606.41,34.0
+IP00116,buy,,Precisa,C,58.98,26.6
+IP00117,buy,,Ecofold Pro,A,1101.58,29.0
+IP00118,make,P05,Halcyon,A,926.06,42.4
+IP00119,buy,,Snowmere,A,1005.77,41.2
+IP00120,buy,,Fixline,A,1627.63,54.8
+IP00121,buy,,Precisa,A,778.9,34.6
+IP00122,make,P02,Sealtek,A,644.17,34.6
+IP00123,buy,,Clearwave,A,743.75,26.4
+IP00124,make,P04,Willowby,A,909.52,35.8
+IP00125,buy,,Maxspare Pro,C,204.64,67.7
+IP00126,make,P04,Axial Pro,A,1190.18,38.3
+IP00127,buy,,Clarion Pack Pro,A,587.82,35.7
+IP00128,make,P03,Brightline,B,329.27,36.7
+IP00129,buy,,Pureleaf,A,895.47,41.3
+IP00130,buy,,Fixline Max,C,316.55,50.1
+IP00131,buy,,Tritonix Pro,C,224.12,26.3
+IP00132,buy,,Boxwell Pro,A,1006.9,36.1
+IP00133,make,P03,Aurel Pro,A,1042.46,30.8
+IP00134,make,P01,Pureleaf Pro,B,728.86,32.7
+IP00135,buy,,Maxspare Pro,A,787.46,42.5
+IP00136,buy,,Moldex Pro,A,1075.0,35.6
+IP00137,make,P05,Clarion Pack,B,555.14,23.1
+IP00138,make,P01,Juniper,A,1384.23,49.7
+IP00139,make,P01,Featherly,A,911.38,29.7
+IP00140,buy,,Maxspare Eco,B,541.06,43.5
+IP00141,make,P04,Axial Pro,A,968.77,28.3
+IP00142,make,P04,Ecofold,B,428.32,28.6
+IP00143,buy,,Dawnfield,B,679.37,33.6
+IP00144,make,P01,Velvet Isle,B,483.15,34.5
+IP00145,buy,,Servo Eco,A,1333.35,47.2
+IP00146,buy,,Precisa Pro,C,123.45,26.6
+IP00147,buy,,Ecofold,A,753.09,20.5
+IP00148,buy,,Aurel Pro,A,1226.7,42.4
+IP00149,buy,,Softwell Pro,A,1182.67,34.2
+IP00150,buy,,Fixline Pro,A,592.97,42.5
+IP00151,buy,,Moldex,B,814.05,26.1
+IP00152,make,P04,Formline,A,618.24,22.2
+IP00153,make,P05,Ivory Crest,B,731.02,42.1
+IP00154,make,P03,Cloudnest,C,572.07,41.6
+IP00155,buy,,Servo Pro,A,1253.0,41.3
+IP00156,make,P01,Moldex,B,475.71,31.3
+IP00157,make,P05,Packright Pro,A,831.8,26.1
+IP00158,make,P02,Brightline Pro,C,209.63,40.4
+IP00159,buy,,Willowby,A,1238.65,32.1
+IP00160,buy,,Servo Eco,C,129.98,51.7
+IP00161,buy,,Lumen Parts,A,1002.66,24.4
+IP00162,make,P03,Boxwell,B,398.28,24.8
+IP00163,buy,,Glenbrook,A,732.57,39.2
+IP00164,make,P04,Snowmere Pro,A,1238.6,39.5
+IP00165,buy,,Servo Pro,A,977.96,48.0
+IP00166,buy,,Axial Pro,B,360.14,41.2
+IP00167,buy,,Formline,C,146.6,25.9
+IP00168,make,P04,Everpure,A,687.49,50.6
+IP00169,make,P01,Pureleaf Pro,A,752.08,29.8
+IP00170,buy,,Maxspare,A,686.57,49.2
+IP00171,buy,,Lumen Parts Pro,A,913.34,37.5
+IP00172,make,P02,Boxwell Pro,B,408.34,31.8
+IP00173,make,P02,Glenbrook,A,1127.27,51.7
+IP00174,make,P03,Cloudnest,C,104.78,41.9
+IP00175,buy,,Maxspare Max,A,899.43,47.7
+IP00176,buy,,Corefit,C,142.51,34.6
+IP00177,make,P04,Formline Pro,C,213.85,24.1
+IP00178,make,P02,Fairmist,C,182.05,41.4
+IP00179,buy,,Pureleaf,B,297.19,39.4
+IP00180,buy,,Servo Eco,A,508.13,39.6
+IP00181,buy,,Moldex,C,206.87,28.2
+IP00182,make,P04,Formline Pro,C,291.6,21.4
+IP00183,make,P02,Fairmist,A,818.57,44.9
+IP00184,make,P02,Cottonvale Pro,C,107.45,39.2
+IP00185,buy,,Maxspare Max,A,606.89,49.2
+IP00186,buy,,Precisa,A,1187.08,31.9
+IP00187,make,P05,Clarion Pack,A,1027.67,21.9
+IP00188,make,P02,Brightline Pro,A,1468.41,42.3
+IP00189,buy,,Pureleaf Pro,A,1160.99,40.6
+IP00190,buy,,Fixline Pro,A,1140.57,56.5
+IP00191,buy,,Precisa Pro,C,25.86,39.1
+IP00192,make,P02,Sealtek,B,449.07,28.2
+IP00193,buy,,Brightline,C,26.25,34.7
+IP00194,make,P01,Velvet Isle,A,1180.15,31.1
+IP00195,buy,,Servo Eco,A,1359.52,53.8
+IP00196,buy,,Tritonix,A,1022.08,28.9
+IP00197,buy,,Packright Pro,B,708.54,31.6
+IP00198,make,P03,Brightline,A,1186.15,47.5
+IP00199,buy,,Cottonvale Pro,C,392.55,36.5
+IP00200,buy,,Maxspare Pro,A,633.35,47.1
+IP00201,make,P03,Lumen Parts,A,582.9,32.3
+IP00202,buy,,Boxwell,A,800.97,25.4
+IP00203,make,P05,Aurel,C,3.4,38.5
+IP00204,make,P03,Cloudnest,A,673.85,34.0
+IP00205,buy,,Servo Max,C,120.12,32.5
+IP00206,make,P02,Axial,C,129.76,28.5
+IP00207,make,P02,Boxwell Pro,C,237.24,25.4
+IP00208,make,P03,Aurel Pro,B,446.59,47.5
+IP00209,buy,,Cottonvale Pro,B,286.04,35.6
+IP00210,buy,,Maxspare Max,A,896.0,52.3
+IP00211,buy,,Corefit,B,457.06,28.2
+IP00212,make,P05,Clarion Pack,A,1112.81,27.3
+IP00213,make,P01,Dawnfield,A,1151.53,43.7
+IP00214,buy,,Snowmere,B,393.85,38.5
+IP00215,buy,,Fixline Eco,A,994.74,52.1
+IP00216,buy,,Tritonix Pro,A,493.45,46.3
+IP00217,make,P02,Ecofold Pro,C,79.79,22.6
+IP00218,make,P02,Glenbrook,B,565.52,42.4
+IP00219,buy,,Cloudnest,C,239.04,30.9
+IP00220,buy,,Servo Pro,B,315.58,36.6
+IP00221,buy,,Axial,B,460.43,26.1
+IP00222,buy,,Sealtek Pro,A,1098.99,27.9
+IP00223,make,P02,Fairmist,A,1089.73,40.8
+IP00224,make,P04,Snowmere,C,48.69,38.9
+IP00225,buy,,Servo,C,54.25,39.3
+IP00226,buy,,Tritonix Pro,A,916.48,24.2
+IP00227,make,P04,Formline Pro,C,225.02,26.9
+IP00228,make,P03,Aurel Pro,C,313.07,34.9
+IP00229,buy,,Pureleaf,A,631.43,37.6
+IP00230,buy,,Maxspare Eco,B,818.65,48.0
+IP00231,make,P01,Corefit,A,1019.4,41.3
+IP00232,buy,,Packright Pro,C,79.03,32.2
+IP00233,make,P03,Aurel Pro,A,1476.59,46.6
+IP00234,buy,,Pureleaf,B,433.92,43.1
+IP00235,buy,,Servo,A,893.98,36.4
+IP00236,buy,,Corefit Pro,A,648.61,23.5
+IP00237,buy,,Sealtek Pro,A,874.72,34.6
+IP00238,buy,,Dawnfield,A,1229.11,50.6
+IP00239,make,P03,Cottonvale,A,572.7,43.3
+IP00240,buy,,Servo,A,664.91,31.8
+IP00241,buy,,Corefit Pro,C,23.45,33.0
+IP00242,buy,,Ecofold,C,123.27,23.6
+IP00243,buy,,Ivory Crest,C,93.63,47.6
+IP00244,buy,,Featherly,A,638.22,39.9
+IP00245,buy,,Servo Pro,A,1358.07,44.5
+IP00246,make,P01,Tritonix,A,555.24,34.2
+IP00247,buy,,Formline Pro,C,225.38,30.7
+IP00248,make,P04,Everpure,C,2.21,44.0
+IP00249,buy,,Snowmere Pro,A,1049.92,37.8
+IP00250,buy,,Maxspare Pro,A,851.1,42.0
+IP00251,make,P03,Moldex Pro,A,990.66,29.0
+IP00252,buy,,Ecofold Pro,A,954.19,20.1
+IP00253,make,P01,Dawnfield,A,907.8,47.2
+IP00254,buy,,Velvet Isle,C,362.25,38.7
+IP00255,buy,,Maxspare Max,B,301.57,44.0
+IP00256,buy,,Corefit Pro,A,1072.42,30.6
+IP00257,make,P03,Sealtek Pro,B,542.46,18.7
+IP00258,make,P04,Everpure,A,1323.25,48.3
+IP00259,make,P01,Featherly,B,630.28,35.6
+IP00260,buy,,Maxspare Pro,A,604.46,42.6
+IP00261,make,P05,Precisa Pro,A,1026.82,29.0
+IP00262,make,P04,Formline,A,1096.4,24.8
+IP00263,make,P01,Juniper,C,226.34,38.6
+IP00264,make,P04,Snowmere Pro,B,415.04,31.5
+IP00265,buy,,Maxspare,A,1155.19,47.4
+IP00266,buy,,Precisa,B,334.49,39.2
+IP00267,buy,,Packright Pro,A,718.56,34.2
+IP00268,buy,,Juniper,B,506.06,43.6
+IP00269,buy,,Cottonvale Pro,C,323.39,38.1
+IP00270,buy,,Maxspare Max,A,447.21,47.7
+IP00271,buy,,Corefit,C,103.22,28.8
+IP00272,buy,,Clarion Pack Pro,B,528.39,24.0
+IP00273,make,P01,Juniper,C,289.76,37.1
+IP00274,buy,,Cottonvale,A,1355.24,39.3
+IP00275,buy,,Fixline Eco,A,1120.24,44.8
+IP00276,make,P03,Lumen Parts,B,732.51,28.3
+IP00277,buy,,Clarion Pack,A,1046.9,27.5
+IP00278,buy,,Dawnfield,C,7.01,44.1
+IP00279,make,P01,Velvet Isle,A,1121.35,37.1
+IP00280,buy,,Servo Eco,A,868.57,35.6
+IP00281,make,P01,Corefit Pro,A,977.22,27.1
+IP00282,make,P03,Boxwell,A,787.11,21.1
+IP00283,make,P01,Juniper,C,89.75,40.3
+IP00284,make,P03,Cottonvale,A,1277.74,33.6
+IP00285,buy,,Fixline Max,A,1166.19,50.4
+IP00286,make,P01,Lumen Parts Pro,A,484.97,25.4
+IP00287,buy,,Boxwell Pro,A,1113.9,27.9
+IP00288,buy,,Aurel,A,1283.83,39.2
+IP00289,buy,,Cottonvale Pro,B,733.81,38.1
+IP00290,buy,,Maxspare Eco,B,425.99,39.2
+IP00291,buy,,Tritonix Pro,C,74.77,38.0
+IP00292,buy,,Formline,A,545.96,35.7
+IP00293,buy,,Brightline,A,1430.28,42.2
+IP00294,make,P03,Cottonvale,C,163.06,28.8
+IP00295,buy,,Servo,A,858.08,39.6
+IP00296,buy,,Lumen Parts Pro,C,371.82,37.5
+IP00297,buy,,Boxwell,C,122.69,24.2
+IP00298,buy,,Juniper,A,1172.78,46.0
+IP00299,make,P05,Pureleaf,B,424.89,45.4
+IP00300,buy,,Fixline Pro,A,1030.39,61.2
+IP00301,buy,,Precisa,C,105.99,25.4
+IP00302,buy,,Clarion Pack Pro,C,25.15,27.8
+IP00303,make,P03,Aurel Pro,C,283.5,34.2
+IP00304,make,P03,Cloudnest,A,994.72,35.8
+IP00305,buy,,Fixline,A,1404.24,51.2
+IP00306,make,P01,Lumen Parts Pro,B,541.03,23.6
+IP00307,buy,,Ecofold,A,849.31,24.4
+IP00308,make,P05,Aurel,C,214.96,38.7
+IP00309,buy,,Pureleaf,A,946.02,38.4
+IP00310,buy,,Fixline Pro,A,1058.13,43.7
+IP00311,buy,,Lumen Parts,A,1165.98,35.4
+IP00312,buy,,Packright,A,411.78,21.2
+IP00313,make,P05,Halcyon,A,844.85,40.2
+IP00314,make,P04,Snowmere,A,672.71,43.5
+IP00315,buy,,Servo Pro,A,1200.26,45.1
+IP00316,buy,,Moldex Pro,C,256.4,29.7
+IP00317,buy,,Formline Pro,B,719.28,26.3
+IP00318,buy,,Aurel Pro,A,1563.14,46.5
+IP00319,buy,,Cottonvale,A,841.92,32.7
+IP00320,buy,,Fixline Max,B,788.34,46.5
+IP00321,make,P02,Axial,A,1035.99,38.7
+IP00322,buy,,Clarion Pack Pro,B,324.63,34.4
+IP00323,make,P04,Everpure,A,1343.34,45.5
+IP00324,make,P04,Snowmere,B,411.29,44.0
+IP00325,buy,,Fixline Pro,B,463.52,49.4
+IP00326,buy,,Precisa Pro,B,464.96,26.2
+IP00327,buy,,Formline,A,854.99,27.7
+IP00328,make,P03,Aurel Pro,A,759.66,41.1
+IP00329,make,P04,Willowby,C,337.75,33.4
+IP00330,buy,,Fixline Pro,A,1421.02,56.0
+IP00331,make,P02,Tritonix Pro,A,1131.17,32.7
+IP00332,buy,,Packright Pro,B,662.99,28.8
+IP00333,make,P05,Ivory Crest,A,1626.71,51.1
+IP00334,make,P04,Willowby,B,260.96,35.7
+IP00335,buy,,Servo Eco,B,234.3,51.2
+IP00336,buy,,Corefit Pro,B,285.94,32.5
+IP00337,make,P02,Boxwell Pro,C,220.87,31.4
+IP00338,buy,,Glenbrook,B,354.01,44.2
+IP00339,buy,,Pureleaf,B,282.72,25.1
+IP00340,buy,,Fixline Pro,C,149.49,47.0
+IP00341,buy,,Lumen Parts Pro,C,30.52,34.8
+IP00342,buy,,Ecofold Pro,A,1079.92,27.5
+IP00343,make,P01,Dawnfield,A,1615.71,51.1
+IP00344,make,P02,Cottonvale Pro,A,1038.71,33.1
+IP00345,buy,,Servo Eco,C,153.17,51.7
+IP00346,make,P03,Moldex Pro,A,1214.28,35.1
+IP00347,make,P05,Packright Pro,A,913.39,31.9
+IP00348,make,P04,Everpure,B,609.71,37.2
+IP00349,make,P03,Cottonvale,A,725.93,38.1
+IP00350,buy,,Fixline Pro,A,1234.12,46.9
+IP00351,make,P01,Precisa,A,939.4,30.0
+IP00352,make,P02,Boxwell Pro,A,848.29,29.9
+IP00353,make,P01,Dawnfield,B,330.74,35.2
+IP00354,make,P05,Pureleaf,A,1011.08,23.4
+IP00355,buy,,Fixline Pro,A,800.78,37.4
+IP00356,buy,,Lumen Parts,B,1058.97,30.3
+IP00357,make,P03,Packright,C,75.85,29.4
+IP00358,make,P03,Aurel Pro,B,1351.82,48.3
+IP00359,make,P02,Cottonvale Pro,A,1084.43,40.8
+IP00360,buy,,Maxspare,A,1323.04,49.7
+IP00361,make,P01,Corefit,A,1088.11,31.6
+IP00362,make,P03,Packright,A,1074.34,28.3
+IP00363,make,P05,Halcyon,C,207.94,39.4
+IP00364,make,P04,Willowby,A,1263.65,39.8
+IP00365,buy,,Maxspare Max,A,994.81,43.3
+IP00366,buy,,Precisa Pro,C,150.73,30.2
+IP00367,make,P03,Sealtek Pro,A,762.22,30.6
+IP00368,buy,,Aurel Pro,A,962.44,40.2
+IP00369,buy,,Softwell Pro,A,1034.37,33.7
+IP00370,buy,,Servo,C,103.79,37.8
+IP00371,buy,,Lumen Parts Pro,A,960.17,30.6
+IP00372,buy,,Formline Pro,A,740.52,31.1
+IP00373,make,P05,Halcyon,C,237.41,39.7
+IP00374,buy,,Cloudnest,A,817.19,35.7
+IP00375,buy,,Servo Eco,B,428.98,36.4
+IP00376,buy,,Precisa,C,339.6,30.5
+IP00377,make,P03,Boxwell,C,286.09,22.5
+IP00378,buy,,Halcyon,A,1018.84,44.0
+IP00379,make,P04,Snowmere Pro,B,359.98,40.4
+IP00380,buy,,Maxspare,A,1703.96,54.6
+IP00381,buy,,Corefit Pro,A,805.76,21.5
+IP00382,buy,,Ecofold Pro,A,989.26,33.5
+IP00383,make,P03,Aurel Pro,A,1195.29,45.7
+IP00384,make,P03,Cottonvale,A,788.24,29.0
+IP00385,buy,,Maxspare Eco,A,1394.49,54.8
+IP00386,buy,,Lumen Parts Pro,B,303.41,25.3
+IP00387,buy,,Packright Pro,C,70.33,30.4
+IP00388,make,P05,Aurel,A,744.4,38.8
+IP00389,make,P01,Pureleaf Pro,A,699.03,35.2
+IP00390,buy,,Maxspare Pro,A,775.05,33.7
+IP00391,buy,,Axial,A,944.31,28.0
+IP00392,buy,,Ecofold Pro,B,927.61,25.9
+IP00393,make,P03,Brightline,C,11.54,51.9
+IP00394,make,P01,Featherly,C,218.28,31.3
+IP00395,buy,,Servo Eco,A,1158.97,48.5
+IP00396,buy,,Precisa Pro,B,581.18,24.8
+IP00397,buy,,Clarion Pack,A,1264.64,35.8
+IP00398,make,P02,Clearwave,A,565.02,37.2
+IP00399,buy,,Velvet Isle,A,1226.56,37.5
+IP00400,buy,,Servo Eco,A,625.76,41.0
+IP00401,buy,,Tritonix,A,794.64,23.0
+IP00402,make,P04,Ecofold,B,625.23,31.2
+IP00403,make,P02,Fairmist,A,1273.23,52.7
+IP00404,buy,,Pureleaf,B,599.91,34.2
+IP00405,buy,,Servo Pro,A,1354.12,48.3
+IP00406,buy,,Corefit Pro,C,95.49,27.7
+IP00407,buy,,Formline Pro,A,1002.48,26.9
+IP00408,make,P03,Brightline,A,375.13,37.2
+IP00409,make,P03,Cottonvale,A,827.77,30.4
+IP00410,buy,,Servo Max,A,1363.66,39.4
+IP00411,buy,,Lumen Parts Pro,A,522.85,26.3
+IP00412,buy,,Sealtek,B,303.86,26.9
+IP00413,make,P02,Fairmist,A,672.43,52.2
+IP00414,make,P01,Featherly,A,973.97,35.0
+IP00415,buy,,Servo Pro,B,321.5,42.8
+IP00416,make,P01,Moldex,A,601.44,28.6
+IP00417,buy,,Packright Pro,A,764.84,21.3
+IP00418,make,P02,Clearwave,C,600.43,36.7
+IP00419,buy,,Pureleaf,A,1187.88,38.1
+IP00420,buy,,Servo Eco,C,46.08,51.0
+IP00421,buy,,Lumen Parts,B,358.69,23.8
+IP00422,buy,,Sealtek Pro,A,882.74,23.4
+IP00423,make,P03,Brightline,A,1314.96,44.2
+IP00424,buy,,Snowmere,A,685.89,39.7
+IP00425,buy,,Fixline Eco,A,1310.38,41.9
+IP00426,buy,,Tritonix,B,713.76,23.9
+IP00427,buy,,Boxwell Pro,B,382.66,32.7
+IP00428,make,P03,Brightline,A,1038.28,42.3
+IP00429,buy,,Cloudnest,A,1258.1,38.8
+IP00430,buy,,Fixline,A,1702.62,61.0
+IP00431,make,P03,Moldex Pro,A,945.57,26.8
+IP00432,buy,,Ecofold Pro,C,223.74,26.8
+IP00433,make,P05,Ivory Crest,C,110.71,46.1
+IP00434,make,P03,Cloudnest,C,255.57,43.4
+IP00435,buy,,Fixline,C,126.56,41.8
+IP00436,buy,,Corefit,B,693.94,33.2
+IP00437,buy,,Packright,A,1037.91,30.0
+IP00438,make,P02,Clearwave,A,1215.47,44.1
+IP00439,make,P05,Softwell Pro,C,218.92,30.3
+IP00440,buy,,Fixline Eco,B,490.65,45.8
+IP00441,buy,,Lumen Parts,A,922.23,24.5
+IP00442,buy,,Ecofold Pro,A,1106.12,24.2
+IP00443,buy,,Clearwave,A,1055.8,44.5
+IP00444,make,P03,Cottonvale,A,828.49,39.0
+IP00445,buy,,Maxspare Eco,C,156.91,29.7
+IP00446,buy,,Moldex,B,430.48,28.5
+IP00447,buy,,Boxwell,C,237.39,30.2
+IP00448,make,P04,Everpure,A,1346.86,51.9
+IP00449,make,P05,Pureleaf,A,1263.07,36.9
+IP00450,buy,,Servo Max,B,448.0,49.1
+IP00451,make,P01,Lumen Parts Pro,A,709.16,35.4
+IP00452,buy,,Ecofold Pro,A,1130.31,28.4
+IP00453,buy,,Ivory Crest,C,174.95,51.1
+IP00454,buy,,Willowby,B,372.26,36.7
+IP00455,buy,,Fixline Max,C,260.39,48.5
+IP00456,buy,,Corefit Pro,A,1348.57,39.1
+IP00457,make,P02,Sealtek,B,690.15,24.3
+IP00458,make,P04,Everpure,A,1319.41,40.5
+IP00459,make,P05,Softwell Pro,B,1037.53,34.8
+IP00460,buy,,Maxspare Max,B,315.55,45.9
+IP00461,buy,,Axial Pro,C,78.32,32.1
+IP00462,buy,,Sealtek Pro,A,1010.26,34.2
+IP00463,make,P01,Dawnfield,C,223.67,45.3
+IP00464,make,P01,Softwell,B,370.25,35.3
+IP00465,buy,,Maxspare Eco,A,816.86,51.0
+IP00466,buy,,Lumen Parts Pro,B,763.32,31.0
+IP00467,make,P05,Packright Pro,C,177.21,29.8
+IP00468,make,P05,Halcyon,A,783.92,26.2
+IP00469,make,P03,Cloudnest,C,61.89,41.2
+IP00470,buy,,Maxspare,A,1014.97,50.3
+IP00471,make,P02,Axial,C,44.18,38.5
+IP00472,make,P04,Ecofold,A,777.56,27.6
+IP00473,make,P05,Aurel,A,583.63,42.7
+IP00474,buy,,Snowmere,B,705.32,30.8
+IP00475,buy,,Servo,C,221.41,55.4
+IP00476,buy,,Moldex,C,103.03,31.6
+IP00477,buy,,Sealtek,B,236.54,24.9
+IP00478,make,P05,Aurel,B,430.93,41.8
+IP00479,buy,,Snowmere,C,69.24,41.1
+IP00480,buy,,Servo,B,416.47,50.7
+IP00481,buy,,Axial Pro,C,74.42,29.9
+IP00482,buy,,Boxwell Pro,B,386.04,26.8
+IP00483,make,P02,Brightline Pro,A,1301.79,54.8
+IP00484,make,P02,Cottonvale Pro,A,1016.47,29.2
+IP00485,buy,,Fixline Max,C,161.41,32.8
+IP00486,make,P03,Lumen Parts,A,1351.06,42.2
+IP00487,buy,,Ecofold,C,40.99,39.4
+IP00488,make,P05,Halcyon,A,1475.7,44.2
+IP00489,make,P03,Cloudnest,B,410.76,33.1
+IP00490,buy,,Servo Pro,A,885.17,44.5
+IP00491,make,P02,Axial,C,151.04,27.9
+IP00492,buy,,Ecofold Pro,C,456.34,24.5
+IP00493,make,P03,Brightline,A,633.57,39.7
+IP00494,make,P01,Featherly,B,744.54,34.3
+IP00495,buy,,Maxspare,A,1367.54,44.3
+IP00496,buy,,Axial,B,217.81,29.2
+IP00497,buy,,Formline Pro,B,444.35,19.7
+IP00498,make,P02,Glenbrook,A,740.57,45.9
+IP00499,make,P02,Cottonvale Pro,A,904.36,35.1
+IP00500,buy,,Maxspare Pro,C,243.28,50.0
+IP00501,make,P01,Moldex,C,45.79,27.6
+IP00502,buy,,Sealtek,A,944.96,26.0
+IP00503,make,P02,Fairmist,A,1419.46,44.1
+IP00504,make,P01,Velvet Isle,A,648.99,42.4
+IP00505,buy,,Maxspare Eco,A,1267.17,37.1
+IP00506,buy,,Tritonix,A,898.89,33.3
+IP00507,buy,,Packright,C,175.5,28.4
+IP00508,make,P02,Fairmist,A,809.7,46.5
+IP00509,make,P03,Cloudnest,A,991.23,31.7
+IP00510,buy,,Maxspare Pro,A,698.19,41.0
+IP00511,buy,,Axial Pro,A,733.77,27.4
+IP00512,buy,,Formline,B,632.62,29.5
+IP00513,make,P02,Brightline Pro,A,468.54,39.1
+IP00514,buy,,Featherly,C,31.14,38.5
+IP00515,buy,,Maxspare Eco,A,926.1,46.7
+IP00516,make,P01,Corefit Pro,C,2.72,34.3
+IP00517,make,P03,Packright,B,321.9,25.4
+IP00518,make,P02,Glenbrook,A,637.43,31.2
+IP00519,make,P04,Snowmere Pro,A,1282.48,40.8
+IP00520,buy,,Fixline Eco,C,34.42,48.0
+IP00521,make,P01,Corefit,A,1157.23,29.5
+IP00522,make,P02,Sealtek,A,822.77,36.0
+IP00523,buy,,Ivory Crest,B,613.68,31.5
+IP00524,buy,,Softwell Pro,A,981.63,37.9
+IP00525,buy,,Maxspare Pro,C,240.92,47.0
+IP00526,buy,,Tritonix,B,561.34,36.0
+IP00527,make,P03,Sealtek Pro,B,331.53,31.2
+IP00528,make,P02,Brightline Pro,A,954.19,39.4
+IP00529,make,P03,Cloudnest,A,927.46,35.9
+IP00530,buy,,Servo Eco,C,78.08,31.3
+IP00531,buy,,Tritonix,B,407.4,35.7
+IP00532,make,P04,Clarion Pack Pro,C,188.22,27.0
+IP00533,buy,,Dawnfield,B,683.37,38.2
+IP00534,make,P01,Featherly,C,11.51,25.3
+IP00535,buy,,Servo Eco,A,1030.67,44.6
+IP00536,buy,,Lumen Parts,B,309.53,32.4
+IP00537,buy,,Boxwell,A,503.34,27.3
+IP00538,make,P05,Aurel,A,778.04,32.3
+IP00539,make,P05,Pureleaf,C,310.77,38.0
+IP00540,buy,,Fixline Eco,A,1338.8,44.8
+IP00541,buy,,Corefit,C,32.85,20.8
+IP00542,make,P04,Formline Pro,C,137.31,28.2
+IP00543,make,P02,Fairmist,A,1122.57,40.0
+IP00544,make,P04,Willowby,B,371.15,37.3
+IP00545,buy,,Maxspare Pro,A,637.72,39.6
+IP00546,buy,,Lumen Parts,A,1027.99,27.8
+IP00547,make,P04,Clarion Pack Pro,B,568.8,20.0
+IP00548,make,P04,Everpure,A,1449.86,43.0
+IP00549,make,P04,Snowmere,A,929.36,33.3
+IP00550,buy,,Servo Max,A,1552.88,48.9
+IP00551,make,P03,Lumen Parts,B,373.41,26.4
+IP00552,buy,,Boxwell,A,664.99,25.6
+IP00553,make,P03,Aurel Pro,A,639.25,37.2
+IP00554,make,P04,Snowmere,C,155.84,31.9
+IP00555,buy,,Maxspare Pro,A,800.67,40.7
+IP00556,make,P01,Moldex,A,996.96,28.0
+IP00557,buy,,Ecofold,C,99.1,24.1
+IP00558,make,P03,Brightline,A,1065.96,41.9
+IP00559,make,P01,Pureleaf Pro,C,5.39,36.4
+IP00560,buy,,Servo Max,B,383.11,49.8
+IP00561,buy,,Moldex Pro,C,260.2,39.5
+IP00562,make,P04,Ecofold,A,801.39,24.0
+IP00563,make,P05,Ivory Crest,A,991.42,45.2
+IP00564,make,P04,Snowmere,B,413.71,34.3
+IP00565,buy,,Servo Pro,B,432.77,62.1
+IP00566,make,P01,Corefit,A,506.48,25.2
+IP00567,buy,,Sealtek,A,488.62,33.9
+IP00568,make,P01,Dawnfield,A,554.47,45.2
+IP00569,make,P04,Snowmere,C,144.96,32.2
+IP00570,buy,,Maxspare,C,79.7,49.9
+IP00571,buy,,Precisa,A,891.76,29.4
+IP00572,make,P04,Clarion Pack Pro,A,1079.88,26.9
+IP00573,make,P02,Glenbrook,A,747.64,42.4
+IP00574,buy,,Softwell,A,751.6,33.6
+IP00575,buy,,Fixline Eco,A,958.05,47.2
+IP00576,buy,,Axial Pro,C,51.09,28.6
+IP00577,buy,,Packright Pro,C,91.66,24.1
+IP00578,make,P05,Halcyon,A,1040.71,36.9
+IP00579,buy,,Pureleaf,C,125.6,41.3
+IP00580,buy,,Maxspare Eco,A,846.79,32.3
+IP00581,buy,,Corefit Pro,A,998.04,34.2
+IP00582,buy,,Formline,B,376.08,29.0
+IP00583,make,P01,Dawnfield,A,877.82,41.2
+IP00584,buy,,Snowmere Pro,B,280.9,38.7
+IP00585,buy,,Servo Max,A,900.26,45.3
+IP00586,buy,,Lumen Parts Pro,C,16.45,31.2
+IP00587,buy,,Packright Pro,B,576.86,27.5
+IP00588,make,P01,Dawnfield,C,249.53,42.8
+IP00589,make,P01,Softwell,C,165.75,35.3
+IP00590,buy,,Fixline,C,32.47,54.7
+IP00591,buy,,Moldex Pro,A,911.8,22.3
+IP00592,buy,,Boxwell,A,685.81,23.9
+IP00593,make,P02,Fairmist,B,932.61,40.2
+IP00594,make,P03,Cloudnest,C,161.87,36.3
+IP00595,buy,,Fixline Eco,A,691.1,42.7
+IP00596,buy,,Moldex Pro,A,1018.2,35.1
+IP00597,buy,,Packright Pro,B,293.85,29.6
+IP00598,make,P02,Clearwave,C,200.09,41.7
+IP00599,buy,,Softwell,A,939.92,40.9
+IP00600,buy,,Fixline,A,532.71,44.2
+IP00601,make,P03,Moldex Pro,A,1177.98,30.8
+IP00602,buy,,Clarion Pack Pro,A,572.4,28.3
+IP00603,make,P01,Juniper,B,285.12,40.8
+IP00604,buy,,Pureleaf,A,843.23,39.7
+IP00605,buy,,Fixline,A,1346.95,44.6
+IP00606,buy,,Corefit,A,1127.18,30.8
+IP00607,buy,,Packright Pro,A,1060.73,26.1
+IP00608,make,P02,Clearwave,C,7.89,43.7
+IP00609,make,P03,Cloudnest,A,1218.28,35.5
+IP00610,buy,,Servo Max,C,489.29,46.1
+IP00611,buy,,Moldex,A,750.43,30.1
+IP00612,buy,,Clarion Pack,A,897.18,26.5
+IP00613,make,P02,Clearwave,C,51.68,35.7
+IP00614,make,P01,Pureleaf Pro,C,15.95,34.6
+IP00615,buy,,Maxspare Pro,A,588.33,43.8
+IP00616,buy,,Lumen Parts,A,761.55,29.9
+IP00617,buy,,Packright,C,152.06,25.7
+IP00618,make,P02,Glenbrook,B,336.69,31.5
+IP00619,buy,,Cottonvale,A,629.81,42.9
+IP00620,buy,,Servo,A,1694.56,54.2
+IP00621,buy,,Precisa,B,625.91,28.3
+IP00622,buy,,Sealtek Pro,C,126.14,22.1
+IP00623,make,P04,Everpure,B,549.96,28.9
+IP00624,make,P04,Willowby,B,704.14,31.4
+IP00625,buy,,Servo Pro,C,45.66,36.4
+IP00626,buy,,Axial,A,879.31,34.5
+IP00627,buy,,Clarion Pack,A,1014.86,30.1
+IP00628,make,P03,Aurel Pro,A,1274.56,48.9
+IP00629,buy,,Cottonvale Pro,A,771.58,34.3
+IP00630,buy,,Maxspare Pro,A,1326.89,48.3
+IP00631,buy,,Tritonix Pro,C,56.46,33.0
+IP00632,buy,,Boxwell,B,651.64,15.5
+IP00633,make,P02,Brightline Pro,A,1428.0,50.9
+IP00634,make,P03,Cloudnest,A,657.62,33.5
+IP00635,buy,,Maxspare,C,22.97,42.0
+IP00636,buy,,Precisa Pro,B,856.81,32.3
+IP00637,buy,,Packright Pro,B,785.18,28.4
+IP00638,make,P05,Ivory Crest,B,518.42,41.8
+IP00639,make,P03,Cloudnest,C,152.91,34.8
+IP00640,buy,,Maxspare Pro,A,1286.91,43.4
+IP00641,buy,,Precisa Pro,C,169.06,25.4
+IP00642,make,P04,Formline Pro,A,748.35,22.0
+IP00643,make,P05,Halcyon,B,336.72,38.8
+IP00644,make,P01,Velvet Isle,C,71.12,36.8
+IP00645,buy,,Maxspare Pro,A,1179.01,50.6
+IP00646,buy,,Moldex Pro,A,874.82,31.3
+IP00647,buy,,Sealtek,A,615.8,27.1
+IP00648,make,P01,Juniper,C,213.36,54.7
+IP00649,make,P04,Snowmere Pro,A,486.77,32.1
+IP00650,buy,,Maxspare Max,C,271.59,39.6
+IP00651,buy,,Moldex,A,1139.85,31.5
+IP00652,make,P04,Formline,A,1066.07,30.6
+IP00653,make,P04,Everpure,A,1123.66,42.4
+IP00654,buy,,Cottonvale,C,65.54,43.5
+IP00655,buy,,Maxspare Max,A,2361.3,65.5
+IP00656,make,P03,Moldex Pro,C,172.02,28.1
+IP00657,buy,,Packright,C,527.44,25.9
+IP00658,make,P01,Juniper,A,496.39,39.4
+IP00659,make,P03,Cloudnest,C,110.4,35.7
+IP00660,buy,,Fixline Eco,C,59.88,50.2
+IP00661,buy,,Tritonix,A,597.76,25.6
+IP00662,buy,,Sealtek Pro,A,574.83,27.8
+IP00663,buy,,Aurel Pro,B,433.27,34.5
+IP00664,buy,,Snowmere Pro,C,171.03,26.9
+IP00665,buy,,Servo Max,A,1192.76,35.9
+IP00666,buy,,Corefit,A,496.83,34.8
+IP00667,make,P04,Formline Pro,A,665.49,39.3
+IP00668,make,P04,Everpure,A,999.61,39.0
+IP00669,buy,,Willowby,A,930.38,42.2
+IP00670,buy,,Fixline Max,C,53.83,36.3
+IP00671,buy,,Lumen Parts Pro,B,703.34,31.8
+IP00672,make,P02,Boxwell Pro,B,360.39,26.2
+IP00673,make,P01,Juniper,A,1214.16,38.4
+IP00674,make,P04,Willowby,B,343.76,39.7
+IP00675,buy,,Servo Pro,B,584.29,31.0
+IP00676,make,P03,Lumen Parts,C,102.46,31.3
+IP00677,buy,,Boxwell,C,240.71,24.4
+IP00678,make,P04,Everpure,B,293.93,38.7
+IP00679,make,P01,Softwell,A,968.42,36.8
+IP00680,buy,,Fixline,A,1004.49,35.0
+IP00681,buy,,Tritonix,A,897.75,27.9
+IP00682,buy,,Clarion Pack Pro,A,1046.9,28.5
+IP00683,make,P03,Brightline,A,712.86,43.8
+IP00684,make,P01,Featherly,B,382.45,39.6
+IP00685,buy,,Maxspare,A,1081.76,44.9
+IP00686,buy,,Tritonix,B,654.55,30.4
+IP00687,buy,,Sealtek,B,610.59,23.3
+IP00688,make,P03,Brightline,A,947.98,41.6
+IP00689,make,P05,Pureleaf,A,1100.72,38.9
+IP00690,buy,,Maxspare,A,1612.32,59.4
+IP00691,make,P01,Moldex,C,14.74,28.5
+IP00692,buy,,Formline,A,1382.73,38.8
+IP00693,buy,,Brightline Pro,C,159.42,46.6
+IP00694,make,P03,Cottonvale,C,161.28,34.5
+IP00695,buy,,Servo Max,A,1293.65,55.9
+IP00696,buy,,Tritonix,B,393.97,30.5
+IP00697,buy,,Ecofold,C,247.84,25.6
+IP00698,make,P02,Brightline Pro,B,574.13,31.7
+IP00699,make,P05,Softwell Pro,C,619.95,33.7
+IP00700,buy,,Fixline Pro,A,1197.24,44.3
+IP00701,make,P01,Moldex,A,577.36,24.7
+IP00702,make,P05,Clarion Pack,A,1063.44,26.2
+IP00703,buy,,Juniper,A,1456.07,48.1
+IP00704,buy,,Velvet Isle,A,986.29,26.9
+IP00705,buy,,Maxspare Max,B,462.39,43.9
+IP00706,buy,,Precisa Pro,A,1053.22,28.5
+IP00707,make,P03,Sealtek Pro,A,605.4,35.0
+IP00708,buy,,Halcyon,A,1017.0,44.6
+IP00709,buy,,Pureleaf Pro,A,581.25,40.2
+IP00710,buy,,Servo Eco,C,244.84,34.9
+IP00711,buy,,Tritonix Pro,B,560.61,29.0
+IP00712,buy,,Ecofold,C,837.89,32.8
+IP00713,make,P02,Clearwave,A,1087.61,34.3
+IP00714,make,P04,Willowby,A,1143.47,45.6
+IP00715,buy,,Servo Pro,B,562.91,39.6
+IP00716,buy,,Axial Pro,C,266.79,33.4
+IP00717,buy,,Sealtek,B,520.08,25.6
+IP00718,make,P05,Ivory Crest,C,56.96,44.4
+IP00719,buy,,Pureleaf,B,586.39,31.8
+IP00720,buy,,Maxspare Eco,A,636.72,42.0
+IP00721,buy,,Axial Pro,A,1194.81,35.1
+IP00722,buy,,Ecofold,A,547.34,28.7
+IP00723,make,P01,Dawnfield,A,1028.57,49.5
+IP00724,make,P01,Softwell,A,543.38,38.8
+IP00725,buy,,Maxspare Max,A,1030.22,37.0
+IP00726,buy,,Moldex,C,45.89,29.4
+IP00727,buy,,Formline Pro,B,426.16,22.3
+IP00728,make,P05,Halcyon,A,987.83,44.7
+IP00729,buy,,Snowmere,C,204.81,35.3
+IP00730,buy,,Servo Eco,A,1556.98,47.1
+IP00731,make,P01,Lumen Parts Pro,B,597.87,19.6
+IP00732,buy,,Clarion Pack,A,625.64,22.5
+IP00733,make,P03,Aurel Pro,A,667.79,29.8
+IP00734,make,P03,Cottonvale,A,1240.0,35.8
+IP00735,buy,,Servo Eco,A,968.32,48.2
+IP00736,make,P05,Precisa Pro,A,1093.29,31.4
+IP00737,buy,,Ecofold Pro,C,220.46,20.1
+IP00738,make,P02,Brightline Pro,C,43.76,37.0
+IP00739,buy,,Willowby,C,60.35,31.6
+IP00740,buy,,Maxspare,C,156.88,43.0
+IP00741,buy,,Corefit Pro,C,11.36,19.0
+IP00742,make,P02,Boxwell Pro,A,1319.33,35.9
+IP00743,make,P02,Fairmist,A,1272.48,46.7
+IP00744,make,P03,Cottonvale,B,450.6,32.1
+IP00745,buy,,Fixline Max,A,1181.44,48.7
+IP00746,make,P02,Tritonix Pro,C,176.52,31.0
+IP00747,make,P03,Packright,A,1022.67,30.4
+IP00748,make,P02,Clearwave,B,381.11,39.0
+IP00749,buy,,Softwell Pro,A,1121.48,34.6
+IP00750,buy,,Fixline Pro,A,1378.37,42.8
+IP00751,buy,,Tritonix Pro,C,348.63,32.9
+IP00752,make,P02,Boxwell Pro,B,544.06,26.4
+IP00753,make,P04,Everpure,A,930.18,39.4
+IP00754,make,P01,Velvet Isle,A,1168.49,32.9
+IP00755,buy,,Servo,A,557.37,49.1
+IP00756,buy,,Precisa Pro,C,186.37,25.8
+IP00757,buy,,Boxwell,B,313.51,25.7
+IP00758,make,P02,Fairmist,C,67.28,36.0
+IP00759,make,P03,Cottonvale,A,949.39,30.9
+IP00760,buy,,Servo Max,A,1485.89,48.6
+IP00761,buy,,Corefit Pro,A,1176.16,36.2
+IP00762,buy,,Packright Pro,A,980.06,30.7
+IP00763,make,P02,Fairmist,A,1516.66,46.4
+IP00764,make,P01,Velvet Isle,C,158.38,40.1
+IP00765,buy,,Fixline Eco,A,855.58,40.7
+IP00766,make,P02,Axial,B,252.66,39.1
+IP00767,make,P04,Ecofold,A,1046.93,25.2
+IP00768,make,P02,Brightline Pro,A,1332.28,39.5
+IP00769,make,P01,Velvet Isle,A,997.25,28.0
+IP00770,buy,,Maxspare Pro,A,1172.35,42.9
+IP00771,buy,,Moldex Pro,B,752.14,36.0
+IP00772,buy,,Boxwell Pro,A,914.83,36.4
+IP00773,make,P02,Fairmist,A,1136.67,38.2
+IP00774,make,P01,Velvet Isle,B,325.01,34.9
+IP00775,buy,,Fixline Pro,A,1248.41,43.4
+IP00776,make,P01,Precisa,B,496.95,22.6
+IP00777,make,P05,Clarion Pack,C,210.76,25.2
+IP00778,buy,,Ivory Crest,C,555.22,32.6
+IP00779,buy,,Willowby,A,711.37,35.1
+IP00780,buy,,Fixline Eco,B,363.73,39.9
+IP00781,buy,,Corefit Pro,B,410.78,37.2
+IP00782,buy,,Clarion Pack,C,277.61,12.0
+IP00783,make,P01,Juniper,A,1250.37,46.3
+IP00784,buy,,Featherly,C,102.61,29.4
+IP00785,buy,,Servo Eco,B,373.66,47.2
+IP00786,make,P03,Lumen Parts,A,872.84,25.8
+IP00787,make,P04,Formline,C,159.68,22.4
+IP00788,make,P03,Aurel Pro,B,759.18,43.7
+IP00789,make,P01,Velvet Isle,A,844.14,34.3
+IP00790,buy,,Maxspare Max,C,83.74,40.6
+IP00791,buy,,Corefit Pro,B,544.89,38.6
+IP00792,buy,,Sealtek Pro,B,262.84,22.1
+IP00793,make,P02,Clearwave,A,676.16,41.6
+IP00794,make,P04,Snowmere,B,690.78,38.8
+IP00795,buy,,Fixline Max,A,752.18,52.7
+IP00796,buy,,Lumen Parts,B,384.12,18.4
+IP00797,buy,,Packright,B,543.74,24.1
+IP00798,make,P02,Brightline Pro,A,1033.71,38.5
+IP00799,make,P02,Cottonvale Pro,B,541.15,31.5
+IP00800,buy,,Maxspare,A,1160.64,37.8
+IP00801,make,P01,Moldex,C,342.78,36.7
+IP00802,buy,,Packright,B,625.93,26.6
+IP00803,make,P02,Clearwave,A,825.88,44.2
+IP00804,buy,,Velvet Isle,C,219.42,42.9
+IP00805,buy,,Maxspare Pro,C,265.44,57.9
+IP00806,buy,,Precisa,B,867.37,21.8
+IP00807,make,P05,Packright Pro,C,151.57,27.8
+IP00808,make,P03,Aurel Pro,A,1427.92,51.0
+IP00809,buy,,Pureleaf,C,41.04,37.2
+IP00810,buy,,Servo,C,85.78,50.9
+IP00811,buy,,Axial Pro,A,966.18,30.7
+IP00812,buy,,Sealtek,A,635.66,27.5
+IP00813,make,P05,Aurel,A,636.27,42.7
+IP00814,buy,,Velvet Isle,A,1187.07,35.9
+IP00815,buy,,Servo,A,1332.72,44.8
+IP00816,buy,,Moldex,A,1175.45,29.0
+IP00817,buy,,Ecofold Pro,B,271.95,46.6
+IP00818,make,P04,Everpure,C,49.41,42.3
+IP00819,make,P04,Willowby,A,1294.87,36.2
+IP00820,buy,,Fixline Pro,B,399.31,32.3
+IP00821,make,P01,Corefit Pro,A,901.74,27.0
+IP00822,buy,,Packright,A,790.47,38.4
+IP00823,make,P05,Aurel,B,333.61,40.2
+IP00824,buy,,Cloudnest,A,973.17,36.5
+IP00825,buy,,Maxspare,A,896.47,44.7
+IP00826,buy,,Moldex Pro,A,1019.58,28.3
+IP00827,make,P04,Ecofold,B,704.45,25.7
+IP00828,make,P05,Halcyon,A,1069.12,35.2
+IP00829,make,P01,Softwell,A,935.29,37.2
+IP00830,buy,,Servo,A,670.29,34.3
+IP00831,make,P01,Lumen Parts Pro,C,99.28,23.1
+IP00832,buy,,Packright Pro,C,106.26,25.9
+IP00833,make,P02,Brightline Pro,B,357.42,46.9
+IP00834,make,P03,Cloudnest,A,1081.38,39.0
+IP00835,buy,,Servo,C,162.87,31.8
+IP00836,make,P01,Moldex,C,287.35,35.2
+IP00837,make,P02,Sealtek,A,823.3,20.9
+IP00838,make,P01,Dawnfield,A,1028.89,35.3
+IP00839,buy,,Cottonvale Pro,B,604.02,35.4
+IP00840,buy,,Maxspare Eco,A,938.12,46.9
+IP00841,make,P04,Axial Pro,C,74.74,21.7
+IP00842,buy,,Formline Pro,A,859.67,29.8
+IP00843,make,P02,Glenbrook,A,807.84,46.4
+IP00844,make,P05,Pureleaf,B,258.37,31.8
+IP00845,buy,,Fixline,A,853.07,54.4
+IP00846,make,P01,Lumen Parts Pro,A,1032.52,28.2
+IP00847,make,P04,Formline Pro,C,17.31,20.3
+IP00848,make,P01,Dawnfield,C,154.37,34.1
+IP00849,make,P03,Cloudnest,A,1298.48,36.3
+IP00850,buy,,Servo Max,A,1406.42,43.6
+IP00851,make,P01,Moldex,A,1056.45,26.0
+IP00852,make,P03,Boxwell,C,311.97,28.0
+IP00853,make,P01,Juniper,A,952.52,40.4
+IP00854,make,P01,Velvet Isle,C,310.03,28.3
+IP00855,buy,,Maxspare Eco,A,992.31,40.7
+IP00856,buy,,Precisa,A,566.59,44.9
+IP00857,buy,,Formline Pro,A,916.71,29.4
+IP00858,make,P04,Everpure,A,1116.0,48.2
+IP00859,make,P04,Snowmere,C,325.7,40.3
+IP00860,buy,,Fixline,A,1313.74,39.1
+IP00861,make,P02,Axial,A,1119.52,30.7
+IP00862,make,P02,Sealtek,B,476.49,30.5
+IP00863,make,P02,Clearwave,A,1456.32,42.4
+IP00864,make,P04,Snowmere Pro,A,666.12,36.0
+IP00865,buy,,Servo,B,335.22,50.4
+IP00866,buy,,Precisa,A,515.98,30.4
+IP00867,buy,,Ecofold Pro,B,731.84,27.6
+IP00868,make,P01,Juniper,A,841.39,45.2
+IP00869,buy,,Pureleaf,A,521.94,39.8
+IP00870,buy,,Maxspare Pro,A,971.17,41.1
+IP00871,buy,,Precisa,B,570.38,29.5
+IP00872,buy,,Sealtek Pro,A,670.82,34.2
+IP00873,make,P03,Brightline,B,514.99,43.1
+IP00874,make,P04,Willowby,B,345.06,43.1
+IP00875,buy,,Maxspare Eco,A,767.46,53.5
+IP00876,buy,,Precisa Pro,A,790.42,34.1
+IP00877,make,P02,Sealtek,C,19.37,25.0
+IP00878,make,P04,Everpure,B,399.69,34.9
+IP00879,buy,,Softwell Pro,A,1009.1,32.0
+IP00880,buy,,Maxspare Eco,A,1293.19,41.0
+IP00881,make,P01,Corefit Pro,C,197.66,31.7
+IP00882,buy,,Sealtek,C,29.09,29.8
+IP00883,make,P05,Ivory Crest,C,303.07,56.7
+IP00884,make,P03,Cottonvale,C,241.63,30.5
+IP00885,buy,,Maxspare,A,1259.89,47.4
+IP00886,buy,,Moldex,C,49.1,29.9
+IP00887,buy,,Sealtek,A,786.98,32.7
+IP00888,make,P02,Glenbrook,A,558.92,40.9
+IP00889,make,P03,Cloudnest,C,95.24,30.3
+IP00890,buy,,Maxspare Max,A,964.15,37.4
+IP00891,buy,,Tritonix,A,1206.79,31.4
+IP00892,make,P05,Clarion Pack,A,916.91,29.8
+IP00893,make,P02,Glenbrook,B,223.52,35.0
+IP00894,make,P03,Cloudnest,A,1086.01,29.4
+IP00895,buy,,Fixline,A,831.14,50.2
+IP00896,make,P01,Tritonix,B,427.81,28.9
+IP00897,buy,,Clarion Pack Pro,A,1231.9,32.6
+IP00898,make,P02,Brightline Pro,A,918.84,42.3
+IP00899,make,P01,Featherly,C,215.49,34.2
+IP00900,buy,,Fixline Max,A,1313.53,49.3
+IP00901,make,P01,Corefit Pro,A,1125.97,28.5
+IP00902,buy,,Formline Pro,C,240.94,24.1
+IP00903,make,P01,Dawnfield,C,65.2,36.5
+IP00904,make,P01,Pureleaf Pro,C,342.46,27.2
+IP00905,buy,,Maxspare,C,137.49,42.6
+IP00906,make,P04,Axial Pro,A,1175.64,28.4
+IP00907,buy,,Ecofold,C,35.33,29.1
+IP00908,make,P01,Juniper,A,803.76,40.5
+IP00909,make,P01,Velvet Isle,B,401.98,32.9
+IP00910,buy,,Servo,A,1436.33,42.3
+IP00911,buy,,Tritonix Pro,C,235.81,33.9
+IP00912,buy,,Formline,A,1122.64,32.6
+IP00913,make,P05,Ivory Crest,B,486.69,38.9
+IP00914,make,P04,Snowmere Pro,A,1189.94,33.9
+IP00915,buy,,Servo,A,988.16,44.6
+IP00916,buy,,Corefit Pro,A,1120.55,29.6
+IP00917,buy,,Packright Pro,A,1132.56,30.1
+IP00918,make,P05,Aurel,A,1586.61,50.5
+IP00919,make,P03,Cloudnest,B,593.64,34.4
+IP00920,buy,,Fixline Eco,A,645.68,47.7
+IP00921,buy,,Moldex,B,355.22,32.4
+IP00922,make,P04,Ecofold,A,1152.14,29.3
+IP00923,make,P02,Fairmist,A,861.44,37.6
+IP00924,buy,,Featherly,B,334.47,36.7
+IP00925,buy,,Fixline Eco,C,111.56,44.9
+IP00926,buy,,Corefit,C,146.15,24.7
+IP00927,buy,,Clarion Pack,B,343.31,26.3
+IP00928,make,P02,Fairmist,C,150.73,42.2
+IP00929,make,P04,Snowmere,B,473.0,33.6
+IP00930,buy,,Fixline Eco,A,1415.63,48.7
+IP00931,buy,,Corefit Pro,B,575.31,28.2
+IP00932,make,P05,Packright Pro,A,930.62,30.7
+IP00933,buy,,Aurel,C,57.48,38.1
+IP00934,buy,,Softwell,B,457.64,34.0
+IP00935,buy,,Maxspare Eco,A,1255.18,50.8
+IP00936,make,P01,Moldex,B,698.84,27.4
+IP00937,make,P03,Boxwell,C,242.11,30.4
+IP00938,make,P01,Juniper,A,808.27,45.1
+IP00939,make,P01,Pureleaf Pro,A,574.19,33.1
+IP00940,buy,,Servo Pro,A,1629.31,50.4
+IP00941,buy,,Axial Pro,A,1135.62,27.0
+IP00942,make,P03,Packright,A,881.58,26.1
+IP00943,make,P02,Clearwave,A,1448.36,47.5
+IP00944,make,P02,Cottonvale Pro,B,1001.12,30.4
+IP00945,buy,,Fixline,A,790.86,38.6
+IP00946,buy,,Lumen Parts Pro,C,166.67,31.2
+IP00947,buy,,Formline,C,87.77,27.0
+IP00948,buy,,Clearwave,C,242.88,43.7
+IP00949,make,P03,Cottonvale,A,1140.45,33.1
+IP00950,buy,,Servo Max,A,1162.03,49.7
+IP00951,make,P02,Axial,A,847.0,36.0
+IP00952,make,P03,Packright,A,807.18,25.4
+IP00953,make,P02,Clearwave,B,660.6,48.2
+IP00954,make,P03,Cloudnest,A,894.66,37.3
+IP00955,buy,,Fixline Eco,A,827.26,37.6
+IP00956,buy,,Axial,B,330.13,31.4
+IP00957,buy,,Boxwell Pro,C,4.47,26.8
+IP00958,buy,,Aurel,C,54.02,48.5
+IP00959,make,P05,Softwell Pro,C,49.95,36.9
+IP00960,buy,,Servo,A,1449.67,41.9
+IP00961,make,P03,Moldex Pro,B,392.42,17.4
+IP00962,make,P02,Sealtek,C,185.46,29.0
+IP00963,make,P05,Aurel,B,349.91,46.0
+IP00964,make,P03,Cloudnest,B,374.68,35.5
+IP00965,buy,,Fixline Pro,C,68.52,54.8
+IP00966,make,P03,Lumen Parts,B,468.75,30.2
+IP00967,buy,,Formline Pro,A,1088.24,26.6
+IP00968,make,P01,Dawnfield,A,462.68,32.4
+IP00969,make,P05,Pureleaf,B,400.0,31.7
+IP00970,buy,,Fixline,A,1278.81,40.2
+IP00971,buy,,Corefit Pro,B,378.35,31.1
+IP00972,make,P02,Sealtek,A,557.63,24.1
+IP00973,make,P02,Brightline Pro,C,70.58,41.6
+IP00974,make,P04,Snowmere Pro,A,1200.02,35.8
+IP00975,buy,,Maxspare Max,C,125.4,50.0
+IP00976,make,P01,Tritonix,A,529.52,26.9
+IP00977,buy,,Packright Pro,C,56.13,28.5
+IP00978,make,P02,Clearwave,A,1257.22,39.3
+IP00979,make,P04,Willowby,A,874.46,39.0
+IP00980,buy,,Servo Eco,B,409.29,48.2
+IP00981,make,P02,Tritonix Pro,A,575.5,30.5
+IP00982,buy,,Sealtek,C,63.73,27.0
+IP00983,make,P01,Dawnfield,B,258.15,40.0
+IP00984,buy,,Cottonvale Pro,B,472.54,36.9
+IP00985,buy,,Maxspare Eco,A,1225.77,45.1
+IP00986,buy,,Moldex Pro,C,199.79,33.1
+IP00987,buy,,Clarion Pack,C,177.56,37.0
+IP00988,make,P03,Aurel Pro,A,1092.29,44.0
+IP00989,make,P01,Featherly,A,1193.83,30.2
+IP00990,buy,,Maxspare Eco,B,758.91,39.5
+IP00991,buy,,Axial,A,1179.04,32.5
+IP00992,buy,,Packright,C,266.1,16.5
+IP00993,make,P04,Everpure,B,430.1,48.7
+IP00994,make,P01,Softwell,A,590.81,34.9
+IP00995,buy,,Servo Eco,A,863.87,52.4
+IP00996,make,P01,Precisa,A,1086.5,29.9
+IP00997,make,P02,Boxwell Pro,A,972.42,18.1
+IP00998,buy,,Ivory Crest,A,1152.29,38.9
+IP00999,make,P04,Snowmere Pro,C,7.15,39.7
+IP01000,buy,,Servo Max,C,96.86,47.1
+IP01001,make,P05,Precisa Pro,A,999.86,29.0
+IP01002,buy,,Sealtek,C,286.74,25.2
+IP01003,make,P02,Clearwave,C,116.45,49.9
+IP01004,buy,,Softwell,A,1079.01,37.5
+IP01005,buy,,Servo Max,A,756.16,43.2
+IP01006,buy,,Lumen Parts,A,731.5,42.5
+IP01007,buy,,Formline Pro,A,817.63,23.7
+IP01008,make,P05,Ivory Crest,A,1320.55,35.9
+IP01009,make,P01,Featherly,A,1306.73,43.4
+IP01010,buy,,Maxspare,B,491.14,46.6
+IP01011,buy,,Tritonix,C,126.65,29.0
+IP01012,make,P05,Clarion Pack,C,32.47,27.6
+IP01013,make,P01,Juniper,C,145.21,46.8
+IP01014,make,P04,Willowby,A,583.5,29.5
+IP01015,buy,,Maxspare,B,422.74,31.1
+IP01016,buy,,Tritonix Pro,B,361.25,32.0
+IP01017,make,P03,Packright,A,867.71,28.7
+IP01018,make,P02,Fairmist,B,453.04,48.6
+IP01019,make,P03,Cottonvale,A,1086.81,34.2
+IP01020,buy,,Maxspare Pro,B,344.22,36.9
+IP01021,buy,,Axial Pro,A,1075.0,36.8
+IP01022,make,P05,Packright Pro,C,122.9,24.8
+IP01023,make,P02,Brightline Pro,A,1487.33,49.8
+IP01024,make,P03,Cottonvale,A,899.37,44.0
+IP01025,buy,,Fixline Eco,B,619.38,51.4
+IP01026,buy,,Moldex,B,513.41,32.5
+IP01027,buy,,Ecofold Pro,A,916.27,21.0
+IP01028,make,P01,Dawnfield,A,747.08,33.8
+IP01029,make,P04,Willowby,C,125.88,28.0
+IP01030,buy,,Maxspare Eco,C,198.43,51.0
+IP01031,make,P03,Moldex Pro,A,1318.19,36.0
+IP01032,buy,,Formline Pro,A,936.16,23.5
+IP01033,make,P05,Aurel,C,192.24,38.3
+IP01034,buy,,Cottonvale Pro,A,1074.65,41.1
+IP01035,buy,,Servo Eco,A,877.77,36.7
+IP01036,buy,,Precisa Pro,C,285.22,26.1
+IP01037,buy,,Boxwell,C,15.89,27.2
+IP01038,make,P03,Aurel Pro,A,1480.88,47.5
+IP01039,buy,,Softwell,A,493.29,35.9
+IP01040,buy,,Maxspare Eco,C,337.67,35.1
+IP01041,buy,,Tritonix Pro,A,957.7,18.1
+IP01042,buy,,Formline,A,1038.01,30.5
+IP01043,make,P04,Everpure,C,117.41,29.0
+IP01044,make,P02,Cottonvale Pro,A,1056.46,45.7
+IP01045,buy,,Fixline Max,A,946.0,34.2
+IP01046,buy,,Corefit Pro,A,674.26,32.0
+IP01047,buy,,Packright Pro,A,914.48,32.1
+IP01048,make,P03,Brightline,A,1163.17,52.4
+IP01049,make,P03,Cottonvale,A,1068.12,38.3
+IP01050,buy,,Fixline Max,A,691.55,37.5
+IP01051,buy,,Moldex,A,1048.42,24.2
+IP01052,buy,,Formline Pro,A,1009.19,30.8
+IP01053,make,P03,Aurel Pro,B,601.89,31.3
+IP01054,make,P04,Snowmere Pro,B,530.72,34.4
+IP01055,buy,,Servo Eco,A,1359.45,47.7
+IP01056,make,P01,Precisa,C,322.75,29.5
+IP01057,buy,,Ecofold Pro,A,492.13,37.7
+IP01058,make,P02,Brightline Pro,A,755.01,38.5
+IP01059,make,P01,Featherly,C,309.92,36.3
+IP01060,buy,,Maxspare Eco,A,1230.79,50.5
+IP01061,buy,,Tritonix Pro,C,152.73,32.6
+IP01062,make,P04,Ecofold,B,351.14,31.6
+IP01063,buy,,Ivory Crest,B,454.22,44.1
+IP01064,make,P03,Cloudnest,A,1196.58,35.3
+IP01065,buy,,Maxspare,A,1348.28,37.2
+IP01066,buy,,Corefit Pro,A,914.06,35.9
+IP01067,buy,,Boxwell,C,280.57,28.0
+IP01068,make,P02,Fairmist,A,952.42,39.2
+IP01069,make,P01,Softwell,C,90.77,32.3
+IP01070,buy,,Servo Pro,A,545.23,48.4
+IP01071,buy,,Precisa Pro,A,1064.69,31.7
+IP01072,buy,,Boxwell,C,206.56,25.1
+IP01073,make,P04,Everpure,A,1261.52,40.3
+IP01074,make,P05,Softwell Pro,A,1254.4,34.1
+IP01075,buy,,Servo Pro,C,192.23,46.6
+IP01076,buy,,Axial Pro,C,246.14,31.4
+IP01077,buy,,Boxwell,B,616.58,24.5
+IP01078,make,P02,Clearwave,A,1301.39,45.2
+IP01079,make,P04,Snowmere Pro,C,99.02,35.7
+IP01080,buy,,Servo,B,626.67,40.8
+IP01081,buy,,Precisa,A,1071.38,28.2
+IP01082,buy,,Formline Pro,B,580.24,27.9
+IP01083,buy,,Aurel Pro,B,551.46,43.1
+IP01084,make,P01,Pureleaf Pro,A,904.23,29.1
+IP01085,buy,,Fixline Pro,A,921.55,45.1
+IP01086,buy,,Corefit,C,284.3,34.7
+IP01087,buy,,Formline Pro,A,1162.28,31.1
+IP01088,buy,,Glenbrook,B,579.14,31.4
+IP01089,make,P04,Snowmere,A,766.53,38.4
+IP01090,buy,,Fixline Pro,A,1230.5,44.0
+IP01091,buy,,Tritonix,B,926.12,30.2
+IP01092,buy,,Ecofold Pro,C,84.15,31.3
+IP01093,buy,,Fairmist,A,914.46,43.0
+IP01094,buy,,Cottonvale,A,781.13,36.2
+IP01095,buy,,Servo Max,B,646.61,38.3
+IP01096,buy,,Moldex Pro,C,349.49,25.2
+IP01097,make,P03,Boxwell,B,426.39,38.2
+IP01098,make,P02,Brightline Pro,B,620.66,47.2
+IP01099,buy,,Cottonvale,C,204.55,30.3
+IP01100,buy,,Servo Pro,A,1636.15,50.6
+IP01101,buy,,Axial Pro,A,797.57,29.1
+IP01102,make,P05,Packright Pro,A,949.5,32.5
+IP01103,make,P02,Fairmist,C,174.44,40.7
+IP01104,make,P04,Snowmere,B,501.44,37.0
+IP01105,buy,,Maxspare Pro,A,968.54,37.0
+IP01106,make,P02,Tritonix Pro,B,305.72,28.3
+IP01107,make,P02,Boxwell Pro,C,158.44,20.3
+IP01108,buy,,Everpure,A,1237.94,32.2
+IP01109,make,P01,Featherly,A,1065.92,28.1
+IP01110,buy,,Servo,B,502.56,55.1
+IP01111,make,P01,Corefit,A,849.59,33.6
+IP01112,make,P02,Boxwell Pro,B,637.17,31.8
+IP01113,buy,,Everpure,A,1094.79,45.3
+IP01114,make,P01,Pureleaf Pro,C,319.9,31.2
+IP01115,buy,,Servo Pro,C,163.35,44.4
+IP01116,buy,,Moldex,C,166.2,40.8
+IP01117,buy,,Packright Pro,C,307.05,22.5
+IP01118,make,P05,Ivory Crest,B,295.13,35.1
+IP01119,make,P05,Pureleaf,A,956.52,34.5
+IP01120,buy,,Servo Max,A,1545.58,59.5
+IP01121,buy,,Lumen Parts Pro,C,47.76,30.0
+IP01122,make,P04,Ecofold,A,704.11,27.5
+IP01123,buy,,Juniper,A,504.14,44.5
+IP01124,make,P01,Velvet Isle,C,67.18,25.8
+IP01125,buy,,Maxspare Max,A,1807.15,55.5
+IP01126,buy,,Axial Pro,B,377.47,24.6
+IP01127,buy,,Ecofold,C,216.44,30.4
+IP01128,make,P05,Aurel,A,591.88,43.2
+IP01129,make,P01,Softwell,A,541.92,30.8
+IP01130,buy,,Servo,A,646.45,41.2
+IP01131,buy,,Lumen Parts,A,556.79,34.0
+IP01132,buy,,Clarion Pack,C,217.04,30.8
+IP01133,make,P02,Brightline Pro,B,287.18,51.5
+IP01134,buy,,Pureleaf Pro,A,1062.31,44.7
+IP01135,buy,,Maxspare Eco,A,720.62,37.3
+IP01136,buy,,Lumen Parts Pro,A,733.59,34.3
+IP01137,buy,,Clarion Pack Pro,B,244.34,12.5
+IP01138,buy,,Glenbrook,A,532.32,41.8
+IP01139,make,P05,Softwell Pro,A,1465.39,42.3
+IP01140,buy,,Maxspare Eco,B,639.58,50.4
+IP01141,buy,,Precisa,A,718.21,33.1
+IP01142,buy,,Boxwell,C,162.38,29.5
+IP01143,make,P02,Fairmist,A,917.81,46.5
+IP01144,make,P01,Featherly,B,238.28,35.6
+IP01145,buy,,Maxspare Max,C,22.62,37.7
+IP01146,buy,,Moldex Pro,A,837.99,29.4
+IP01147,make,P02,Sealtek,B,546.33,35.2
+IP01148,make,P02,Clearwave,B,450.14,33.5
+IP01149,make,P03,Cloudnest,B,465.81,25.7
+IP01150,buy,,Servo,B,400.32,43.9
+IP01151,buy,,Corefit,B,501.5,27.4
+IP01152,make,P03,Packright,C,37.18,37.3
+IP01153,make,P05,Aurel,A,949.37,36.3
+IP01154,make,P03,Cottonvale,C,183.45,35.4
+IP01155,buy,,Servo Eco,B,526.68,41.3
+IP01156,make,P01,Corefit,B,396.34,34.7
+IP01157,make,P03,Boxwell,B,464.8,25.9
+IP01158,buy,,Halcyon,A,1238.94,55.8
+IP01159,buy,,Featherly,A,526.19,29.2
+IP01160,buy,,Fixline,C,239.8,50.9
+IP01161,buy,,Tritonix Pro,C,134.36,30.8
+IP01162,buy,,Packright Pro,B,516.32,26.1
+IP01163,make,P02,Glenbrook,A,1269.78,37.4
+IP01164,buy,,Pureleaf,B,964.27,35.8
+IP01165,buy,,Maxspare Pro,B,318.71,32.0
+IP01166,buy,,Precisa,C,159.51,35.3
+IP01167,buy,,Packright Pro,A,1206.51,31.6
+IP01168,make,P03,Aurel Pro,B,524.53,47.0
+IP01169,buy,,Pureleaf Pro,C,146.99,32.0
+IP01170,buy,,Servo Max,A,1826.03,55.9
+IP01171,make,P01,Precisa,A,848.79,38.2
+IP01172,buy,,Boxwell,C,99.76,34.0
+IP01173,make,P05,Halcyon,C,64.67,37.2
+IP01174,buy,,Softwell Pro,A,988.06,38.0
+IP01175,buy,,Servo Pro,C,69.12,45.5
+IP01176,make,P01,Corefit,C,153.87,26.9
+IP01177,buy,,Packright Pro,C,38.85,29.7
+IP01178,make,P01,Juniper,A,1065.53,45.4
+IP01179,make,P03,Cottonvale,B,499.94,29.0
+IP01180,buy,,Fixline,A,1157.3,49.2
+IP01181,buy,,Lumen Parts Pro,A,1107.88,35.5
+IP01182,buy,,Sealtek Pro,C,252.45,30.7
+IP01183,make,P02,Clearwave,C,277.22,47.1
+IP01184,buy,,Cottonvale,A,1257.36,35.6
+IP01185,buy,,Maxspare Max,A,540.61,49.0
+IP01186,buy,,Lumen Parts Pro,A,843.89,29.9
+IP01187,buy,,Clarion Pack Pro,A,712.72,27.9
+IP01188,make,P02,Glenbrook,A,1265.11,45.4
+IP01189,make,P01,Pureleaf Pro,C,47.14,27.9
+IP01190,buy,,Fixline,A,1164.81,42.0
+IP01191,buy,,Lumen Parts Pro,A,779.65,25.5
+IP01192,make,P04,Ecofold,B,367.19,25.2
+IP01193,make,P03,Brightline,B,785.56,38.3
+IP01194,make,P04,Snowmere,C,87.94,40.9
+IP01195,buy,,Fixline Pro,C,526.61,42.4
+IP01196,buy,,Moldex Pro,C,56.09,39.6
+IP01197,buy,,Boxwell,B,551.14,26.4
+IP01198,make,P05,Halcyon,A,668.8,47.7
+IP01199,buy,,Snowmere,C,81.66,35.5
+IP01200,buy,,Servo,A,1677.56,49.5
+IP01201,buy,,Corefit Pro,C,104.16,31.3
+IP01202,buy,,Sealtek Pro,A,646.47,31.7
+IP01203,make,P04,Everpure,A,939.61,37.9
+IP01204,make,P01,Velvet Isle,C,336.74,33.1
+IP01205,buy,,Maxspare Eco,B,904.03,49.4
+IP01206,make,P01,Moldex,B,407.49,36.2
+IP01207,buy,,Sealtek,C,13.87,33.4
+IP01208,make,P05,Ivory Crest,A,842.61,38.0
+IP01209,make,P01,Pureleaf Pro,A,883.6,31.3
+IP01210,buy,,Servo Eco,A,1282.08,52.0
+IP01211,buy,,Axial Pro,C,26.18,31.1
+IP01212,buy,,Sealtek,B,289.77,30.0
+IP01213,make,P01,Dawnfield,A,845.03,41.8
+IP01214,make,P05,Pureleaf,A,1118.82,36.6
+IP01215,buy,,Fixline Pro,A,866.69,48.1
+IP01216,buy,,Axial,B,378.67,33.9
+IP01217,buy,,Sealtek Pro,B,374.17,25.0
+IP01218,make,P02,Brightline Pro,B,366.21,38.2
+IP01219,buy,,Softwell Pro,A,656.35,48.5
+IP01220,buy,,Maxspare Pro,A,1050.13,40.4
+IP01221,make,P02,Tritonix Pro,B,381.16,27.7
+IP01222,make,P03,Packright,A,1002.15,24.6
+IP01223,make,P05,Halcyon,A,643.41,41.0
+IP01224,make,P04,Snowmere,B,421.61,30.3
+IP01225,buy,,Maxspare Pro,A,1306.55,53.1
+IP01226,make,P01,Moldex,C,333.36,34.2
+IP01227,buy,,Boxwell Pro,A,973.02,28.5
+IP01228,buy,,Aurel,A,1438.48,41.5
+IP01229,make,P01,Velvet Isle,B,372.27,46.8
+IP01230,buy,,Maxspare Max,A,1694.46,54.5
+IP01231,make,P01,Corefit,C,92.2,35.5
+IP01232,make,P03,Sealtek Pro,C,57.31,30.1
+IP01233,make,P04,Everpure,A,750.75,43.9
+IP01234,make,P01,Featherly,A,762.72,35.6
+IP01235,buy,,Servo Eco,B,242.7,35.3
+IP01236,buy,,Lumen Parts,C,5.63,38.2
+IP01237,buy,,Clarion Pack Pro,C,59.92,36.1
+IP01238,make,P01,Dawnfield,C,117.05,40.3
+IP01239,make,P02,Cottonvale Pro,C,190.03,42.0
+IP01240,buy,,Fixline Eco,A,664.74,34.8
+IP01241,buy,,Corefit,A,818.77,33.1
+IP01242,make,P02,Sealtek,A,870.95,26.4
+IP01243,buy,,Aurel Pro,B,464.73,47.8
+IP01244,make,P04,Willowby,A,1249.95,34.6
+IP01245,buy,,Fixline Pro,A,1314.18,48.8
+IP01246,make,P02,Axial,C,263.51,25.9
+IP01247,buy,,Sealtek Pro,A,1110.98,28.8
+IP01248,make,P02,Brightline Pro,C,5.85,35.2
+IP01249,make,P04,Snowmere Pro,C,68.98,45.1
+IP01250,buy,,Fixline Pro,A,482.12,39.7
+IP01251,buy,,Moldex Pro,A,687.08,19.9
+IP01252,make,P04,Clarion Pack Pro,B,557.7,24.0
+IP01253,make,P02,Fairmist,A,1155.53,34.5
+IP01254,buy,,Velvet Isle,B,536.73,30.8
+IP01255,buy,,Maxspare Max,B,688.58,37.5
+IP01256,buy,,Corefit Pro,B,497.78,24.7
+IP01257,buy,,Sealtek Pro,A,786.51,27.0
+IP01258,make,P04,Everpure,B,284.78,35.0
+IP01259,make,P01,Pureleaf Pro,A,915.88,27.2
+IP01260,buy,,Fixline Pro,C,271.24,55.5
+IP01261,make,P01,Corefit,A,735.68,30.1
+IP01262,buy,,Packright,C,109.3,23.3
+IP01263,make,P05,Ivory Crest,B,380.66,38.2
+IP01264,make,P01,Velvet Isle,A,868.99,34.6
+IP01265,buy,,Maxspare Max,A,1253.21,37.3
+IP01266,buy,,Axial,B,744.14,34.5
+IP01267,make,P03,Packright,C,279.04,35.5
+IP01268,make,P02,Glenbrook,A,659.67,57.1
+IP01269,buy,,Softwell,A,644.08,41.7
+IP01270,buy,,Maxspare Pro,A,575.71,31.5
+IP01271,buy,,Axial,C,331.07,15.9
+IP01272,make,P04,Formline,A,1264.8,33.3
+IP01273,make,P05,Aurel,A,601.66,41.1
+IP01274,buy,,Velvet Isle,A,1027.86,36.0
+IP01275,buy,,Maxspare,B,272.56,50.0
+IP01276,buy,,Moldex Pro,B,566.31,42.5
+IP01277,make,P02,Sealtek,A,979.97,32.1
+IP01278,make,P05,Aurel,A,1208.11,37.7
+IP01279,buy,,Pureleaf Pro,A,1258.46,40.9
+IP01280,buy,,Servo Pro,B,349.54,50.0
+IP01281,buy,,Axial,A,897.71,35.9
+IP01282,buy,,Packright,A,648.43,29.1
+IP01283,make,P05,Halcyon,A,771.27,49.5
+IP01284,make,P03,Cloudnest,A,1058.28,27.8
+IP01285,buy,,Fixline Max,B,490.35,45.7
+IP01286,buy,,Axial,B,416.44,32.5
+IP01287,make,P04,Ecofold,C,184.97,26.3
+IP01288,make,P05,Aurel,A,1381.76,44.2
+IP01289,make,P01,Pureleaf Pro,A,1069.78,40.5
+IP01290,buy,,Maxspare,A,824.44,45.9
+IP01291,buy,,Corefit Pro,C,39.05,24.3
+IP01292,make,P04,Formline Pro,B,385.59,30.6
+IP01293,make,P01,Dawnfield,C,102.79,41.6
+IP01294,make,P04,Snowmere Pro,A,1023.7,35.9
+IP01295,buy,,Servo Eco,B,501.43,47.7
+IP01296,buy,,Precisa,A,992.8,34.0
+IP01297,buy,,Ecofold Pro,C,136.42,28.7
+IP01298,make,P01,Juniper,B,204.55,30.5
+IP01299,make,P04,Snowmere,A,1348.29,37.5
+IP01300,buy,,Maxspare Eco,C,61.7,37.0
+IP01301,buy,,Precisa,C,178.15,31.8
+IP01302,buy,,Boxwell Pro,A,658.45,25.8
+IP01303,buy,,Ivory Crest,A,1198.51,42.4
+IP01304,make,P01,Pureleaf Pro,A,1092.12,41.5
+IP01305,buy,,Fixline Eco,A,746.48,31.5
+IP01306,buy,,Corefit Pro,C,44.01,31.5
+IP01307,buy,,Packright,C,203.68,35.6
+IP01308,make,P01,Dawnfield,A,1400.94,51.1
+IP01309,buy,,Featherly,A,658.68,29.5
+IP01310,buy,,Fixline Pro,B,445.04,47.4
+IP01311,make,P01,Moldex,B,485.15,28.9
+IP01312,buy,,Clarion Pack,A,586.51,18.3
+IP01313,make,P01,Juniper,A,837.72,39.9
+IP01314,buy,,Snowmere,B,488.31,39.1
+IP01315,buy,,Servo Pro,A,917.82,42.2
+IP01316,make,P03,Lumen Parts,B,342.16,24.9
+IP01317,buy,,Boxwell,C,21.77,19.0
+IP01318,make,P03,Brightline,C,249.79,29.3
+IP01319,make,P01,Velvet Isle,C,9.13,34.7
+IP01320,buy,,Maxspare Eco,A,727.53,51.9
+IP01321,buy,,Corefit Pro,C,67.71,34.4
+IP01322,buy,,Sealtek Pro,A,978.19,33.2
+IP01323,make,P01,Dawnfield,A,1343.82,48.2
+IP01324,make,P05,Softwell Pro,A,1130.6,28.7
+IP01325,buy,,Maxspare Max,A,741.27,37.9
+IP01326,buy,,Moldex,B,392.56,44.6
+IP01327,buy,,Packright Pro,C,297.36,26.9
+IP01328,make,P03,Aurel Pro,B,699.95,62.3
+IP01329,make,P02,Cottonvale Pro,B,395.82,36.1
+IP01330,buy,,Servo Pro,A,1426.84,45.5
+IP01331,buy,,Corefit Pro,A,571.6,30.7
+IP01332,make,P03,Packright,C,13.37,34.4
+IP01333,make,P05,Aurel,B,361.1,46.2
+IP01334,make,P05,Softwell Pro,A,1201.7,38.2
+IP01335,buy,,Maxspare Pro,A,699.49,45.4
+IP01336,buy,,Precisa Pro,C,18.21,31.9
+IP01337,make,P04,Formline,B,476.46,28.8
+IP01338,make,P03,Brightline,C,193.27,39.1
+IP01339,make,P03,Cloudnest,A,1124.03,38.9
+IP01340,buy,,Servo Pro,A,1223.12,34.4
+IP01341,make,P05,Precisa Pro,B,420.18,32.4
+IP01342,buy,,Boxwell Pro,C,14.5,29.7
+IP01343,buy,,Brightline,A,1212.77,36.1
+IP01344,make,P01,Pureleaf Pro,C,267.01,32.8
+IP01345,buy,,Servo,A,1164.6,30.6
+IP01346,buy,,Tritonix Pro,B,400.77,36.3
+IP01347,buy,,Ecofold,A,838.46,29.2
+IP01348,make,P02,Fairmist,B,631.13,36.9
+IP01349,make,P03,Cloudnest,C,222.49,35.4
+IP01350,buy,,Fixline Eco,B,633.48,40.3
+IP01351,make,P01,Precisa,A,836.39,20.6
+IP01352,buy,,Ecofold Pro,C,146.45,25.4
+IP01353,make,P02,Clearwave,A,1331.2,40.2
+IP01354,make,P01,Pureleaf Pro,A,758.29,35.2
+IP01355,buy,,Fixline Max,B,575.48,52.0
+IP01356,buy,,Axial Pro,A,1019.79,32.6
+IP01357,make,P04,Ecofold,A,1179.23,33.6
+IP01358,make,P03,Brightline,A,858.78,35.3
+IP01359,buy,,Softwell,A,544.61,35.3
+IP01360,buy,,Maxspare Pro,C,80.98,37.7
+IP01361,make,P05,Precisa Pro,B,445.95,32.6
+IP01362,make,P02,Ecofold Pro,B,450.09,24.1
+IP01363,make,P01,Dawnfield,B,303.72,32.2
+IP01364,buy,,Pureleaf Pro,A,758.87,30.7
+IP01365,buy,,Fixline,B,266.76,58.6
+IP01366,buy,,Moldex Pro,C,246.06,25.8
+IP01367,buy,,Boxwell Pro,A,733.99,28.1
+IP01368,make,P01,Juniper,C,206.57,30.0
+IP01369,make,P04,Willowby,B,377.12,46.1
+IP01370,buy,,Servo Max,A,923.86,33.2
+IP01371,buy,,Moldex Pro,C,77.39,31.9
+IP01372,buy,,Formline Pro,C,121.19,20.9
+IP01373,make,P05,Aurel,B,647.6,37.4
+IP01374,make,P01,Pureleaf Pro,A,580.95,36.6
+IP01375,buy,,Fixline,A,731.13,60.1
+IP01376,make,P02,Tritonix Pro,A,1188.22,38.2
+IP01377,buy,,Sealtek,C,155.73,21.4
+IP01378,make,P02,Brightline Pro,B,404.87,38.8
+IP01379,buy,,Cottonvale Pro,A,1143.13,36.7
+IP01380,buy,,Maxspare Max,A,1618.48,51.4
+IP01381,buy,,Precisa Pro,A,946.3,27.6
+IP01382,buy,,Formline,A,852.7,25.6
+IP01383,buy,,Brightline,A,676.74,43.9
+IP01384,make,P01,Velvet Isle,B,718.12,40.3
+IP01385,buy,,Servo,C,215.97,44.4
+IP01386,buy,,Corefit,C,75.71,27.9
+IP01387,make,P03,Packright,A,817.69,29.5
+IP01388,buy,,Brightline Pro,A,1745.31,52.5
+IP01389,make,P02,Cottonvale Pro,B,497.4,25.0
+IP01390,buy,,Fixline Eco,A,1118.69,46.4
+IP01391,buy,,Tritonix,A,928.51,28.8
+IP01392,buy,,Sealtek,A,740.52,28.5
+IP01393,make,P05,Ivory Crest,A,848.06,42.7
+IP01394,buy,,Snowmere,A,813.16,41.2
+IP01395,buy,,Fixline,A,1217.85,39.6
+IP01396,buy,,Corefit Pro,A,847.76,29.1
+IP01397,make,P04,Ecofold,A,1077.02,24.2
+IP01398,make,P02,Clearwave,A,1212.53,36.0
+IP01399,buy,,Cottonvale,C,154.04,32.4
+IP01400,buy,,Servo Max,C,142.38,52.2
+IP01401,buy,,Lumen Parts Pro,A,718.48,41.4
+IP01402,buy,,Clarion Pack Pro,A,671.98,22.3
+IP01403,make,P02,Fairmist,A,1479.66,46.4
+IP01404,make,P05,Pureleaf,C,328.54,40.4
+IP01405,buy,,Fixline Max,B,327.27,48.8
+IP01406,buy,,Tritonix,C,91.89,24.2
+IP01407,buy,,Formline,A,1082.03,24.8
+IP01408,make,P02,Brightline Pro,A,1152.04,55.0
+IP01409,buy,,Pureleaf Pro,B,444.9,33.0
+IP01410,buy,,Maxspare Max,A,872.81,50.2
+IP01411,buy,,Precisa,C,142.87,29.5
+IP01412,buy,,Sealtek Pro,B,528.56,20.8
+IP01413,make,P03,Brightline,A,1199.88,35.2
+IP01414,make,P04,Willowby,C,290.2,34.8
+IP01415,buy,,Fixline Max,C,43.11,30.5
+IP01416,make,P01,Corefit,A,1333.91,39.4
+IP01417,buy,,Formline,A,1072.02,25.9
+IP01418,make,P02,Fairmist,C,95.73,39.4
+IP01419,make,P03,Cottonvale,A,538.86,33.2
+IP01420,buy,,Servo Eco,A,1598.13,51.4
+IP01421,buy,,Lumen Parts Pro,B,535.97,34.8
+IP01422,make,P04,Ecofold,B,502.54,32.0
+IP01423,make,P02,Glenbrook,A,1586.47,48.4
+IP01424,make,P01,Velvet Isle,A,578.59,34.1
+IP01425,buy,,Maxspare Pro,A,1900.59,56.2
+IP01426,buy,,Tritonix Pro,A,1039.68,33.9
+IP01427,make,P03,Sealtek Pro,C,123.7,24.0
+IP01428,buy,,Halcyon,A,1372.44,42.3
+IP01429,buy,,Pureleaf,B,422.53,41.4
+IP01430,buy,,Servo Max,A,644.53,36.6
+IP01431,buy,,Lumen Parts,A,892.62,25.5
+IP01432,buy,,Formline Pro,B,376.64,28.2
+IP01433,make,P02,Clearwave,A,1281.31,40.6
+IP01434,buy,,Velvet Isle,A,1034.06,35.7
+IP01435,buy,,Maxspare Eco,B,618.03,46.2
+IP01436,buy,,Tritonix Pro,C,15.28,36.9
+IP01437,buy,,Ecofold Pro,C,16.85,45.0
+IP01438,make,P03,Aurel Pro,A,1351.2,47.4
+IP01439,buy,,Snowmere,C,108.61,42.6
+IP01440,buy,,Maxspare Eco,C,14.3,35.8
+IP01441,buy,,Tritonix,C,109.99,23.2
+IP01442,make,P03,Packright,B,532.56,27.0
+IP01443,make,P05,Ivory Crest,B,743.81,32.2
+IP01444,make,P03,Cloudnest,A,1294.72,38.8
+IP01445,buy,,Servo Eco,A,900.38,49.9
+IP01446,buy,,Moldex,A,1186.74,35.3
+IP01447,buy,,Packright Pro,A,785.28,22.2
+IP01448,make,P02,Glenbrook,A,988.45,43.8
+IP01449,buy,,Snowmere Pro,B,310.05,36.3
+IP01450,buy,,Maxspare Pro,C,386.53,34.2
+IP01451,make,P01,Corefit,C,72.04,23.4
+IP01452,make,P02,Boxwell Pro,B,424.27,35.2
+IP01453,make,P03,Aurel Pro,C,93.47,42.9
+IP01454,make,P01,Featherly,A,984.27,35.8
+IP01455,buy,,Maxspare,A,943.37,51.3
+IP01456,make,P04,Axial Pro,C,415.42,35.1
+IP01457,make,P05,Clarion Pack,A,578.42,18.6
+IP01458,make,P05,Halcyon,B,364.86,45.1
+IP01459,make,P01,Pureleaf Pro,C,226.99,33.6
+IP01460,buy,,Fixline Pro,A,1079.67,45.8
+IP01461,make,P01,Corefit,C,52.22,26.2
+IP01462,make,P05,Packright Pro,A,1068.68,25.0
+IP01463,make,P01,Dawnfield,A,1063.98,38.5
+IP01464,make,P01,Pureleaf Pro,B,700.95,43.2
+IP01465,buy,,Fixline Pro,C,117.83,44.3
+IP01466,buy,,Tritonix,A,875.28,24.4
+IP01467,make,P02,Boxwell Pro,B,359.02,31.5
+IP01468,make,P03,Brightline,C,94.64,43.8
+IP01469,make,P05,Pureleaf,C,96.67,33.0
+IP01470,buy,,Servo Pro,A,594.8,37.5
+IP01471,buy,,Moldex Pro,B,413.37,27.6
+IP01472,buy,,Ecofold,B,524.07,39.8
+IP01473,make,P01,Juniper,C,144.59,29.6
+IP01474,make,P04,Snowmere,C,26.9,35.5
+IP01475,buy,,Fixline Max,C,110.55,41.7
+IP01476,make,P01,Corefit Pro,A,856.91,23.0
+IP01477,make,P04,Formline,A,651.68,28.5
+IP01478,make,P03,Brightline,C,273.06,36.5
+IP01479,make,P02,Cottonvale Pro,A,583.09,36.0
+IP01480,buy,,Fixline Eco,C,132.36,57.6
+IP01481,buy,,Moldex,C,98.54,24.0
+IP01482,make,P04,Formline,A,692.01,32.0
+IP01483,make,P02,Glenbrook,C,44.51,55.9
+IP01484,make,P01,Featherly,A,619.06,35.0
+IP01485,buy,,Maxspare,A,1606.47,54.1
+IP01486,make,P05,Precisa Pro,A,740.2,40.5
+IP01487,buy,,Formline,B,312.65,18.8
+IP01488,buy,,Glenbrook,B,303.95,40.7
+IP01489,make,P04,Willowby,B,984.51,36.6
+IP01490,buy,,Fixline,A,704.78,41.9
+IP01491,buy,,Axial Pro,C,199.72,42.9
+IP01492,buy,,Boxwell,C,176.67,22.2
+IP01493,make,P02,Clearwave,A,1137.01,42.5
+IP01494,buy,,Willowby,C,151.49,37.1
+IP01495,buy,,Fixline Eco,A,669.95,44.6
+IP01496,make,P01,Precisa,A,459.08,29.4
+IP01497,buy,,Boxwell,A,1011.25,20.6
+IP01498,make,P02,Clearwave,A,1269.66,43.6
+IP01499,buy,,Pureleaf Pro,C,11.67,35.5
+IP01500,buy,,Maxspare Pro,A,1304.02,45.5
+IP01501,make,P01,Lumen Parts Pro,A,766.36,40.6
+IP01502,buy,,Clarion Pack,A,823.8,20.7
+IP01503,buy,,Ivory Crest,C,283.5,40.9
+IP01504,make,P01,Softwell,B,942.22,40.6
+IP01505,buy,,Servo Pro,B,405.06,32.2
+IP01506,buy,,Moldex Pro,A,1035.04,31.8
+IP01507,make,P03,Sealtek Pro,C,168.36,20.6
+IP01508,make,P02,Glenbrook,C,119.6,34.3
+IP01509,make,P01,Pureleaf Pro,A,893.83,34.7
+IP01510,buy,,Maxspare Max,A,1196.8,45.0
+IP01511,make,P05,Precisa Pro,B,643.11,35.1
+IP01512,buy,,Clarion Pack Pro,B,214.77,39.0
+IP01513,make,P05,Aurel,C,132.54,35.0
+IP01514,make,P05,Pureleaf,A,790.14,30.5
+IP01515,buy,,Maxspare Max,A,1829.91,66.0
+IP01516,buy,,Moldex Pro,C,354.96,33.5
+IP01517,buy,,Boxwell,A,898.77,23.7
+IP01518,buy,,Brightline Pro,A,1004.04,37.9
+IP01519,make,P01,Softwell,B,451.64,41.6
+IP01520,buy,,Fixline Max,B,542.24,52.3
+IP01521,buy,,Precisa,A,1238.5,34.0
+IP01522,buy,,Sealtek,C,314.88,36.9
+IP01523,buy,,Ivory Crest,B,667.29,48.4
+IP01524,buy,,Pureleaf,A,1241.73,39.9
+IP01525,buy,,Servo Pro,B,473.22,52.8
+IP01526,make,P03,Moldex Pro,B,718.44,29.6
+IP01527,buy,,Clarion Pack,A,836.24,27.1
+IP01528,make,P01,Dawnfield,A,880.35,36.8
+IP01529,buy,,Featherly,B,356.29,32.9
+IP01530,buy,,Servo Eco,C,283.53,51.5
+IP01531,make,P01,Tritonix,B,464.21,25.4
+IP01532,buy,,Clarion Pack,B,529.83,24.3
+IP01533,make,P02,Fairmist,A,1465.93,43.5
+IP01534,make,P04,Snowmere Pro,A,414.29,39.4
+IP01535,buy,,Fixline Max,B,351.53,40.4
+IP01536,buy,,Tritonix Pro,C,106.99,30.9
+IP01537,make,P03,Packright,A,1061.64,29.9
+IP01538,make,P02,Glenbrook,A,1509.64,43.8
+IP01539,buy,,Pureleaf,A,1395.5,44.0
+IP01540,buy,,Servo,B,319.77,44.2
+IP01541,buy,,Moldex,B,480.82,34.2
+IP01542,make,P04,Clarion Pack Pro,A,990.34,21.4
+IP01543,make,P05,Halcyon,A,1084.5,51.6
+IP01544,make,P01,Pureleaf Pro,A,779.94,37.3
+IP01545,buy,,Fixline,C,92.37,38.7
+IP01546,buy,,Axial Pro,A,857.58,25.5
+IP01547,make,P04,Formline,C,48.52,35.0
+IP01548,buy,,Aurel,C,154.46,36.6
+IP01549,make,P01,Softwell,A,618.9,30.7
+IP01550,buy,,Servo Pro,A,898.46,40.3
+IP01551,make,P01,Precisa,A,1161.37,30.5
+IP01552,buy,,Sealtek Pro,A,1225.05,35.0
+IP01553,make,P03,Brightline,A,1116.58,50.0
+IP01554,make,P04,Snowmere Pro,B,459.24,39.1
+IP01555,buy,,Maxspare Max,A,1473.8,46.9
+IP01556,buy,,Axial Pro,C,275.08,26.4
+IP01557,buy,,Packright Pro,A,972.42,31.7
+IP01558,buy,,Clearwave,A,1479.2,50.1
+IP01559,make,P03,Cloudnest,A,801.81,40.9
+IP01560,buy,,Fixline Max,B,435.89,50.4
+IP01561,buy,,Axial,C,50.98,33.9
+IP01562,make,P02,Boxwell Pro,A,935.98,26.1
+IP01563,make,P02,Brightline Pro,A,1007.09,55.6
+IP01564,make,P05,Pureleaf,A,732.75,32.1
+IP01565,buy,,Fixline Eco,B,405.17,43.3
+IP01566,buy,,Axial,C,117.64,26.8
+IP01567,buy,,Formline Pro,C,229.67,26.7
+IP01568,make,P01,Juniper,A,1388.41,47.9
+IP01569,make,P01,Velvet Isle,A,1188.89,36.7
+IP01570,buy,,Maxspare Eco,A,1408.11,44.3
+IP01571,buy,,Tritonix Pro,A,935.5,24.6
+IP01572,make,P05,Clarion Pack,A,1034.65,25.8
+IP01573,make,P05,Aurel,B,841.92,38.0
+IP01574,make,P05,Softwell Pro,A,1201.0,35.2
+IP01575,buy,,Servo Eco,A,1455.23,46.7
+IP01576,buy,,Axial,B,394.75,33.9
+IP01577,make,P04,Formline,A,775.13,32.6
+IP01578,buy,,Aurel,B,333.57,35.8
+IP01579,make,P01,Velvet Isle,B,563.65,36.5
+IP01580,buy,,Servo Max,A,1356.72,38.4
+IP01581,make,P04,Axial Pro,B,582.11,35.6
+IP01582,buy,,Clarion Pack Pro,B,395.43,33.5
+IP01583,make,P05,Aurel,A,1023.45,38.6
+IP01584,buy,,Willowby,A,748.26,37.9
+IP01585,buy,,Fixline,A,1382.51,42.3
+IP01586,buy,,Axial,B,354.07,24.6
+IP01587,make,P04,Formline Pro,C,148.19,23.2
+IP01588,buy,,Clearwave,B,370.27,48.7
+IP01589,make,P02,Cottonvale Pro,A,1006.18,29.6
+IP01590,buy,,Servo,A,1639.66,53.4
+IP01591,buy,,Tritonix,C,376.4,31.6
+IP01592,buy,,Formline,A,659.35,26.0
+IP01593,make,P05,Ivory Crest,C,259.78,58.9
+IP01594,make,P03,Cloudnest,A,1131.76,47.8
+IP01595,buy,,Fixline Max,C,200.23,52.9
+IP01596,buy,,Precisa,A,712.86,38.1
+IP01597,make,P03,Sealtek Pro,A,677.63,25.6
+IP01598,make,P04,Everpure,A,1177.98,41.7
+IP01599,make,P05,Softwell Pro,A,1066.22,32.5
+IP01600,buy,,Servo Eco,C,184.72,49.8
+IP01601,make,P03,Moldex Pro,A,1271.22,40.9
+IP01602,make,P04,Ecofold,C,206.92,26.0
+IP01603,make,P02,Glenbrook,C,267.59,41.1
+IP01604,buy,,Cloudnest,C,228.21,25.0
+IP01605,buy,,Maxspare Pro,A,666.51,54.1
+IP01606,buy,,Corefit Pro,C,258.82,26.2
+IP01607,make,P04,Formline,B,924.98,29.7
+IP01608,make,P05,Halcyon,B,678.85,37.6
+IP01609,make,P04,Willowby,A,655.18,44.0
+IP01610,buy,,Maxspare Max,A,1471.12,48.0
+IP01611,buy,,Tritonix Pro,C,135.25,28.8
+IP01612,make,P02,Ecofold Pro,A,679.9,33.2
+IP01613,make,P02,Glenbrook,C,8.03,44.3
+IP01614,make,P05,Softwell Pro,C,85.33,23.6
+IP01615,buy,,Servo Pro,B,498.48,49.5
+IP01616,buy,,Moldex,A,612.62,36.2
+IP01617,buy,,Clarion Pack,B,453.11,31.8
+IP01618,make,P05,Halcyon,A,958.09,26.2
+IP01619,buy,,Softwell Pro,B,291.06,31.0
+IP01620,buy,,Fixline Max,A,1485.2,60.8
+IP01621,buy,,Lumen Parts Pro,A,736.83,39.7
+IP01622,buy,,Packright,B,615.8,25.7
+IP01623,make,P05,Halcyon,B,550.6,39.7
+IP01624,buy,,Pureleaf,C,173.33,32.7
+IP01625,buy,,Maxspare Eco,A,1495.32,48.9
+IP01626,make,P01,Corefit,B,581.8,33.8
+IP01627,buy,,Boxwell Pro,A,1076.69,28.3
+IP01628,buy,,Aurel,B,433.91,34.0
+IP01629,buy,,Cottonvale Pro,C,246.11,30.9
+IP01630,buy,,Fixline Max,A,1123.81,36.0
+IP01631,buy,,Precisa Pro,A,1361.61,37.8
+IP01632,buy,,Clarion Pack Pro,B,317.05,33.5
+IP01633,buy,,Aurel Pro,A,1246.78,51.0
+IP01634,make,P04,Snowmere Pro,C,202.07,28.0
+IP01635,buy,,Maxspare Max,A,1371.2,55.0
+IP01636,buy,,Tritonix Pro,B,727.21,30.4
+IP01637,make,P04,Ecofold,B,651.94,24.8
+IP01638,buy,,Fairmist,A,1358.57,43.3
+IP01639,make,P04,Snowmere Pro,C,13.08,39.2
+IP01640,buy,,Fixline Max,A,870.04,50.9
+IP01641,make,P01,Tritonix,B,294.4,32.1
+IP01642,buy,,Ecofold Pro,C,213.58,30.4
+IP01643,make,P03,Aurel Pro,A,874.53,46.1
+IP01644,make,P04,Snowmere Pro,A,561.16,40.7
+IP01645,buy,,Maxspare Eco,C,5.62,27.7
+IP01646,buy,,Tritonix Pro,B,416.88,26.2
+IP01647,make,P04,Formline Pro,C,354.21,33.3
+IP01648,buy,,Aurel,A,1129.18,31.3
+IP01649,buy,,Cloudnest,A,545.57,37.5
+IP01650,buy,,Fixline,A,1494.0,45.2
+IP01651,buy,,Lumen Parts Pro,C,94.99,35.3
+IP01652,buy,,Boxwell,B,451.85,23.8
+IP01653,make,P02,Glenbrook,A,1339.35,39.6
+IP01654,make,P05,Pureleaf,A,1124.14,46.1
+IP01655,buy,,Maxspare,A,872.33,44.3
+IP01656,make,P02,Axial,A,1029.74,30.6
+IP01657,make,P02,Boxwell Pro,A,822.14,24.4
+IP01658,make,P05,Ivory Crest,A,1072.09,40.3
+IP01659,buy,,Softwell,A,1238.42,37.3
+IP01660,buy,,Fixline Eco,B,374.11,32.9
+IP01661,make,P01,Corefit,A,1131.8,31.5
+IP01662,make,P02,Boxwell Pro,A,826.15,34.5
+IP01663,buy,,Aurel Pro,A,1386.3,48.4
+IP01664,make,P05,Pureleaf,C,169.37,44.1
+IP01665,buy,,Servo Max,C,185.46,52.9
+IP01666,buy,,Axial,B,299.82,31.5
+IP01667,buy,,Formline Pro,C,290.56,25.2
+IP01668,make,P01,Juniper,A,1661.79,49.2
+IP01669,make,P05,Softwell Pro,A,823.73,27.9
+IP01670,buy,,Maxspare,B,642.26,36.8
+IP01671,make,P01,Lumen Parts Pro,A,1108.21,27.2
+IP01672,buy,,Packright,C,144.76,30.5
+IP01673,make,P05,Halcyon,A,848.87,35.2
+IP01674,make,P04,Willowby,A,1294.96,43.1
+IP01675,buy,,Servo Eco,C,284.82,41.1
+IP01676,buy,,Tritonix,B,560.4,33.2
+IP01677,make,P04,Ecofold,A,981.76,25.7
+IP01678,make,P02,Fairmist,A,840.91,40.8
+IP01679,make,P02,Cottonvale Pro,C,4.91,41.4
+IP01680,buy,,Servo Eco,A,1246.9,37.7
+IP01681,buy,,Lumen Parts,A,930.01,23.0
+IP01682,make,P03,Boxwell,B,253.76,27.7
+IP01683,buy,,Glenbrook,A,719.21,45.8
+IP01684,make,P04,Snowmere,B,232.1,47.5
+IP01685,buy,,Fixline,A,864.62,36.0
+IP01686,buy,,Precisa Pro,C,405.74,27.2
+IP01687,make,P02,Boxwell Pro,A,1174.1,32.2
+IP01688,make,P03,Aurel Pro,A,698.54,38.4
+IP01689,make,P04,Willowby,B,368.91,35.7
+IP01690,buy,,Servo Pro,A,1131.39,42.4
+IP01691,make,P02,Axial,B,480.13,30.6
+IP01692,make,P02,Ecofold Pro,A,1092.89,31.2
+IP01693,make,P02,Brightline Pro,B,436.06,40.4
+IP01694,buy,,Pureleaf,B,340.61,36.2
+IP01695,buy,,Servo Max,A,1411.37,43.6
+IP01696,buy,,Precisa Pro,A,1086.89,28.7
+IP01697,buy,,Sealtek Pro,B,513.21,35.3
+IP01698,make,P01,Dawnfield,A,707.69,35.0
+IP01699,make,P04,Willowby,C,137.42,35.3
+IP01700,buy,,Maxspare,C,140.18,45.7
+IP01701,buy,,Lumen Parts,A,560.82,34.5
+IP01702,buy,,Formline Pro,C,137.59,37.3
+IP01703,make,P03,Brightline,A,1437.25,44.1
+IP01704,make,P01,Softwell,C,111.34,36.0
+IP01705,buy,,Fixline,A,545.33,48.4
+IP01706,make,P01,Lumen Parts Pro,B,560.37,29.5
+IP01707,buy,,Packright Pro,B,483.65,38.6
+IP01708,make,P02,Brightline Pro,C,52.87,39.7
+IP01709,buy,,Cottonvale Pro,A,1444.71,52.2
+IP01710,buy,,Servo Eco,A,749.43,52.8
+IP01711,make,P04,Axial Pro,C,170.92,38.9
+IP01712,make,P04,Formline,B,435.4,26.3
+IP01713,make,P03,Brightline,A,817.03,40.8
+IP01714,make,P01,Velvet Isle,B,691.04,34.5
+IP01715,buy,,Fixline,B,373.61,38.5
+IP01716,buy,,Axial,C,183.27,36.4
+IP01717,buy,,Clarion Pack Pro,C,18.76,32.0
+IP01718,buy,,Clearwave,C,343.35,48.0
+IP01719,make,P01,Featherly,C,137.21,27.0
+IP01720,buy,,Servo,A,574.14,38.6
+IP01721,buy,,Axial Pro,A,1256.69,37.8
+IP01722,buy,,Ecofold Pro,A,831.26,26.8
+IP01723,buy,,Juniper,B,517.81,40.1
+IP01724,buy,,Softwell,A,1088.55,46.9
+IP01725,buy,,Fixline Eco,A,1506.11,46.5
+IP01726,buy,,Axial,A,976.79,42.4
+IP01727,make,P04,Ecofold,B,714.64,21.8
+IP01728,make,P02,Glenbrook,B,287.97,38.9
+IP01729,make,P05,Pureleaf,A,590.17,36.4
+IP01730,buy,,Fixline Pro,C,159.57,34.2
+IP01731,buy,,Tritonix Pro,C,10.04,33.0
+IP01732,make,P02,Ecofold Pro,A,1043.42,24.0
+IP01733,make,P05,Halcyon,A,1048.94,45.2
+IP01734,make,P01,Pureleaf Pro,A,1167.38,37.3
+IP01735,buy,,Servo Eco,A,1668.12,50.1
+IP01736,buy,,Tritonix,A,1245.13,37.4
+IP01737,buy,,Ecofold Pro,B,430.49,28.1
+IP01738,make,P03,Brightline,A,719.78,40.7
+IP01739,make,P05,Softwell Pro,C,204.28,38.1
+IP01740,buy,,Servo,A,1131.86,44.5
+IP01741,make,P03,Lumen Parts,A,730.23,31.4
+IP01742,buy,,Sealtek Pro,C,35.91,27.9
+IP01743,buy,,Glenbrook,B,437.11,34.7
+IP01744,make,P01,Pureleaf Pro,A,1108.54,43.7
+IP01745,buy,,Servo Max,A,846.06,33.0
+IP01746,buy,,Precisa Pro,C,208.5,24.7
+IP01747,make,P02,Ecofold Pro,C,294.5,18.9
+IP01748,make,P02,Clearwave,A,1341.51,40.9
+IP01749,make,P03,Cottonvale,B,545.6,33.7
+IP01750,buy,,Maxspare Max,A,1193.41,41.1
+IP01751,make,P01,Tritonix,B,386.93,28.0
+IP01752,make,P03,Sealtek Pro,A,784.01,38.9
+IP01753,make,P01,Dawnfield,A,444.08,49.0
+IP01754,buy,,Pureleaf Pro,A,936.08,29.4
+IP01755,buy,,Maxspare Max,B,629.86,37.6
+IP01756,make,P03,Lumen Parts,B,318.61,32.2
+IP01757,buy,,Sealtek,B,389.35,32.7
+IP01758,buy,,Fairmist,A,699.0,51.0
+IP01759,make,P05,Softwell Pro,A,1070.51,38.7
+IP01760,buy,,Maxspare Pro,B,844.11,49.6
+IP01761,buy,,Precisa Pro,A,1358.42,37.5
+IP01762,buy,,Boxwell,B,353.65,31.8
+IP01763,buy,,Everpure,B,445.57,47.0
+IP01764,make,P05,Softwell Pro,A,1250.65,35.7
+IP01765,buy,,Fixline,A,754.26,38.3
+IP01766,buy,,Axial Pro,A,926.78,32.7
+IP01767,buy,,Ecofold Pro,A,1116.07,29.0
+IP01768,make,P03,Aurel Pro,A,963.62,38.4
+IP01769,make,P03,Cottonvale,A,592.57,31.2
+IP01770,buy,,Maxspare Eco,A,935.97,46.9
+IP01771,make,P05,Precisa Pro,C,64.84,25.0
+IP01772,buy,,Sealtek,A,1015.21,26.5
+IP01773,make,P03,Brightline,B,721.44,37.5
+IP01774,make,P01,Featherly,C,299.58,28.8
+IP01775,buy,,Maxspare Pro,A,965.91,43.8
+IP01776,buy,,Corefit,A,456.92,33.5
+IP01777,make,P04,Ecofold,C,132.62,29.5
+IP01778,buy,,Aurel Pro,B,260.21,34.1
+IP01779,buy,,Softwell,A,694.79,33.6
+IP01780,buy,,Servo Max,A,1309.98,50.4
+IP01781,buy,,Lumen Parts,B,672.76,24.9
+IP01782,buy,,Ecofold,B,984.64,23.9
+IP01783,make,P04,Everpure,C,178.08,42.2
+IP01784,buy,,Snowmere Pro,A,666.09,30.2
+IP01785,buy,,Fixline Max,A,1306.78,46.6
+IP01786,make,P01,Corefit,A,817.75,24.4
+IP01787,buy,,Boxwell Pro,C,215.5,35.3
+IP01788,make,P02,Clearwave,C,3.3,38.2
+IP01789,make,P04,Willowby,B,741.88,35.0
+IP01790,buy,,Servo Pro,C,197.61,44.7
+IP01791,buy,,Tritonix,A,1139.09,27.7
+IP01792,make,P05,Clarion Pack,A,757.29,26.6
+IP01793,make,P05,Aurel,A,817.55,51.9
+IP01794,make,P01,Velvet Isle,A,1006.56,43.6
+IP01795,buy,,Maxspare,A,866.8,47.8
+IP01796,buy,,Lumen Parts,A,946.8,39.7
+IP01797,buy,,Boxwell Pro,A,1017.35,25.3
+IP01798,make,P03,Brightline,A,1117.55,34.3
+IP01799,make,P01,Featherly,A,785.9,29.1
+IP01800,buy,,Fixline,C,137.95,30.4
+IP01801,make,P05,Precisa Pro,A,1146.88,40.7
+IP01802,buy,,Ecofold,A,1071.25,31.9
+IP01803,make,P03,Aurel Pro,A,1247.46,34.6
+IP01804,make,P01,Pureleaf Pro,C,345.95,35.1
+IP01805,buy,,Maxspare,A,824.29,29.9
+IP01806,make,P01,Lumen Parts Pro,A,961.47,32.1
+IP01807,make,P03,Sealtek Pro,C,287.19,18.4
+IP01808,buy,,Ivory Crest,B,405.81,36.3
+IP01809,make,P01,Softwell,B,440.09,34.5
+IP01810,buy,,Fixline,C,318.96,43.3
+IP01811,buy,,Lumen Parts Pro,B,686.07,38.9
+IP01812,buy,,Packright,B,712.99,28.2
+IP01813,buy,,Juniper,A,646.17,47.3
+IP01814,make,P05,Softwell Pro,A,748.71,41.8
+IP01815,buy,,Maxspare Eco,C,75.65,46.9
+IP01816,buy,,Axial,B,444.45,31.3
+IP01817,buy,,Packright Pro,A,990.27,32.8
+IP01818,make,P05,Halcyon,A,1030.0,53.5
+IP01819,make,P02,Cottonvale Pro,A,497.45,36.0
+IP01820,buy,,Fixline Max,A,1179.97,31.4
+IP01821,buy,,Lumen Parts,A,476.02,24.4
+IP01822,make,P03,Sealtek Pro,C,40.32,32.1
+IP01823,make,P02,Glenbrook,A,1047.1,47.5
+IP01824,make,P03,Cloudnest,A,745.32,44.9
+IP01825,buy,,Maxspare Max,A,403.29,48.1
+IP01826,make,P01,Corefit Pro,A,671.88,33.5
+IP01827,make,P02,Sealtek,C,226.26,27.1
+IP01828,buy,,Clearwave,A,1430.35,43.4
+IP01829,buy,,Snowmere,C,104.19,36.0
+IP01830,buy,,Fixline Eco,A,1143.58,49.4
+IP01831,make,P01,Tritonix,C,78.74,22.9
+IP01832,make,P04,Ecofold,A,744.45,31.2
+IP01833,make,P03,Brightline,A,658.47,43.9
+IP01834,make,P01,Velvet Isle,A,1164.27,42.8
+IP01835,buy,,Maxspare,A,1143.85,43.9
+IP01836,buy,,Lumen Parts,B,444.14,24.6
+IP01837,make,P02,Ecofold Pro,C,119.51,34.5
+IP01838,make,P05,Ivory Crest,B,340.8,38.7
+IP01839,make,P04,Snowmere Pro,A,1372.39,46.9
+IP01840,buy,,Servo Pro,B,688.03,45.2
+IP01841,buy,,Lumen Parts,A,929.48,29.3
+IP01842,buy,,Sealtek,B,266.93,34.8
+IP01843,make,P03,Aurel Pro,C,30.27,41.2
+IP01844,make,P04,Snowmere,A,1205.35,33.1
+IP01845,buy,,Fixline Eco,A,637.47,50.9
+IP01846,buy,,Precisa,A,665.28,39.2
+IP01847,buy,,Clarion Pack Pro,A,708.88,35.8
+IP01848,make,P02,Brightline Pro,C,125.12,31.3
+IP01849,make,P04,Snowmere,A,839.98,38.7
+IP01850,buy,,Fixline,A,1412.78,41.3
+IP01851,buy,,Precisa,A,987.41,33.5
+IP01852,buy,,Formline Pro,C,82.65,32.8
+IP01853,make,P02,Brightline Pro,A,736.02,38.2
+IP01854,make,P01,Featherly,A,875.05,36.8
+IP01855,buy,,Fixline Eco,A,1184.65,45.2
+IP01856,make,P02,Tritonix Pro,A,996.79,22.7
+IP01857,buy,,Boxwell Pro,C,76.34,28.6
+IP01858,make,P02,Glenbrook,A,777.44,41.5
+IP01859,make,P04,Willowby,A,1257.45,40.9
+IP01860,buy,,Fixline Eco,A,1138.83,46.1
+IP01861,make,P04,Axial Pro,A,896.28,40.1
+IP01862,buy,,Ecofold,A,1197.1,30.4
+IP01863,make,P02,Fairmist,A,1578.42,47.5
+IP01864,buy,,Softwell Pro,A,647.75,34.6
+IP01865,buy,,Servo Max,B,986.13,46.8
+IP01866,make,P01,Tritonix,C,244.52,32.8
+IP01867,buy,,Clarion Pack Pro,B,417.14,35.7
+IP01868,make,P04,Everpure,A,605.84,39.9
+IP01869,buy,,Featherly,C,197.81,39.3
+IP01870,buy,,Maxspare Pro,B,552.21,29.8
+IP01871,buy,,Precisa,C,199.23,31.6
+IP01872,make,P02,Boxwell Pro,A,966.56,35.4
+IP01873,make,P02,Fairmist,C,191.84,30.0
+IP01874,buy,,Snowmere Pro,A,1288.75,38.5
+IP01875,buy,,Maxspare Eco,B,764.62,47.2
+IP01876,buy,,Tritonix Pro,A,1012.62,37.4
+IP01877,buy,,Formline Pro,C,28.7,28.4
+IP01878,make,P02,Fairmist,A,1051.83,42.6
+IP01879,make,P01,Softwell,A,933.1,44.2
+IP01880,buy,,Servo Max,B,305.67,53.6
+IP01881,make,P01,Corefit Pro,A,739.14,27.0
+IP01882,make,P04,Clarion Pack Pro,C,47.8,27.8
+IP01883,make,P05,Ivory Crest,C,173.35,45.9
+IP01884,buy,,Softwell,C,10.77,34.9
+IP01885,buy,,Fixline,A,1111.43,35.5
+IP01886,buy,,Tritonix Pro,C,112.31,32.8
+IP01887,buy,,Formline Pro,C,47.97,14.6
+IP01888,make,P02,Glenbrook,A,1374.89,42.5
+IP01889,make,P01,Featherly,A,1219.64,39.3
+IP01890,buy,,Servo Max,A,1509.44,46.6
+IP01891,buy,,Axial Pro,A,1234.78,35.3
+IP01892,buy,,Formline Pro,B,428.53,31.2
+IP01893,make,P05,Ivory Crest,A,1468.73,50.4
+IP01894,make,P01,Featherly,B,351.69,38.3
+IP01895,buy,,Fixline Pro,A,1168.72,42.9
+IP01896,buy,,Tritonix,C,38.14,30.2
+IP01897,make,P04,Formline Pro,A,595.76,28.3
+IP01898,make,P02,Brightline Pro,A,1242.34,38.1
+IP01899,make,P04,Willowby,C,231.8,39.9
+IP01900,buy,,Maxspare Max,A,648.85,43.3
+IP01901,buy,,Tritonix,A,1220.56,36.2
+IP01902,make,P03,Packright,A,830.82,32.9
+IP01903,buy,,Fairmist,A,1304.63,43.4
+IP01904,make,P04,Snowmere,A,995.3,29.3
+IP01905,buy,,Maxspare,A,836.7,38.2
+IP01906,make,P03,Moldex Pro,A,633.09,25.6
+IP01907,make,P02,Sealtek,A,748.48,27.1
+IP01908,make,P05,Aurel,A,1296.11,45.2
+IP01909,buy,,Velvet Isle,A,874.54,43.0
+IP01910,buy,,Maxspare Pro,A,1446.45,41.7
+IP01911,make,P01,Precisa,B,398.43,24.8
+IP01912,buy,,Clarion Pack Pro,A,1102.47,26.3
+IP01913,make,P01,Juniper,A,1069.6,50.4
+IP01914,buy,,Pureleaf Pro,A,1292.21,40.7
+IP01915,buy,,Servo Eco,B,484.72,46.0
+IP01916,buy,,Tritonix,C,137.52,30.7
+IP01917,buy,,Packright Pro,C,299.3,23.1
+IP01918,make,P01,Dawnfield,A,886.76,54.3
+IP01919,buy,,Softwell,B,792.96,34.4
+IP01920,buy,,Servo Max,A,569.49,38.8
+IP01921,make,P02,Axial,B,782.92,32.8
+IP01922,buy,,Packright Pro,C,139.0,22.8
+IP01923,buy,,Halcyon,A,1164.41,43.5
+IP01924,make,P04,Snowmere Pro,B,290.46,36.3
+IP01925,buy,,Fixline Max,A,775.05,40.8
+IP01926,make,P01,Tritonix,C,196.66,32.1
+IP01927,make,P03,Packright,C,246.17,17.5
+IP01928,make,P02,Glenbrook,A,1129.82,49.5
+IP01929,make,P05,Pureleaf,A,828.5,34.0
+IP01930,buy,,Maxspare,B,525.53,37.4
+IP01931,make,P05,Precisa Pro,A,653.79,35.6
+IP01932,make,P04,Clarion Pack Pro,B,479.31,27.5
+IP01933,buy,,Ivory Crest,A,990.39,40.6
+IP01934,make,P02,Cottonvale Pro,A,665.02,36.1
+IP01935,buy,,Fixline Eco,A,819.9,42.3
+IP01936,buy,,Corefit Pro,B,436.55,29.2
+IP01937,buy,,Boxwell Pro,B,485.22,33.1
+IP01938,make,P02,Brightline Pro,A,1013.73,48.5
+IP01939,buy,,Snowmere Pro,A,1612.57,52.9
+IP01940,buy,,Maxspare Max,B,335.85,38.1
+IP01941,buy,,Corefit,A,1143.83,29.2
+IP01942,make,P05,Clarion Pack,B,301.53,19.1
+IP01943,make,P03,Brightline,A,1119.85,40.4
+IP01944,buy,,Softwell Pro,A,1305.54,38.1
+IP01945,buy,,Servo,B,440.91,44.0
+IP01946,buy,,Axial Pro,A,1115.72,34.6
+IP01947,buy,,Formline Pro,B,428.48,30.9
+IP01948,buy,,Juniper,C,4.43,42.7
+IP01949,buy,,Cottonvale,A,855.51,40.3
+IP01950,buy,,Fixline Max,A,1094.86,38.7
+IP01951,buy,,Tritonix Pro,B,582.9,30.4
+IP01952,make,P03,Sealtek Pro,C,284.07,19.1
+IP01953,make,P05,Aurel,A,868.17,40.4
+IP01954,make,P01,Pureleaf Pro,A,778.81,38.6
+IP01955,buy,,Fixline,A,1471.81,44.2
+IP01956,make,P01,Tritonix,C,150.27,30.3
+IP01957,make,P05,Packright Pro,B,430.09,34.7
+IP01958,make,P05,Aurel,B,926.31,46.0
+IP01959,make,P01,Pureleaf Pro,A,1173.02,30.1
+IP01960,buy,,Maxspare,A,1137.23,44.7
+IP01961,buy,,Axial,B,346.48,31.0
+IP01962,make,P03,Sealtek Pro,A,694.09,28.3
+IP01963,buy,,Brightline Pro,C,101.87,34.6
+IP01964,make,P05,Softwell Pro,C,201.47,28.4
+IP01965,buy,,Maxspare,B,786.44,61.2
+IP01966,buy,,Lumen Parts,A,1258.41,35.1
+IP01967,buy,,Sealtek Pro,B,432.59,32.4
+IP01968,make,P05,Halcyon,C,340.43,34.2
+IP01969,make,P01,Pureleaf Pro,C,187.45,23.9
+IP01970,buy,,Maxspare Max,B,586.78,31.0
+IP01971,buy,,Lumen Parts,A,935.66,33.0
+IP01972,buy,,Packright,A,649.1,22.0
+IP01973,make,P01,Dawnfield,B,305.17,44.3
+IP01974,make,P04,Willowby,A,1464.77,44.4
+IP01975,buy,,Maxspare Eco,A,1144.38,35.2
+IP01976,make,P01,Moldex,A,837.15,23.1
+IP01977,make,P03,Boxwell,B,423.34,26.1
+IP01978,make,P04,Everpure,B,501.99,45.7
+IP01979,buy,,Featherly,A,746.11,39.4
+IP01980,buy,,Fixline Pro,C,65.93,52.8
+IP01981,make,P02,Tritonix Pro,C,55.6,24.1
+IP01982,make,P04,Formline,A,936.44,20.7
+IP01983,make,P03,Brightline,B,577.82,47.8
+IP01984,make,P01,Softwell,A,1045.7,32.3
+IP01985,buy,,Fixline Max,C,240.7,29.5
+IP01986,buy,,Axial Pro,A,510.65,22.8
+IP01987,make,P03,Sealtek Pro,A,1049.86,37.8
+IP01988,buy,,Brightline,B,314.78,40.0
+IP01989,make,P05,Softwell Pro,B,381.84,36.5
+IP01990,buy,,Fixline Pro,B,349.85,54.0
+IP01991,buy,,Moldex,C,13.51,34.5
+IP01992,buy,,Ecofold,A,1145.56,29.9
+IP01993,make,P05,Halcyon,A,1086.06,32.2
+IP01994,make,P03,Cloudnest,A,732.8,31.5
+IP01995,buy,,Fixline,B,369.05,37.6
+IP01996,buy,,Axial,B,653.13,30.1
+IP01997,buy,,Formline Pro,A,757.93,27.9
+IP01998,make,P01,Juniper,A,1155.13,48.5
+IP01999,make,P01,Softwell,C,313.33,34.6
+IP02000,buy,,Servo Eco,A,966.31,47.2
+IP02001,buy,,Moldex,B,603.76,25.3
+IP02002,make,P03,Boxwell,B,503.0,25.4
+IP02003,make,P01,Juniper,C,230.46,37.4
+IP02004,make,P04,Snowmere Pro,C,66.86,31.2
+IP02005,buy,,Fixline Pro,B,899.87,52.8
+IP02006,buy,,Precisa Pro,C,330.72,37.8
+IP02007,make,P03,Boxwell,A,1022.77,29.5
+IP02008,make,P01,Dawnfield,A,930.15,54.4
+IP02009,make,P03,Cloudnest,C,173.31,39.5
+IP02010,buy,,Maxspare,C,249.47,43.2
+IP02011,buy,,Lumen Parts Pro,A,1151.13,28.1
+IP02012,make,P04,Clarion Pack Pro,B,268.94,33.8
+IP02013,make,P01,Juniper,B,437.79,34.8
+IP02014,make,P01,Softwell,A,1063.68,33.1
+IP02015,buy,,Servo Max,A,1356.06,39.9
+IP02016,buy,,Moldex Pro,A,540.95,29.5
+IP02017,make,P05,Packright Pro,A,823.28,38.5
+IP02018,buy,,Dawnfield,A,991.47,43.0
+IP02019,make,P03,Cottonvale,B,346.15,35.6
+IP02020,buy,,Fixline Max,A,1262.15,52.6
+IP02021,buy,,Moldex Pro,A,1020.69,23.4
+IP02022,buy,,Boxwell,A,856.89,27.9
+IP02023,buy,,Everpure,B,442.97,46.8
+IP02024,make,P05,Pureleaf,C,243.37,35.4
+IP02025,buy,,Fixline Pro,A,1537.4,55.4
+IP02026,buy,,Precisa Pro,A,806.51,25.0
+IP02027,buy,,Clarion Pack Pro,A,1071.39,30.7
+IP02028,buy,,Clearwave,A,820.45,39.8
+IP02029,make,P01,Softwell,A,1057.75,35.1
+IP02030,buy,,Servo Pro,A,1112.11,45.5
+IP02031,buy,,Moldex Pro,A,764.75,42.5
+IP02032,buy,,Boxwell Pro,B,596.06,26.4
+IP02033,make,P03,Aurel Pro,C,69.22,39.5
+IP02034,buy,,Pureleaf,C,46.55,42.4
+IP02035,buy,,Fixline,B,399.92,38.1
+IP02036,buy,,Axial,B,737.46,30.6
+IP02037,make,P05,Packright Pro,C,228.75,21.5
+IP02038,make,P02,Clearwave,B,416.11,43.7
+IP02039,make,P01,Softwell,B,415.87,39.0
+IP02040,buy,,Fixline Eco,C,114.5,54.2
+IP02041,make,P01,Tritonix,B,378.54,34.1
+IP02042,buy,,Boxwell Pro,C,188.95,27.3
+IP02043,make,P03,Brightline,A,1118.21,41.3
+IP02044,buy,,Snowmere,A,627.21,31.9
+IP02045,buy,,Servo Max,B,342.51,37.0
+IP02046,buy,,Precisa Pro,A,928.89,30.8
+IP02047,make,P04,Formline,A,750.94,36.9
+IP02048,make,P01,Juniper,A,736.84,40.6
+IP02049,buy,,Cottonvale,C,106.47,24.1
+IP02050,buy,,Maxspare Max,A,1173.12,45.6
+IP02051,make,P03,Lumen Parts,C,171.08,35.0
+IP02052,buy,,Packright,C,473.68,28.8
+IP02053,make,P05,Aurel,B,862.43,55.2
+IP02054,make,P04,Snowmere Pro,A,899.15,42.2
+IP02055,buy,,Maxspare Max,A,1499.26,48.7
+IP02056,make,P01,Corefit Pro,C,113.26,26.0
+IP02057,buy,,Boxwell Pro,A,1040.76,25.0
+IP02058,make,P05,Ivory Crest,A,857.23,28.5
+IP02059,make,P01,Featherly,A,897.94,30.0
+IP02060,buy,,Maxspare,C,82.11,52.2
+IP02061,buy,,Tritonix Pro,B,767.27,25.6
+IP02062,buy,,Clarion Pack,A,885.79,32.8
+IP02063,make,P05,Ivory Crest,A,1167.14,40.3
+IP02064,buy,,Softwell,C,84.46,38.5
+IP02065,buy,,Servo,A,1020.95,45.3
+IP02066,buy,,Tritonix Pro,A,1023.42,31.6
+IP02067,make,P03,Sealtek Pro,C,112.52,25.5
+IP02068,make,P01,Juniper,A,1132.59,47.4
+IP02069,make,P04,Willowby,B,326.43,37.3
+IP02070,buy,,Fixline Max,B,498.46,30.5
+IP02071,make,P02,Tritonix Pro,A,856.96,36.2
+IP02072,buy,,Boxwell Pro,C,75.13,28.2
+IP02073,buy,,Everpure,A,1331.89,38.2
+IP02074,buy,,Softwell,C,283.54,33.0
+IP02075,buy,,Maxspare Eco,A,1379.0,41.8
+IP02076,buy,,Lumen Parts Pro,C,640.9,37.7
+IP02077,buy,,Sealtek,A,1011.86,23.8
+IP02078,buy,,Fairmist,A,1297.1,40.4
+IP02079,make,P01,Softwell,A,748.98,29.5
+IP02080,buy,,Fixline,A,1543.56,46.3
+IP02081,buy,,Corefit,A,814.87,33.9
+IP02082,buy,,Formline Pro,A,1055.35,30.5
+IP02083,buy,,Aurel Pro,A,1545.61,56.5
+IP02084,make,P04,Snowmere Pro,A,1285.18,34.3
+IP02085,buy,,Maxspare,A,1038.74,49.3
+IP02086,buy,,Precisa,A,564.24,18.7
+IP02087,make,P04,Formline Pro,A,710.06,34.8
+IP02088,make,P02,Fairmist,B,326.07,35.1
+IP02089,make,P05,Softwell Pro,A,982.9,36.2
+IP02090,buy,,Fixline Max,A,1440.25,48.9
+IP02091,buy,,Precisa Pro,B,219.5,28.3
+IP02092,buy,,Sealtek,A,777.12,36.1
+IP02093,make,P05,Aurel,A,1334.45,41.6
+IP02094,make,P03,Cottonvale,A,1421.49,46.4
+IP02095,buy,,Fixline Max,B,429.79,46.8
+IP02096,buy,,Moldex,A,1153.82,36.4
+IP02097,buy,,Clarion Pack,A,1048.31,39.0
+IP02098,make,P01,Dawnfield,B,260.71,35.5
+IP02099,make,P05,Softwell Pro,A,489.35,35.5
+IP02100,buy,,Servo,B,285.71,46.1
+IP02101,buy,,Axial,C,108.12,30.4
+IP02102,buy,,Ecofold Pro,B,330.06,37.0
+IP02103,buy,,Ivory Crest,C,76.74,44.2
+IP02104,make,P01,Featherly,A,864.19,37.3
+IP02105,buy,,Maxspare Max,B,350.65,47.6
+IP02106,buy,,Axial Pro,A,521.28,29.1
+IP02107,make,P03,Sealtek Pro,A,1047.75,31.6
+IP02108,make,P02,Brightline Pro,A,1021.66,44.7
+IP02109,make,P01,Softwell,A,741.53,34.6
+IP02110,buy,,Servo Max,B,621.87,52.3
+IP02111,buy,,Lumen Parts Pro,A,978.97,28.3
+IP02112,buy,,Formline,B,547.86,24.7
+IP02113,make,P05,Halcyon,B,557.05,42.7
+IP02114,make,P04,Snowmere Pro,A,1138.34,45.3
+IP02115,buy,,Maxspare Eco,C,295.04,50.0
+IP02116,buy,,Moldex,A,661.0,38.3
+IP02117,buy,,Ecofold,C,227.45,33.3
+IP02118,make,P02,Glenbrook,B,522.32,51.8
+IP02119,make,P01,Featherly,A,1223.3,44.3
+IP02120,buy,,Maxspare Eco,A,966.71,40.2
+IP02121,buy,,Moldex,A,874.01,25.6
+IP02122,buy,,Ecofold Pro,A,1014.53,28.2
+IP02123,make,P01,Dawnfield,A,989.87,47.0
+IP02124,buy,,Cloudnest,A,1221.37,40.3
+IP02125,buy,,Maxspare,A,1401.66,47.6
+IP02126,buy,,Moldex,B,402.98,32.3
+IP02127,buy,,Clarion Pack,A,1107.37,35.4
+IP02128,make,P03,Brightline,C,115.87,29.6
+IP02129,buy,,Cloudnest,C,316.94,45.4
+IP02130,buy,,Maxspare Pro,B,605.54,38.8
+IP02131,buy,,Precisa Pro,B,1086.24,36.7
+IP02132,buy,,Sealtek Pro,B,525.86,35.2
+IP02133,make,P02,Clearwave,B,500.32,40.6
+IP02134,buy,,Snowmere,B,381.54,32.6
+IP02135,buy,,Fixline Pro,C,135.41,44.4
+IP02136,buy,,Precisa,C,240.21,38.6
+IP02137,make,P04,Clarion Pack Pro,C,454.15,13.2
+IP02138,make,P02,Glenbrook,C,26.56,34.5
+IP02139,make,P03,Cloudnest,C,111.17,38.7
+IP02140,buy,,Fixline,A,1358.96,39.2
+IP02141,buy,,Moldex Pro,A,751.7,34.6
+IP02142,buy,,Clarion Pack,C,71.3,23.9
+IP02143,make,P02,Glenbrook,A,773.77,57.6
+IP02144,make,P05,Pureleaf,A,1234.31,40.8
+IP02145,buy,,Servo Pro,B,774.08,37.7
+IP02146,make,P01,Moldex,A,1260.61,34.5
+IP02147,make,P02,Boxwell Pro,B,379.5,21.6
+IP02148,make,P03,Brightline,B,508.05,40.6
+IP02149,make,P03,Cottonvale,C,267.58,31.0
+IP02150,buy,,Servo Pro,C,276.56,41.2
+IP02151,buy,,Axial Pro,A,1055.05,34.9
+IP02152,buy,,Clarion Pack Pro,A,798.47,26.1
+IP02153,make,P03,Aurel Pro,A,508.38,59.8
+IP02154,buy,,Snowmere,A,1206.35,32.8
+IP02155,buy,,Fixline Eco,A,589.91,42.8
+IP02156,make,P01,Lumen Parts Pro,B,334.92,34.9
+IP02157,make,P04,Formline,A,1150.63,30.0
+IP02158,make,P04,Everpure,A,505.24,47.7
+IP02159,buy,,Cottonvale Pro,A,788.02,29.4
+IP02160,buy,,Servo,A,542.0,36.0
+IP02161,make,P01,Precisa,A,734.93,30.0
+IP02162,buy,,Clarion Pack Pro,B,351.62,24.0
+IP02163,make,P05,Ivory Crest,A,556.64,30.6
+IP02164,make,P05,Softwell Pro,B,433.82,41.3
+IP02165,buy,,Servo,A,751.86,51.5
+IP02166,buy,,Axial,A,945.56,30.0
+IP02167,buy,,Clarion Pack Pro,A,1031.64,28.7
+IP02168,make,P03,Brightline,A,1107.74,46.0
+IP02169,make,P04,Snowmere,A,962.04,26.4
+IP02170,buy,,Fixline Max,A,1294.07,48.7
+IP02171,buy,,Tritonix,B,692.9,32.7
+IP02172,buy,,Ecofold,A,1067.27,32.9
+IP02173,make,P04,Everpure,C,207.11,47.1
+IP02174,buy,,Featherly,C,382.79,36.9
+IP02175,buy,,Servo,C,251.1,48.2
+IP02176,buy,,Tritonix Pro,A,1099.94,31.3
+IP02177,buy,,Formline,B,857.23,29.0
+IP02178,make,P02,Clearwave,A,883.69,42.5
+IP02179,buy,,Snowmere Pro,C,64.01,45.9
+IP02180,buy,,Fixline Eco,A,1379.37,49.6
+IP02181,make,P01,Corefit,C,246.19,31.8
+IP02182,buy,,Sealtek,A,700.99,29.1
+IP02183,make,P05,Ivory Crest,A,763.73,38.9
+IP02184,make,P04,Snowmere,B,553.34,36.6
+IP02185,buy,,Fixline Max,A,1830.65,53.6
+IP02186,buy,,Precisa Pro,B,342.72,29.0
+IP02187,make,P03,Boxwell,A,663.42,36.6
+IP02188,make,P05,Aurel,B,534.0,51.7
+IP02189,make,P02,Cottonvale Pro,A,1415.63,40.1
+IP02190,buy,,Servo Eco,C,165.76,47.6
+IP02191,make,P03,Lumen Parts,C,205.98,32.6
+IP02192,buy,,Ecofold Pro,A,967.34,19.8
+IP02193,make,P03,Brightline,A,812.6,51.5
+IP02194,buy,,Softwell Pro,B,516.99,29.6
+IP02195,buy,,Fixline Pro,A,916.98,54.3
+IP02196,buy,,Corefit Pro,B,451.44,27.6
+IP02197,make,P04,Ecofold,C,229.53,34.5
+IP02198,make,P05,Halcyon,C,15.76,51.6
+IP02199,make,P04,Willowby,A,1337.14,42.4
+IP02200,buy,,Fixline Pro,B,538.25,46.4
+IP02201,make,P03,Moldex Pro,B,433.96,28.1
+IP02202,make,P04,Clarion Pack Pro,A,876.68,26.2
+IP02203,make,P05,Aurel,C,137.2,47.2
+IP02204,make,P05,Softwell Pro,A,716.27,35.9
+IP02205,buy,,Maxspare Eco,C,43.73,42.1
+IP02206,make,P01,Corefit Pro,A,1134.2,35.2
+IP02207,buy,,Packright,C,375.23,23.9
+IP02208,make,P02,Brightline Pro,B,668.67,41.5
+IP02209,make,P01,Pureleaf Pro,B,1202.02,40.5
+IP02210,buy,,Maxspare,A,802.85,45.0
+IP02211,make,P01,Corefit,C,44.08,21.0
+IP02212,buy,,Boxwell Pro,A,763.56,25.1
+IP02213,make,P05,Ivory Crest,B,331.11,35.1
+IP02214,make,P02,Cottonvale Pro,A,1317.29,50.1
+IP02215,buy,,Maxspare,A,845.06,33.4
+IP02216,buy,,Lumen Parts,C,87.45,31.4
+IP02217,buy,,Boxwell Pro,B,544.01,19.8
+IP02218,buy,,Aurel,A,821.67,31.9
+IP02219,buy,,Snowmere Pro,B,619.28,41.5
+IP02220,buy,,Fixline,B,751.93,43.9
+IP02221,buy,,Lumen Parts Pro,A,655.32,28.6
+IP02222,buy,,Clarion Pack,A,995.06,26.5
+IP02223,make,P01,Dawnfield,A,1178.71,33.1
+IP02224,make,P01,Featherly,C,70.05,39.3
+IP02225,buy,,Fixline Max,C,308.98,32.1
+IP02226,make,P01,Precisa,A,841.91,24.7
+IP02227,buy,,Clarion Pack Pro,C,345.08,32.5
+IP02228,make,P03,Brightline,B,449.12,34.9
+IP02229,make,P02,Cottonvale Pro,A,1001.2,33.1
+IP02230,buy,,Maxspare Eco,C,283.63,41.3
+IP02231,buy,,Moldex Pro,B,301.47,36.8
+IP02232,buy,,Sealtek,C,306.3,26.7
+IP02233,make,P05,Halcyon,A,923.37,39.1
+IP02234,make,P02,Cottonvale Pro,A,1114.59,35.3
+IP02235,buy,,Fixline,A,686.56,24.5
+IP02236,make,P05,Precisa Pro,A,860.59,39.2
+IP02237,buy,,Ecofold,A,1058.14,33.5
+IP02238,make,P02,Brightline Pro,A,823.5,37.7
+IP02239,make,P04,Snowmere,A,1156.27,34.1
+IP02240,buy,,Servo Pro,C,166.58,41.3
+IP02241,buy,,Lumen Parts Pro,A,1201.48,32.4
+IP02242,make,P02,Ecofold Pro,C,203.24,33.1
+IP02243,make,P02,Glenbrook,A,829.93,41.4
+IP02244,make,P01,Softwell,B,545.69,28.6
+IP02245,buy,,Servo,C,104.29,44.0
+IP02246,buy,,Lumen Parts,A,827.96,36.2
+IP02247,make,P03,Packright,A,622.74,31.0
+IP02248,make,P05,Ivory Crest,A,470.44,38.7
+IP02249,make,P04,Snowmere Pro,C,354.98,34.7
+IP02250,buy,,Fixline Eco,A,1057.59,41.4
+IP02251,buy,,Moldex,A,1164.02,29.9
+IP02252,make,P05,Clarion Pack,C,55.6,21.2
+IP02253,make,P02,Clearwave,A,704.99,37.7
+IP02254,buy,,Velvet Isle,C,193.95,36.5
+IP02255,buy,,Fixline Eco,A,1285.67,41.4
+IP02256,buy,,Tritonix Pro,B,1078.78,37.5
+IP02257,make,P04,Formline Pro,C,83.22,23.5
+IP02258,make,P03,Aurel Pro,A,1452.73,45.0
+IP02259,make,P04,Willowby,A,1277.57,35.9
+IP02260,buy,,Maxspare Pro,A,1154.47,43.8
+IP02261,make,P01,Tritonix,B,415.12,31.9
+IP02262,buy,,Clarion Pack Pro,C,210.09,29.5
+IP02263,buy,,Everpure,A,680.44,43.3
+IP02264,make,P04,Snowmere Pro,A,1408.11,39.7
+IP02265,buy,,Servo Max,A,1484.45,45.8
+IP02266,make,P03,Lumen Parts,C,272.45,22.1
+IP02267,make,P03,Boxwell,B,381.58,29.6
+IP02268,make,P02,Brightline Pro,B,460.68,45.6
+IP02269,buy,,Cottonvale Pro,B,390.33,33.6
+IP02270,buy,,Fixline Pro,A,1057.75,41.4
+IP02271,buy,,Lumen Parts Pro,C,224.92,29.1
+IP02272,make,P04,Formline,C,206.77,28.5
+IP02273,make,P01,Juniper,B,658.0,41.6
+IP02274,make,P04,Snowmere,B,353.78,29.7
+IP02275,buy,,Servo Max,A,861.3,52.9
+IP02276,buy,,Lumen Parts,A,674.88,32.2
+IP02277,make,P05,Clarion Pack,B,407.16,24.4
+IP02278,make,P05,Halcyon,B,559.68,37.4
+IP02279,make,P01,Velvet Isle,B,525.1,40.6
+IP02280,buy,,Maxspare,A,790.18,48.6
+IP02281,make,P02,Axial,B,362.32,33.5
+IP02282,buy,,Formline,A,1061.95,28.7
+IP02283,make,P01,Dawnfield,A,956.03,50.1
+IP02284,make,P04,Willowby,B,528.98,35.5
+IP02285,buy,,Servo Pro,C,187.46,38.6
+IP02286,buy,,Axial,A,809.35,27.9
+IP02287,buy,,Sealtek Pro,A,1017.59,36.1
+IP02288,make,P01,Dawnfield,C,184.69,39.9
+IP02289,make,P04,Snowmere Pro,A,615.28,42.4
+IP02290,buy,,Maxspare Max,A,739.93,30.2
+IP02291,buy,,Corefit,A,586.4,30.0
+IP02292,buy,,Clarion Pack,A,848.66,20.7
+IP02293,make,P05,Aurel,A,1116.84,47.1
+IP02294,buy,,Cottonvale Pro,B,439.59,36.1
+IP02295,buy,,Fixline,A,681.97,42.5
+IP02296,make,P05,Precisa Pro,B,506.44,23.7
+IP02297,buy,,Boxwell Pro,B,529.15,31.7
+IP02298,make,P02,Clearwave,B,568.04,42.4
+IP02299,make,P01,Velvet Isle,B,378.62,29.8
+IP02300,buy,,Fixline Max,B,613.5,44.0
+IP02301,make,P02,Tritonix Pro,C,99.21,35.3
+IP02302,make,P04,Clarion Pack Pro,A,1037.25,24.7
+IP02303,make,P02,Fairmist,A,599.49,48.8
+IP02304,buy,,Softwell,A,674.94,30.8
+IP02305,buy,,Fixline Eco,A,816.91,49.2
+IP02306,buy,,Tritonix,A,919.39,30.0
+IP02307,make,P03,Sealtek Pro,A,825.99,28.2
+IP02308,make,P05,Halcyon,B,464.33,51.7
+IP02309,make,P02,Cottonvale Pro,B,495.6,37.1
+IP02310,buy,,Servo,B,285.11,42.1
+IP02311,make,P05,Precisa Pro,A,718.79,22.4
+IP02312,buy,,Sealtek,C,116.81,38.2
+IP02313,make,P05,Halcyon,A,1312.18,39.9
+IP02314,make,P01,Featherly,A,575.38,31.2
+IP02315,buy,,Servo,A,360.05,39.5
+IP02316,buy,,Lumen Parts,C,39.92,27.9
+IP02317,buy,,Packright Pro,A,1240.51,33.3
+IP02318,make,P02,Glenbrook,A,843.7,36.3
+IP02319,make,P03,Cottonvale,B,225.62,31.9
+IP02320,buy,,Servo Pro,C,162.1,54.3
+IP02321,buy,,Moldex Pro,C,148.83,25.1
+IP02322,make,P02,Ecofold Pro,C,190.94,23.0
+IP02323,make,P03,Aurel Pro,B,445.54,48.6
+IP02324,make,P01,Featherly,A,1213.46,32.7
+IP02325,buy,,Fixline Max,A,723.13,50.1
+IP02326,buy,,Precisa Pro,C,163.7,25.4
+IP02327,buy,,Packright Pro,C,7.01,31.1
+IP02328,buy,,Brightline,B,459.45,29.7
+IP02329,make,P03,Cottonvale,A,493.8,30.2
+IP02330,buy,,Fixline Eco,C,3.44,43.9
+IP02331,make,P02,Axial,B,597.6,29.3
+IP02332,buy,,Formline,A,698.54,22.1
+IP02333,buy,,Everpure,A,1247.14,40.3
+IP02334,make,P02,Cottonvale Pro,A,1222.17,47.1
+IP02335,buy,,Servo,A,1134.98,35.3
+IP02336,buy,,Moldex,A,605.48,34.5
+IP02337,buy,,Formline Pro,C,152.96,32.1
+IP02338,make,P04,Everpure,A,1345.75,44.3
+IP02339,make,P01,Softwell,A,742.35,40.1
+IP02340,buy,,Fixline Max,C,113.5,48.0
+IP02341,buy,,Precisa,A,755.18,20.9
+IP02342,buy,,Clarion Pack,A,707.46,19.6
+IP02343,make,P01,Juniper,A,843.4,39.2
+IP02344,make,P05,Softwell Pro,C,63.31,32.4
+IP02345,buy,,Maxspare Pro,A,1347.48,38.5
+IP02346,buy,,Axial Pro,A,947.7,29.6
+IP02347,make,P04,Formline,A,621.79,28.4
+IP02348,make,P01,Juniper,B,684.04,38.9
+IP02349,make,P03,Cottonvale,C,181.6,36.7
+IP02350,buy,,Fixline,B,416.55,41.2
+IP02351,make,P01,Corefit Pro,A,994.92,33.8
+IP02352,buy,,Formline,A,1247.44,33.2
+IP02353,make,P02,Glenbrook,A,1332.02,36.7
+IP02354,buy,,Cottonvale,C,219.8,39.3
+IP02355,buy,,Servo Eco,A,981.34,40.3
+IP02356,buy,,Corefit,B,463.85,33.8
+IP02357,buy,,Boxwell,C,45.6,27.0
+IP02358,make,P03,Brightline,A,653.48,43.6
+IP02359,make,P04,Snowmere Pro,A,1271.0,45.0
+IP02360,buy,,Fixline Max,B,347.56,38.6
+IP02361,buy,,Moldex Pro,A,833.58,28.5
+IP02362,make,P03,Boxwell,A,1143.71,28.9
+IP02363,buy,,Everpure,B,512.68,44.7
+IP02364,buy,,Softwell Pro,A,1290.48,37.9
+IP02365,buy,,Servo Eco,A,1272.86,47.9
+IP02366,buy,,Precisa,A,917.78,24.9
+IP02367,buy,,Packright Pro,C,74.57,29.7
+IP02368,make,P04,Everpure,B,587.91,34.8
+IP02369,make,P03,Cottonvale,C,385.13,40.0
+IP02370,buy,,Servo Max,A,904.73,55.8
+IP02371,make,P05,Precisa Pro,A,585.34,34.1
+IP02372,buy,,Clarion Pack,C,77.14,25.1
+IP02373,make,P03,Brightline,A,642.73,43.9
+IP02374,make,P01,Velvet Isle,A,679.39,29.6
+IP02375,buy,,Maxspare,A,1137.22,53.6
+IP02376,buy,,Axial Pro,B,897.27,29.4
+IP02377,buy,,Formline,A,1132.6,30.0
+IP02378,make,P04,Everpure,A,1033.41,41.6
+IP02379,buy,,Snowmere,A,1289.49,37.7
+IP02380,buy,,Servo Pro,C,189.14,45.6
+IP02381,buy,,Corefit,C,127.81,31.6
+IP02382,make,P03,Packright,B,279.74,20.1
+IP02383,make,P05,Aurel,B,394.73,45.9
+IP02384,make,P05,Pureleaf,A,978.22,34.4
+IP02385,buy,,Servo Max,B,543.43,50.5
+IP02386,buy,,Precisa Pro,A,786.58,32.7
+IP02387,make,P03,Packright,B,586.47,27.2
+IP02388,make,P02,Fairmist,A,1502.63,44.2
+IP02389,make,P01,Featherly,A,831.17,26.5
+IP02390,buy,,Maxspare Pro,C,371.37,51.0
+IP02391,buy,,Lumen Parts,B,580.52,28.7
+IP02392,make,P05,Clarion Pack,C,212.13,21.7
+IP02393,make,P01,Dawnfield,A,1060.37,46.3
+IP02394,buy,,Cottonvale Pro,B,542.04,36.9
+IP02395,buy,,Fixline,A,831.98,44.0
+IP02396,make,P03,Moldex Pro,B,509.42,30.8
+IP02397,buy,,Formline,C,72.05,26.7
+IP02398,buy,,Clearwave,A,1035.55,42.3
+IP02399,make,P01,Velvet Isle,C,225.92,37.2
+IP02400,buy,,Fixline Max,C,74.49,42.5
+IP02401,buy,,Axial Pro,B,395.56,36.9
+IP02402,make,P04,Clarion Pack Pro,B,342.03,21.2
+IP02403,make,P02,Glenbrook,A,1102.02,49.1
+IP02404,make,P04,Willowby,C,136.23,30.5
+IP02405,buy,,Fixline Eco,A,1203.69,30.9
+IP02406,buy,,Axial Pro,A,868.4,32.5
+IP02407,buy,,Clarion Pack,A,1103.24,29.3
+IP02408,buy,,Halcyon,B,275.84,45.2
+IP02409,buy,,Snowmere,A,1157.06,35.7
+IP02410,buy,,Fixline Eco,B,1120.07,42.6
+IP02411,make,P01,Corefit,C,23.47,25.0
+IP02412,buy,,Ecofold Pro,B,850.94,29.9
+IP02413,make,P02,Glenbrook,B,781.78,43.9
+IP02414,buy,,Softwell Pro,B,469.16,40.6
+IP02415,buy,,Fixline Pro,A,1568.47,64.7
+IP02416,buy,,Corefit,A,645.13,30.6
+IP02417,make,P03,Boxwell,A,1060.45,27.3
+IP02418,make,P05,Aurel,A,1148.13,51.4
+IP02419,buy,,Softwell,A,896.11,38.0
+IP02420,buy,,Servo,A,775.75,53.7
+IP02421,buy,,Tritonix Pro,B,796.78,29.5
+IP02422,buy,,Clarion Pack Pro,A,998.17,24.5
+IP02423,make,P02,Brightline Pro,B,490.42,54.8
+IP02424,buy,,Cottonvale,A,884.93,26.8
+IP02425,buy,,Maxspare Eco,C,253.57,41.4
+IP02426,buy,,Precisa,C,96.53,23.6
+IP02427,make,P02,Ecofold Pro,A,726.51,23.0
+IP02428,make,P05,Ivory Crest,A,1303.24,46.0
+IP02429,make,P01,Featherly,B,582.89,35.3
+IP02430,buy,,Fixline Eco,A,949.76,50.7
+IP02431,buy,,Moldex Pro,C,174.57,25.8
+IP02432,make,P02,Boxwell Pro,C,149.01,17.8
+IP02433,make,P05,Ivory Crest,A,852.3,47.3
+IP02434,buy,,Softwell Pro,B,734.22,36.5
+IP02435,buy,,Maxspare Max,A,1014.1,48.3
+IP02436,buy,,Tritonix,A,680.15,40.6
+IP02437,buy,,Packright,C,255.02,26.9
+IP02438,make,P05,Halcyon,A,1521.68,45.4
+IP02439,make,P01,Velvet Isle,C,117.02,36.2
+IP02440,buy,,Servo,A,865.64,53.2
+IP02441,make,P01,Lumen Parts Pro,A,1171.83,28.8
+IP02442,make,P02,Sealtek,C,149.78,27.0
+IP02443,buy,,Brightline Pro,C,26.84,41.7
+IP02444,make,P02,Cottonvale Pro,A,1017.77,36.4
+IP02445,buy,,Fixline Pro,A,1531.31,45.8
+IP02446,buy,,Precisa,A,987.97,25.2
+IP02447,make,P02,Sealtek,B,419.55,24.9
+IP02448,make,P01,Juniper,A,712.86,50.0
+IP02449,make,P04,Snowmere,A,822.58,45.7
+IP02450,buy,,Servo,A,718.48,55.8
+IP02451,buy,,Tritonix,A,1016.73,27.2
+IP02452,buy,,Ecofold Pro,A,1088.21,27.3
+IP02453,buy,,Clearwave,B,363.04,30.2
+IP02454,make,P04,Willowby,A,550.38,34.4
+IP02455,buy,,Maxspare Max,C,89.2,53.6
+IP02456,make,P02,Axial,A,1191.73,30.7
+IP02457,buy,,Formline,C,262.26,30.1
+IP02458,make,P02,Brightline Pro,A,1416.73,48.7
+IP02459,make,P01,Featherly,A,528.64,32.9
+IP02460,buy,,Servo Pro,A,914.42,45.7
+IP02461,make,P04,Axial Pro,A,742.31,28.5
+IP02462,make,P03,Packright,B,493.91,24.2
+IP02463,make,P02,Brightline Pro,A,1407.06,42.9
+IP02464,make,P01,Softwell,A,770.42,40.1
+IP02465,buy,,Fixline Max,B,360.98,47.2
+IP02466,make,P02,Axial,B,557.73,31.7
+IP02467,buy,,Packright,B,557.38,23.4
+IP02468,buy,,Fairmist,B,455.62,50.4
+IP02469,make,P04,Snowmere Pro,A,1162.91,33.4
+IP02470,buy,,Maxspare Pro,B,577.93,30.4
+IP02471,buy,,Moldex Pro,A,1037.21,20.0
+IP02472,buy,,Clarion Pack,A,1108.15,30.1
+IP02473,make,P05,Aurel,A,722.92,38.1
+IP02474,make,P05,Pureleaf,A,939.46,42.3
+IP02475,buy,,Servo Max,B,358.2,41.6
+IP02476,buy,,Corefit Pro,A,797.37,30.4
+IP02477,make,P04,Clarion Pack Pro,C,134.57,21.4
+IP02478,make,P01,Dawnfield,A,1365.95,44.0
+IP02479,buy,,Softwell,A,1263.76,47.4
+IP02480,buy,,Fixline Eco,B,486.55,43.7
+IP02481,buy,,Tritonix Pro,A,928.21,28.1
+IP02482,buy,,Ecofold Pro,A,1115.93,26.0
+IP02483,make,P03,Aurel Pro,A,1003.89,43.9
+IP02484,make,P05,Softwell Pro,A,942.86,32.2
+IP02485,buy,,Fixline Pro,A,1272.34,48.2
+IP02486,buy,,Lumen Parts Pro,C,159.31,28.8
+IP02487,buy,,Boxwell,B,661.72,28.9
+IP02488,make,P02,Glenbrook,A,1247.34,36.1
+IP02489,make,P03,Cloudnest,B,339.96,29.0
+IP02490,buy,,Maxspare,B,707.53,43.0
+IP02491,make,P04,Axial Pro,C,239.11,23.7
+IP02492,make,P04,Formline Pro,A,1229.53,32.5
+IP02493,make,P05,Halcyon,A,1439.24,42.0
+IP02494,make,P01,Velvet Isle,B,470.73,32.8
+IP02495,buy,,Servo Max,A,1483.16,46.2
+IP02496,buy,,Tritonix Pro,A,518.63,29.0
+IP02497,buy,,Clarion Pack,A,1088.79,22.5
+IP02498,make,P05,Ivory Crest,A,1840.07,56.6
+IP02499,make,P05,Softwell Pro,B,461.9,38.9
+IP02500,buy,,Fixline Pro,B,544.71,49.0

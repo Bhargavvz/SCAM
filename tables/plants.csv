@@ -1,0 +1,6 @@
+plant_id,plant_name,region,country_code,capacity_units_per_week
+P01,Lakeshore Plant,West,US,20400
+P02,Maplewood Plant,Midwest,US,18100
+P03,Eastfield Plant,Southeast,US,14500
+P04,Riverbend Plant,Southwest,MX,14800
+P05,Northgate Plant,Northeast,US,13000
