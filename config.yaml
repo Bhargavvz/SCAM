@@ -1,0 +1,219 @@
+# Supply Chain Memory & Decision Agent - dataset extension config.
+# Every tunable lives here. Scale/category facts are profiled from the source (Stage 0);
+# values below are behavioural assumptions, keyed by source category name with a _default
+# fallback so unseen categories still work.
+
+seed: 20260928
+window_start: "2023-01-01"
+window_end: "2025-12-31"
+sim_start: "2022-11-01"          # RM world starts before the FG window (runs for Jan-2023 receipts start in Dec-2022)
+holdout_start: "2025-10-01"
+
+scale:
+  small:
+    narrated_event_frac: 0.10     # share of events that get a full narrative chain
+    target_docs: 300
+    eval_questions: 120
+    holdout_scenarios: 12
+    rm_events: 60
+  full:
+    narrated_event_frac: 0.85
+    target_docs: 2500
+    eval_questions: 260
+    holdout_scenarios: 14
+    rm_events: 220
+
+# ---------------------------------------------------------------- structure
+plants:
+  count: 5                        # 4-6
+  capacity_headroom: 1.20         # weekly capacity = p95 weekly produced units x headroom
+  # plant regions are drawn from the warehouse regions found in the source
+  region_country: {Canada: CA, _default: US}
+
+region_transit_days:              # plant region -> warehouse region
+  same: 1
+  adjacent: 3
+  far: 5
+  adjacent_pairs: [[West, Southwest], [Southwest, Midwest], [Midwest, Northeast], [Northeast, Southeast],
+                   [Southeast, Midwest], [Canada, Northeast], [Canada, Midwest], [West, Canada]]
+
+category_profiles:
+  _default:        {make_prob: 0.40, prod_days: [2, 4], margin: [0.25, 0.40], rm_mix: {resin: 2, packaging_film: 1, adhesive: 1, fasteners: 1}}
+  finished_goods:  {make_prob: 0.85, prod_days: [2, 4], margin: [0.30, 0.48], rm_mix: {surfactant: 3, fragrance: 2, actives: 2, solvent: 1, colorant: 1, resin: 2, closure: 2}}
+  components:      {make_prob: 0.60, prod_days: [3, 5], margin: [0.22, 0.35], rm_mix: {steel_coil: 3, aluminum_extrusion: 2, resin: 2, fasteners: 2, rubber_compound: 2, wire_harness: 1}}
+  packaging:       {make_prob: 0.50, prod_days: [1, 3], margin: [0.18, 0.30], rm_mix: {resin: 3, packaging_film: 2, pulp_board: 3, ink: 2, adhesive: 2}}
+  consumables:     {make_prob: 0.35, prod_days: [1, 3], margin: [0.28, 0.42], rm_mix: {pulp: 3, nonwoven: 2, superabsorbent: 2, adhesive: 1, fragrance: 1}}
+  spares:          {make_prob: 0.05, prod_days: [3, 6], margin: [0.35, 0.55], rm_mix: {steel_bar: 3, bearing: 2, seal_kit: 2, fasteners: 2}}
+
+brand_families_per_category: 4
+brand_family_words: [Apex, Northwind, Clearline, Evergreen, Bluecrest, Harbor, Summit, Keystone, Meridian, Oakridge,
+                     Silverleaf, Truefield, Pinnacle, Riverside, Stonebridge, Westgate, Brightwater, Ironwood, Lakeside, Crescent]
+
+rm_archetypes:                    # uom, std cost range per uom, qty per FG unit, hazmat probability, name stems
+  surfactant:         {uom: kg, cost: [1.8, 4.5],  qty: [0.20, 1.20], hazmat: 0.30, names: [SLES 70, LAS Acid, Cocamidopropyl Betaine, AOS 40, Nonionic Blend]}
+  fragrance:          {uom: kg, cost: [18, 65],    qty: [0.005, 0.03], hazmat: 0.50, names: [Citrus Accord, Fresh Linen Accord, Floral Base, Mint Oil, Ocean Accord]}
+  actives:            {uom: kg, cost: [9, 40],     qty: [0.01, 0.08], hazmat: 0.40, names: [Enzyme Protease, Zinc Pyrithione, Optical Brightener, Chelant GLDA, Polymer Dispersant]}
+  solvent:            {uom: L,  cost: [1.2, 3.8],  qty: [0.05, 0.40], hazmat: 0.90, names: [Propylene Glycol, Ethanol Denat, IPA 99]}
+  colorant:           {uom: kg, cost: [12, 55],    qty: [0.001, 0.01], hazmat: 0.05, names: [Blue Dye 1, Green Pigment Disp, TiO2 Slurry]}
+  resin:              {uom: kg, cost: [1.1, 2.9],  qty: [0.05, 0.60], hazmat: 0.00, names: [HDPE Blow Grade, PP Homopolymer, PET Bottle Grade, LLDPE Film Grade, ABS General]}
+  closure:            {uom: ea, cost: [0.03, 0.18], qty: [1, 1],       hazmat: 0.00, names: [Flip-Top Cap 28mm, Trigger Sprayer, Pump Dispenser, Screw Cap 38mm]}
+  packaging_film:     {uom: m2, cost: [0.08, 0.35], qty: [0.10, 0.80], hazmat: 0.00, names: [Shrink Film 60um, BOPP Laminate, Stretch Wrap, Printed Pouch Film]}
+  corrugate:          {uom: ea, cost: [0.35, 1.20], qty: [0.04, 0.17], hazmat: 0.00, names: [RSC Shipper 12ct, Tray 24ct, Display Shipper]}
+  label_stock:        {uom: m2, cost: [0.15, 0.60], qty: [0.01, 0.05], hazmat: 0.00, names: [PP Label Stock, Paper Label Stock]}
+  pulp_board:         {uom: kg, cost: [0.8, 1.9],  qty: [0.10, 0.90], hazmat: 0.00, names: [SBS Board 18pt, CRB Board, Kraftliner 42lb]}
+  pulp:               {uom: kg, cost: [0.7, 1.6],  qty: [0.10, 0.80], hazmat: 0.00, names: [Fluff Pulp, NBSK Pulp, Hardwood Pulp]}
+  nonwoven:           {uom: m2, cost: [0.10, 0.40], qty: [0.20, 1.00], hazmat: 0.00, names: [Spunbond PP 15gsm, SMS Nonwoven, Airlaid Core]}
+  superabsorbent:     {uom: kg, cost: [2.0, 3.6],  qty: [0.02, 0.15], hazmat: 0.00, names: [SAP Grade A, SAP Fine]}
+  ink:                {uom: kg, cost: [6, 18],     qty: [0.002, 0.02], hazmat: 0.30, names: [Flexo Ink Black, Flexo Ink Process Set, Overprint Varnish]}
+  adhesive:           {uom: kg, cost: [3, 9],      qty: [0.005, 0.05], hazmat: 0.20, names: [Hot Melt HM-40, PVA Emulsion, PSA Acrylic]}
+  steel_coil:         {uom: kg, cost: [0.9, 1.8],  qty: [0.30, 3.00], hazmat: 0.00, names: [CR Steel Coil 1.2mm, Galvanized Coil, Stainless 304 Coil]}
+  steel_bar:          {uom: kg, cost: [1.0, 2.5],  qty: [0.20, 2.00], hazmat: 0.00, names: [4140 Bar Stock, 1018 Bar Stock]}
+  aluminum_extrusion: {uom: kg, cost: [3.0, 5.5],  qty: [0.10, 1.20], hazmat: 0.00, names: [6061 Extrusion, 6063 Profile]}
+  fasteners:          {uom: ea, cost: [0.01, 0.12], qty: [2, 12],      hazmat: 0.00, names: [M6 Hex Bolt Kit, Self-Tap Screw No8, Rivet Set]}
+  rubber_compound:    {uom: kg, cost: [2.5, 6.0],  qty: [0.02, 0.30], hazmat: 0.00, names: [EPDM Compound, NBR Compound]}
+  wire_harness:       {uom: ea, cost: [1.5, 9.0],  qty: [1, 2],        hazmat: 0.00, names: [Harness 6-Pin, Harness 12-Pin]}
+  bearing:            {uom: ea, cost: [0.8, 6.0],  qty: [1, 4],        hazmat: 0.00, names: [Ball Bearing 6204, Needle Bearing]}
+  seal_kit:           {uom: ea, cost: [0.5, 4.0],  qty: [1, 2],        hazmat: 0.00, names: [O-Ring Kit, Lip Seal Kit]}
+  stretch_pallet:     {uom: ea, cost: [4, 12],     qty: [0.002, 0.01], hazmat: 0.00, names: [GMA Pallet, Stretch Hood]}
+
+# RMs used across every category (drive commonality)
+common_archetypes: [corrugate, label_stock, packaging_film, stretch_pallet, adhesive, resin]
+
+rm:
+  per_make_product: 0.11          # RM universe size relative to make-product count
+  common_frac: 0.10               # ~10% of RMs ...
+  common_min_share: 0.31          # ... appear in >30% of make-products
+  common_usage: [0.36, 0.44]
+  bom_size: [4, 12]
+  specific_zipf: 1.1
+  single_source_frac: 0.15
+  substitute_group_frac: 0.45
+  bom_change_frac: 0.05
+  secondary_share: [0.20, 0.40]
+  tertiary_frac: 0.30
+  tertiary_unqualified_prob: 0.5
+  rm_supplier_count: 120          # suppliers (reused from source) that also sell raw materials
+
+contracts:
+  term_months: [12, 24]
+  price_terms: [fixed, index_linked_quarterly, fixed_with_cap_5pct, cost_plus]
+  penalty_clauses: ["1% credit per week late beyond 5 days", "2% credit per week late beyond 3 days",
+                    "expedite freight at supplier cost if >7 days late", "none", "0.5% credit per day late, capped at 10%"]
+  force_majeure_prob: 0.8
+  renewal_price_change: [-0.03, 0.06]
+
+# ---------------------------------------------------------------- RM operations
+rm_ops:
+  review_weekday: 0               # Monday
+  safety_days: {A: 21, B: 14, C: 10}
+  opening_cover_days: 45
+  moq_weeks: [0.5, 2.0]
+  delay_gamma_shape: 1.6
+  delay_scale_frac_of_lead: 0.12  # late POs slip ~ Gamma(shape, lead*frac)
+  early_prob: 0.08
+  ack_slip_prob: 0.15             # supplier acknowledges a later promised_at than requested
+  notice_days_before: [1, 12]
+  second_revision_prob: 0.25
+  partial_prob_factor: 0.35       # P(partial) = (1-reliability) * factor
+  qc_reject_rate: 0.012           # baseline P(lot rejected at incoming QC)
+  qc_reject_frac: [0.2, 0.6]
+  expedite_fee_rate: [0.10, 0.18] # of line value
+  expedite_pull_days: [3, 9]
+  spot_premium: [0.25, 0.60]
+  holding_rate_annual: 0.22
+  late_penalty_rate_per_day: 0.02 # lost contribution per blocked day (x units x price x margin)
+  lookahead_days: 21
+  country_shocks_per_year: [0, 2]
+  country_shock_len: [10, 35]
+  country_shock_extra_delay: [4, 12]
+
+cascade:
+  target_frac: 0.12               # of late/partial make-product FG lines
+  min_fg_delay: 2
+  episode_gap_days: 28
+  max_on_time_share_of_ss: 0.5
+  qc_scrap_lead_days: [2, 6]
+  notice_lead_days: [3, 12]
+  receipt_buffer_days: [0, 1]
+
+# ---------------------------------------------------------------- demand
+demand:
+  forecast_lag_days: [14, 28]
+  mape_target: [0.20, 0.40]
+  noise_sigma: 0.28
+  promo_noise_sigma: 0.45
+  shock_noise_sigma: 0.55
+  category_bias: {_default: 0.00, finished_goods: 0.06, components: -0.04, packaging: 0.03, consumables: 0.08, spares: -0.07}
+  promo_weeks_per_family_year: 3
+  promo_price_index: [0.82, 0.93]
+  false_positive_frac: 0.04      # forecast rows with zero actual demand
+  shock_count: 12
+  shock_extra_demand: [0.4, 1.2]
+
+# ---------------------------------------------------------------- events / memory
+events:
+  fg_supplier_cluster_events: 18
+  fg_country_month_events: 4
+  fg_adjustment_events: 10
+  decisions_per_event: [1, 2]
+  decision_prob: 0.72
+  context_dependent_min: 0.25
+  breach_min: 0.15
+  renegotiated_target: 0.10
+  negotiations_extra: 40
+  success_tol_days: 2
+  success_cost_ratio: 1.25
+  failed_days: 6
+  failed_cost_ratio: 2.0
+
+patterns:                          # planted recurring patterns (entities are chosen from data at run time)
+  q4_slip_supplier: {months: [11, 12], extra_delay: [7, 14]}
+  feb_port_country: {month: 2, extra_delay: [5, 12]}
+  price_spike_shortage: {spikes: 3, spike_pct: [0.12, 0.25], lag_days: [20, 45], extra_delay: [10, 20]}
+  small_po_supplier: {large_quantile: 0.5, late_prob_large: 0.75, late_prob_small: 0.05}
+  expedite_cost_plant: {multiplier: 2.1}
+  q4_optimistic_notices: {optimism: 0.45}
+  secondary_quality_supplier: {qc_reject_rate: 0.12}
+  lead_time_creep_supplier: {from: "2024-07-01", creep: 0.35}
+  january_resin_increase: {pct: [0.06, 0.12], rm_category: resin}
+  summer_labor_plant: {months: [7, 8]}
+  promo_underforecast_family: {bias: -0.35}
+
+narratives:
+  words: [60, 250]
+  noise_frac: 0.27
+  business_hours: [8, 18]
+  region_utc_offset: {West: "-08:00", Southwest: "-07:00", Midwest: "-06:00", Northeast: "-05:00", Southeast: "-05:00", Canada: "-05:00", _default: "-06:00"}
+  llm:
+    enabled: false
+    provider: openai_compatible   # any OpenAI-compatible endpoint (OpenRouter, vLLM, OpenAI...)
+    base_url_env: LLM_BASE_URL
+    api_key_env: LLM_API_KEY
+    model_env: LLM_MODEL
+    cache_dir: _work/llm_cache
+    max_concurrency: 4
+
+hindsight:
+  base_url_env: HINDSIGHT_BASE_URL
+  api_key_env: HINDSIGHT_API_KEY
+  bank_id: supply-chain-memory
+  batch_size: 25
+  concurrency: 4
+
+costs:                             # decision cost model (documented in README)
+  shortage_value_multiple: 4.0     # one RM-short day costs avg daily RM usage x price x this
+  switch_admin: 1200
+  qualification_cost: 6000
+  qualification_days: 20
+  substitute_qualification_days: 25
+  substitute_cost: 8000
+  transfer_freight_rate: 0.03
+  transfer_fixed: 400
+  expedite_success: {base: 0.80, q4: 0.45, q4_slip_supplier: 0.20}
+  decision_horizon_days: 35
+  decision_min_slip: 4
+  decision_cooldown_days: 30
+  ss_build_prob: 0.30
+  ss_build_multiplier: 1.5
+  ss_build_days: 120
+  pessimistic_notice_prob: {base: 0.55, q4: 0.20}

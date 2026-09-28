@@ -1,0 +1,13 @@
+warehouse_id,warehouse_name,region,capacity_units
+W001,West DC 01,West,175970
+W002,Southwest DC 02,Southwest,238544
+W003,Midwest DC 03,Midwest,221995
+W004,Northeast DC 04,Northeast,259097
+W005,Southeast DC 05,Southeast,83700
+W006,Canada DC 06,Canada,136286
+W007,West DC 07,West,327363
+W008,Southwest DC 08,Southwest,126048
+W009,Midwest DC 09,Midwest,204843
+W010,Northeast DC 10,Northeast,92676
+W011,Southeast DC 11,Southeast,304935
+W012,Canada DC 12,Canada,102313

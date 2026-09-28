@@ -1,0 +1,6 @@
+plant_id,plant_name,region,country_code,capacity_units_per_week
+P01,Northeast Plant 01,Northeast,US,15100
+P02,West Plant 02,West,US,20400
+P03,Midwest Plant 03,Midwest,US,19000
+P04,Canada Plant 04,Canada,CA,14300
+P05,Southeast Plant 05,Southeast,US,12700

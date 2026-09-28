@@ -1,0 +1,1254 @@
+[
+  {
+    "scenario_id": "HS01",
+    "event_id": "EVT00526",
+    "as_of_date": "2025-10-04",
+    "day0_report": "Planner report 2025-10-04: Supplier 136 (SUP0136) has advised that RMPO036508 (465.9 m2 of PP Label Stock, RM0002) for P03 will not arrive on 2025-10-12. Latest supplier ETA is 2025-10-16 (reason given: production issue). P03 holds about 499.1 m2 against usage of roughly 16.5 m2/day. What should we do?",
+    "rm_id": "RM0002",
+    "plant_id": "P03",
+    "supplier_id": "SUP0136",
+    "trigger_po_id": "RMPO036508",
+    "gold_precedent_event_ids": [
+      "EVT00343",
+      "EVT00143",
+      "EVT00002"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01722",
+        "text": "Supplier 136 (SUP0136) confirms revised ship-to-arrive date 2025-10-16 for RMPO036508",
+        "due_date": "2025-10-16",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO036508; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO036508 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 28.01,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 28.01
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO036508 and re-source from SUP0153 (lead 15d)",
+        "alt_supplier_id": "SUP0153",
+        "est_cost": 1230.14,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1230.14
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 465.9 m2 from P02 (6d transit)",
+        "source_plant_id": "P02",
+        "est_cost": 406.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 406.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 499.11,
+      "daily_usage": 16.529,
+      "shortage_day_cost": 28.39,
+      "unit_price": 0.4294
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 28/0d, reallocate_stock 406/0d, switch_supplier 1,230/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "accept_delay",
+    "actual_outcome": "partial"
+  },
+  {
+    "scenario_id": "HS02",
+    "event_id": "EVT00525",
+    "as_of_date": "2025-10-05",
+    "day0_report": "Planner report 2025-10-05: Supplier 054 (SUP0054) has advised that RMPO038130 (463.2 kg of PVA Emulsion, RM0011) for P03 will not arrive on 2025-10-14. Latest supplier ETA is 2025-10-25 (reason given: expedite). P03 holds about 410.5 kg against usage of roughly 17.5 kg/day. What should we do?",
+    "rm_id": "RM0011",
+    "plant_id": "P03",
+    "supplier_id": "SUP0054",
+    "trigger_po_id": "RMPO038130",
+    "gold_precedent_event_ids": [
+      "EVT00157",
+      "EVT00188",
+      "EVT00504"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01723",
+        "text": "Supplier 054 (SUP0054) commits to deliver RMPO038130 by 2025-10-25 on expedited freight",
+        "due_date": "2025-10-25",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO038130; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO038130 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 369.32,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 369.32
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO038130 and re-source from SUP0161 (lead 50d)",
+        "alt_supplier_id": "SUP0161",
+        "est_cost": 1800.04,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1800.04
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 35.8 kg from P02 (6d transit)",
+        "source_plant_id": "P02",
+        "est_cost": 406.11,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 406.11
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 410.49,
+      "daily_usage": 17.491,
+      "shortage_day_cost": 398.42,
+      "unit_price": 5.6947
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 369/0d, reallocate_stock 406/0d, switch_supplier 1,800/0d. The most similar-looking precedent (EVT00382) succeeded with a different action, but under different conditions; the context-matched precedents are EVT00157, EVT00188.",
+    "trap": true,
+    "trap_precedent_event_id": "EVT00382",
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS03",
+    "event_id": "EVT00532",
+    "as_of_date": "2025-10-22",
+    "day0_report": "Planner report 2025-10-22: Supplier 118 (SUP0118) has advised that RMPO036898 (587.3 kg of NBSK Pulp G2, RM0073) for P02 will not arrive on 2025-10-30. Latest supplier ETA is 2025-10-30 (reason given: expedite). P02 holds about 146.1 kg against usage of roughly 12.5 kg/day. What should we do?",
+    "rm_id": "RM0073",
+    "plant_id": "P02",
+    "supplier_id": "SUP0118",
+    "trigger_po_id": "RMPO036898",
+    "gold_precedent_event_ids": [
+      "EVT00366",
+      "EVT00349",
+      "EVT00159"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT00883",
+        "text": "We commit to purchase at least 127,310 units from Supplier 118 (SUP0118) under CT00119 by 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT00884",
+        "text": "Supplier 118 (SUP0118) commits to hold contract prices under CT00119 until 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01734",
+        "text": "Supplier 118 (SUP0118) commits to deliver all Nov-Dec 2025 POs on time from reserved capacity",
+        "due_date": "2025-12-31",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01740",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-11-04 for RMPO036898",
+        "due_date": "2025-11-04",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01742",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO036898 by 2025-10-30 on expedited freight",
+        "due_date": "2025-10-30",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO036898; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO036898 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 133.77,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 133.77
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO036898 and re-source from SUP0086 (lead 60d)",
+        "alt_supplier_id": "SUP0086",
+        "est_cost": 2176.96,
+        "stockout_days": 12,
+        "fg_units_at_risk": 357,
+        "direct_cost": 1200.0
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 39.7 kg from P04 (4d transit)",
+        "source_plant_id": "P04",
+        "est_cost": 401.94,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 401.94
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG012 (25d qualification)",
+        "est_cost": 8000.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 146.12,
+      "daily_usage": 12.51,
+      "shortage_day_cost": 81.41,
+      "unit_price": 1.627
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 134/0d, reallocate_stock 402/0d, switch_supplier 2,177/12d, substitute_rm 8,000/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "failed"
+  },
+  {
+    "scenario_id": "HS04",
+    "event_id": "EVT00527",
+    "as_of_date": "2025-11-02",
+    "day0_report": "Planner report 2025-11-02: Supplier 185 (SUP0185) has advised that RMPO038903 (4,000.0 ea of Self-Tap Screw No8, RM0043) for P04 will not arrive on 2025-11-03. Latest supplier ETA is 2025-11-08 (reason given: expedite). P04 holds about 4,234.9 ea against usage of roughly 143.8 ea/day. What should we do?",
+    "rm_id": "RM0043",
+    "plant_id": "P04",
+    "supplier_id": "SUP0185",
+    "trigger_po_id": "RMPO038903",
+    "gold_precedent_event_ids": [
+      "EVT00340",
+      "EVT00356",
+      "EVT00155"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01518",
+        "text": "We commit to purchase at least 262,030 units from Supplier 185 (SUP0185) under CT00219 by 2026-03-31",
+        "due_date": "2026-03-31",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01519",
+        "text": "Supplier 185 (SUP0185) commits to hold contract prices under CT00219 until 2026-03-31",
+        "due_date": "2026-03-31",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01736",
+        "text": "Supplier 185 (SUP0185) confirms revised ship-to-arrive date 2025-11-10 for RMPO038618",
+        "due_date": "2025-11-10",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01738",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO038618 by 2025-11-04 on expedited freight",
+        "due_date": "2025-11-04",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01741",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO038621 by 2025-10-26 on expedited freight",
+        "due_date": "2025-10-26",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01752",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO038903 by 2025-11-08 on expedited freight",
+        "due_date": "2025-11-08",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO038903; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO038903 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 74.03,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 74.03
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 4,000.0 ea from P01 (4d transit)",
+        "source_plant_id": "P01",
+        "est_cost": 415.86,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 415.86
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG006 (25d qualification)",
+        "est_cost": 8000.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 4234.93,
+      "daily_usage": 143.755,
+      "shortage_day_cost": 76.02,
+      "unit_price": 0.1322
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 74/0d, reallocate_stock 416/0d, substitute_rm 8,000/0d. The most similar-looking precedent (EVT00507) succeeded with a different action, but under different conditions; the context-matched precedents are EVT00340, EVT00356.",
+    "trap": true,
+    "trap_precedent_event_id": "EVT00507",
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "failed"
+  },
+  {
+    "scenario_id": "HS05",
+    "event_id": "EVT00540",
+    "as_of_date": "2025-11-04",
+    "day0_report": "Planner report 2025-11-04: Supplier 221 (SUP0221) has advised that RMPO039455 (100.0 m2 of Printed Pouch Film, RM0066) for P01 will not arrive on 2025-11-09. Latest supplier ETA is 2025-11-13 (reason given: severe weather). P01 holds about 194.2 m2 against usage of roughly 27.5 m2/day. What should we do?",
+    "rm_id": "RM0066",
+    "plant_id": "P01",
+    "supplier_id": "SUP0221",
+    "trigger_po_id": "RMPO039455",
+    "gold_precedent_event_ids": [
+      "EVT00217",
+      "EVT00352",
+      "EVT00344"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01753",
+        "text": "Supplier 221 (SUP0221) confirms revised ship-to-arrive date 2025-11-13 for RMPO039455",
+        "due_date": "2025-11-13",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO039455; cover gaps with spot buys",
+        "est_cost": 79.45,
+        "stockout_days": 3,
+        "fg_units_at_risk": 773,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO039455 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 56.33,
+        "stockout_days": 2,
+        "fg_units_at_risk": 773,
+        "direct_cost": 3.37
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO039455 and re-source from SUP0191 (lead 42d)",
+        "alt_supplier_id": "SUP0191",
+        "est_cost": 1284.17,
+        "stockout_days": 3,
+        "fg_units_at_risk": 773,
+        "direct_cost": 1204.72
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 8.3 m2 from P03 (4d transit)",
+        "source_plant_id": "P03",
+        "est_cost": 479.51,
+        "stockout_days": 3,
+        "fg_units_at_risk": 773,
+        "direct_cost": 400.06
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 194.24,
+      "daily_usage": 27.54,
+      "shortage_day_cost": 26.48,
+      "unit_price": 0.2404
+    },
+    "gold_best_action": "expedite",
+    "gold_reasoning": "expedite has the lowest simulated total cost (56: direct 3 + 2 stockout days) vs accept_delay 79/3d, reallocate_stock 480/3d, switch_supplier 1,284/3d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "accept_delay",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS06",
+    "event_id": "EVT00541",
+    "as_of_date": "2025-11-07",
+    "day0_report": "Planner report 2025-11-07: Supplier 136 (SUP0136) has advised that RMPO037624 (406.5 m2 of PP Label Stock, RM0002) for P02 will not arrive on 2025-11-11. Latest supplier ETA is 2025-11-22 (reason given: expedite). P02 holds about 1,043.2 m2 against usage of roughly 19.8 m2/day. What should we do?",
+    "rm_id": "RM0002",
+    "plant_id": "P02",
+    "supplier_id": "SUP0136",
+    "trigger_po_id": "RMPO037624",
+    "gold_precedent_event_ids": [
+      "EVT00002",
+      "EVT00301",
+      "EVT00343"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01763",
+        "text": "Supplier 136 (SUP0136) confirms revised ship-to-arrive date 2025-11-26 for RMPO037624",
+        "due_date": "2025-11-26",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01764",
+        "text": "Supplier 136 (SUP0136) commits to deliver RMPO037624 by 2025-11-22 on expedited freight",
+        "due_date": "2025-11-22",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO037624; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO037624 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 24.44,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 24.44
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO037624 and re-source from SUP0153 (lead 15d)",
+        "alt_supplier_id": "SUP0153",
+        "est_cost": 1226.3,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1226.3
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 285.7 m2 from P01 (6d transit)",
+        "source_plant_id": "P01",
+        "est_cost": 403.68,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 403.68
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 1043.25,
+      "daily_usage": 19.793,
+      "shortage_day_cost": 34.0,
+      "unit_price": 0.4294
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 24/0d, reallocate_stock 404/0d, switch_supplier 1,226/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS07",
+    "event_id": "EVT00538",
+    "as_of_date": "2025-11-16",
+    "day0_report": "Planner report 2025-11-16: Supplier 118 (SUP0118) has advised that RMPO037181 (300.0 kg of CRB Board, RM0077) for P01 will not arrive on 2025-11-10. Latest supplier ETA is 2025-11-22 (reason given: peak season capacity). P01 holds about 934.0 kg against usage of roughly 25.7 kg/day. What should we do?",
+    "rm_id": "RM0077",
+    "plant_id": "P01",
+    "supplier_id": "SUP0118",
+    "trigger_po_id": "RMPO037181",
+    "gold_precedent_event_ids": [
+      "EVT00346",
+      "EVT00163",
+      "EVT00147"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT00883",
+        "text": "We commit to purchase at least 127,310 units from Supplier 118 (SUP0118) under CT00119 by 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT00884",
+        "text": "Supplier 118 (SUP0118) commits to hold contract prices under CT00119 until 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01771",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-11-17 for RMPO036900",
+        "due_date": "2025-11-17",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01775",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-12-04 for RMPO037977",
+        "due_date": "2025-12-04",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01776",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-11-22 for RMPO037181",
+        "due_date": "2025-11-22",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01777",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO037977 by 2025-11-30 on expedited freight",
+        "due_date": "2025-11-30",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO037181; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO037181 in by ~6 days (success odds 20% in this context)",
+        "est_cost": 42.64,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 42.64
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO037181 and re-source from SUP0058 (lead 7d)",
+        "alt_supplier_id": "SUP0058",
+        "est_cost": 1255.29,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1255.29
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 300.0 kg from P04 (4d transit)",
+        "source_plant_id": "P04",
+        "est_cost": 409.14,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 409.14
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 933.99,
+      "daily_usage": 25.739,
+      "shortage_day_cost": 104.53,
+      "unit_price": 1.0153
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 43/0d, reallocate_stock 409/0d, switch_supplier 1,255/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "accept_delay",
+    "actual_outcome": "failed"
+  },
+  {
+    "scenario_id": "HS08",
+    "event_id": "EVT00535",
+    "as_of_date": "2025-11-25",
+    "day0_report": "Planner report 2025-11-25: Supplier 216 (SUP0216) has advised that RMPO038365 (3,000.0 kg of CR Steel Coil 1.2mm, RM0110) for P05 will not arrive on 2025-12-03. Latest supplier ETA is 2025-12-03 (reason given: expedite). P05 holds about 1,955.7 kg against usage of roughly 162.3 kg/day. What should we do?",
+    "rm_id": "RM0110",
+    "plant_id": "P05",
+    "supplier_id": "SUP0216",
+    "trigger_po_id": "RMPO038365",
+    "gold_precedent_event_ids": [
+      "EVT00345",
+      "EVT00166",
+      "EVT00156"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01784",
+        "text": "Supplier 216 (SUP0216) confirms revised ship-to-arrive date 2025-12-09 for RMPO038365",
+        "due_date": "2025-12-09",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01785",
+        "text": "Supplier 216 (SUP0216) commits to deliver RMPO038365 by 2025-12-03 on expedited freight",
+        "due_date": "2025-12-03",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO038365; cover gaps with spot buys",
+        "est_cost": 9886.48,
+        "stockout_days": 8,
+        "fg_units_at_risk": 1217,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO038365 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 11565.54,
+        "stockout_days": 8,
+        "fg_units_at_risk": 1217,
+        "direct_cost": 1679.06
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO038365 and re-source from SUP0055 (lead 23d)",
+        "alt_supplier_id": "SUP0055",
+        "est_cost": 11086.48,
+        "stockout_days": 8,
+        "fg_units_at_risk": 1217,
+        "direct_cost": 1200.0
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 3,000.0 kg from P04 (6d transit)",
+        "source_plant_id": "P04",
+        "est_cost": 571.33,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 571.33
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG019 (25d qualification)",
+        "est_cost": 17886.48,
+        "stockout_days": 8,
+        "fg_units_at_risk": 1217,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 1955.73,
+      "daily_usage": 162.291,
+      "shortage_day_cost": 1235.81,
+      "unit_price": 1.9037
+    },
+    "gold_best_action": "reallocate_stock",
+    "gold_reasoning": "reallocate_stock has the lowest simulated total cost (571: direct 571 + 0 stockout days) vs accept_delay 9,886/8d, switch_supplier 11,086/8d, expedite 11,566/8d, substitute_rm 17,886/8d. The most similar-looking precedent (EVT00219) succeeded with a different action, but under different conditions; the context-matched precedents are EVT00345, EVT00166.",
+    "trap": true,
+    "trap_precedent_event_id": "EVT00219",
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS09",
+    "event_id": "EVT00553",
+    "as_of_date": "2025-11-27",
+    "day0_report": "Planner report 2025-11-27: Supplier 179 (SUP0179) has advised that RMPO039157 (360.0 kg of Hardwood Pulp, RM0071) for P02 will not arrive on 2025-11-26. Latest supplier ETA is 2025-12-04 (reason given: expedite). P02 holds about 283.8 kg against usage of roughly 9.7 kg/day. What should we do?",
+    "rm_id": "RM0071",
+    "plant_id": "P02",
+    "supplier_id": "SUP0179",
+    "trigger_po_id": "RMPO039157",
+    "gold_precedent_event_ids": [
+      "EVT00136",
+      "EVT00361",
+      "EVT00354"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01095",
+        "text": "We commit to purchase at least 298,460 units from Supplier 179 (SUP0179) under CT00207 by 2026-08-31",
+        "due_date": "2026-08-31",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01790",
+        "text": "Supplier 179 (SUP0179) commits to deliver RMPO039157 by 2025-12-04 on expedited freight",
+        "due_date": "2025-12-04",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01791",
+        "text": "Supplier 179 (SUP0179) confirms revised ship-to-arrive date 2025-12-12 for RMPO039157",
+        "due_date": "2025-12-12",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO039157; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO039157 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 46.07,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 46.07
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO039157 and re-source from SUP0193 (lead 37d)",
+        "alt_supplier_id": "SUP0193",
+        "est_cost": 1437.74,
+        "stockout_days": 5,
+        "fg_units_at_risk": 239,
+        "direct_cost": 1259.62
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 346.1 kg from P03 (6d transit)",
+        "source_plant_id": "P03",
+        "est_cost": 409.49,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 409.49
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG012 (25d qualification)",
+        "est_cost": 8000.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 283.82,
+      "daily_usage": 9.743,
+      "shortage_day_cost": 35.62,
+      "unit_price": 0.9141
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 46/0d, reallocate_stock 409/0d, switch_supplier 1,438/5d, substitute_rm 8,000/0d. The most similar-looking precedent (EVT00487) succeeded with a different action, but under different conditions; the context-matched precedents are EVT00136, EVT00361.",
+    "trap": true,
+    "trap_precedent_event_id": "EVT00487",
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS10",
+    "event_id": "EVT00557",
+    "as_of_date": "2025-11-27",
+    "day0_report": "Planner report 2025-11-27: Supplier 118 (SUP0118) has advised that RMPO037978 (180.0 kg of NBSK Pulp G2, RM0073) for P03 will not arrive on 2025-11-26. Latest supplier ETA is 2025-12-03 (reason given: expedite). P03 holds about 410.8 kg against usage of roughly 7.5 kg/day. What should we do?",
+    "rm_id": "RM0073",
+    "plant_id": "P03",
+    "supplier_id": "SUP0118",
+    "trigger_po_id": "RMPO037978",
+    "gold_precedent_event_ids": [
+      "EVT00349",
+      "EVT00159",
+      "EVT00366"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT00883",
+        "text": "We commit to purchase at least 127,310 units from Supplier 118 (SUP0118) under CT00119 by 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT00884",
+        "text": "Supplier 118 (SUP0118) commits to hold contract prices under CT00119 until 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01771",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-11-17 for RMPO036900",
+        "due_date": "2025-11-17",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01775",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-12-04 for RMPO037977",
+        "due_date": "2025-12-04",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01776",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-11-22 for RMPO037181",
+        "due_date": "2025-11-22",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01777",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO037977 by 2025-11-30 on expedited freight",
+        "due_date": "2025-11-30",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO037978; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO037978 in by ~6 days (success odds 20% in this context)",
+        "est_cost": 41.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 41.0
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO037978 and re-source from SUP0086 (lead 60d)",
+        "alt_supplier_id": "SUP0086",
+        "est_cost": 1200.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1200.0
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 67.8 kg from P01 (4d transit)",
+        "source_plant_id": "P01",
+        "est_cost": 403.31,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 403.31
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG012 (25d qualification)",
+        "est_cost": 8000.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 410.77,
+      "daily_usage": 7.477,
+      "shortage_day_cost": 48.66,
+      "unit_price": 1.627
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 41/0d, reallocate_stock 403/0d, switch_supplier 1,200/0d, substitute_rm 8,000/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "failed"
+  },
+  {
+    "scenario_id": "HS11",
+    "event_id": "EVT00558",
+    "as_of_date": "2025-12-09",
+    "day0_report": "Planner report 2025-12-09: Supplier 118 (SUP0118) has advised that RMPO038677 (300.0 kg of CRB Board, RM0077) for P05 will not arrive on 2025-12-16. Latest supplier ETA is 2025-12-20 (reason given: peak season capacity). P05 holds about 676.4 kg against usage of roughly 16.8 kg/day. What should we do?",
+    "rm_id": "RM0077",
+    "plant_id": "P05",
+    "supplier_id": "SUP0118",
+    "trigger_po_id": "RMPO038677",
+    "gold_precedent_event_ids": [
+      "EVT00346",
+      "EVT00163",
+      "EVT00358"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT00883",
+        "text": "We commit to purchase at least 127,310 units from Supplier 118 (SUP0118) under CT00119 by 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT00884",
+        "text": "Supplier 118 (SUP0118) commits to hold contract prices under CT00119 until 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01786",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-12-06 for RMPO037978",
+        "due_date": "2025-12-06",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01787",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO037978 by 2025-12-03 on expedited freight",
+        "due_date": "2025-12-03",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01794",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO038401 by 2025-12-15 on expedited freight",
+        "due_date": "2025-12-15",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01797",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-12-26 for RMPO038403",
+        "due_date": "2025-12-26",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO038677; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO038677 in by ~6 days (success odds 20% in this context)",
+        "est_cost": 89.55,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 89.55
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO038677 and re-source from SUP0058 (lead 7d)",
+        "alt_supplier_id": "SUP0058",
+        "est_cost": 1255.29,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1255.29
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 265.5 kg from P01 (4d transit)",
+        "source_plant_id": "P01",
+        "est_cost": 408.09,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 408.09
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 676.43,
+      "daily_usage": 16.802,
+      "shortage_day_cost": 68.23,
+      "unit_price": 1.0153
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 90/0d, reallocate_stock 408/0d, switch_supplier 1,255/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "accept_delay",
+    "actual_outcome": "partial"
+  },
+  {
+    "scenario_id": "HS12",
+    "event_id": "EVT00562",
+    "as_of_date": "2025-12-11",
+    "day0_report": "Planner report 2025-12-11: Supplier 054 (SUP0054) has advised that RMPO040204 (30.8 ea of Stretch Hood, RM0010) for P05 will not arrive on 2025-12-13. Latest supplier ETA is 2025-12-15 (reason given: expedite). P05 holds about 22.9 ea against usage of roughly 2.0 ea/day. What should we do?",
+    "rm_id": "RM0010",
+    "plant_id": "P05",
+    "supplier_id": "SUP0054",
+    "trigger_po_id": "RMPO040204",
+    "gold_precedent_event_ids": [
+      "EVT00364",
+      "EVT00490",
+      "EVT00157"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01815",
+        "text": "Supplier 054 (SUP0054) commits to deliver RMPO040204 by 2025-12-15 on expedited freight",
+        "due_date": "2025-12-15",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO040204; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO040204 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 72.24,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 72.24
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO040204 and re-source from SUP0118 (lead 59d)",
+        "alt_supplier_id": "SUP0118",
+        "est_cost": 1238.23,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1238.23
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 22.4 ea from P01 (4d transit)",
+        "source_plant_id": "P01",
+        "est_cost": 405.35,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 405.35
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 22.9,
+      "daily_usage": 2.039,
+      "shortage_day_cost": 64.98,
+      "unit_price": 7.9663
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 72/0d, reallocate_stock 405/0d, switch_supplier 1,238/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "failed"
+  },
+  {
+    "scenario_id": "HS13",
+    "event_id": "EVT00561",
+    "as_of_date": "2025-12-12",
+    "day0_report": "Planner report 2025-12-12: Supplier 185 (SUP0185) has advised that RMPO040292 (8,000.0 ea of Self-Tap Screw No8, RM0043) for P04 will not arrive on 2025-12-17. Latest supplier ETA is 2025-12-20 (reason given: expedite). P04 holds about 911.5 ea against usage of roughly 143.8 ea/day. What should we do?",
+    "rm_id": "RM0043",
+    "plant_id": "P04",
+    "supplier_id": "SUP0185",
+    "trigger_po_id": "RMPO040292",
+    "gold_precedent_event_ids": [
+      "EVT00265",
+      "EVT00340",
+      "EVT00155"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT01518",
+        "text": "We commit to purchase at least 262,030 units from Supplier 185 (SUP0185) under CT00219 by 2026-03-31",
+        "due_date": "2026-03-31",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01792",
+        "text": "Supplier 185 (SUP0185) confirms revised ship-to-arrive date 2025-12-15 for RMPO039907",
+        "due_date": "2025-12-15",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01796",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO039907 by 2025-12-11 on expedited freight",
+        "due_date": "2025-12-11",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01801",
+        "text": "Supplier 185 (SUP0185) confirms revised ship-to-arrive date 2025-12-17 for RMPO040053",
+        "due_date": "2025-12-17",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01804",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO040053 by 2025-12-11 on expedited freight",
+        "due_date": "2025-12-11",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01816",
+        "text": "Supplier 185 (SUP0185) commits to deliver RMPO040292 by 2025-12-20 on expedited freight",
+        "due_date": "2025-12-20",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO040292; cover gaps with spot buys",
+        "est_cost": 357.2,
+        "stockout_days": 4,
+        "fg_units_at_risk": 560,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO040292 in by ~6 days (success odds 45% in this context)",
+        "est_cost": 263.24,
+        "stockout_days": 1,
+        "fg_units_at_risk": 560,
+        "direct_cost": 173.94
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 103.1 ea from P02 (4d transit)",
+        "source_plant_id": "P02",
+        "est_cost": 757.68,
+        "stockout_days": 4,
+        "fg_units_at_risk": 560,
+        "direct_cost": 400.48
+      },
+      {
+        "action": "substitute_rm",
+        "description": "qualify a substitute from group SG006 (25d qualification)",
+        "est_cost": 8357.2,
+        "stockout_days": 4,
+        "fg_units_at_risk": 560,
+        "direct_cost": 8000.0
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 911.46,
+      "daily_usage": 143.755,
+      "shortage_day_cost": 89.3,
+      "unit_price": 0.1553
+    },
+    "gold_best_action": "expedite",
+    "gold_reasoning": "expedite has the lowest simulated total cost (263: direct 174 + 1 stockout days) vs accept_delay 357/4d, reallocate_stock 758/4d, substitute_rm 8,357/4d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "expedite",
+    "actual_outcome": "success"
+  },
+  {
+    "scenario_id": "HS14",
+    "event_id": "EVT00533",
+    "as_of_date": "2025-12-20",
+    "day0_report": "Planner report 2025-12-20: Supplier 118 (SUP0118) has advised that RMPO038523 (30.0 ea of Stretch Hood, RM0010) for P03 will not arrive on 2025-12-11. Latest supplier ETA is 2026-01-13 (reason given: peak season capacity). P03 holds about 58.5 ea against usage of roughly 3.1 ea/day. What should we do?",
+    "rm_id": "RM0010",
+    "plant_id": "P03",
+    "supplier_id": "SUP0118",
+    "trigger_po_id": "RMPO038523",
+    "gold_precedent_event_ids": [
+      "EVT00342",
+      "EVT00145",
+      "EVT00363"
+    ],
+    "relevant_open_commitments": [
+      {
+        "commitment_id": "CMT00883",
+        "text": "We commit to purchase at least 127,310 units from Supplier 118 (SUP0118) under CT00119 by 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT00884",
+        "text": "Supplier 118 (SUP0118) commits to hold contract prices under CT00119 until 2026-02-28",
+        "due_date": "2026-02-28",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01820",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2026-01-06 for RMPO038524",
+        "due_date": "2026-01-06",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01821",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO038813 by 2025-12-22 on expedited freight",
+        "due_date": "2025-12-22",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01822",
+        "text": "Supplier 118 (SUP0118) confirms revised ship-to-arrive date 2025-12-29 for RMPO038813",
+        "due_date": "2025-12-29",
+        "status_at_day0": "open"
+      },
+      {
+        "commitment_id": "CMT01823",
+        "text": "Supplier 118 (SUP0118) commits to deliver RMPO038524 by 2025-12-29 on expedited freight",
+        "due_date": "2025-12-29",
+        "status_at_day0": "open"
+      }
+    ],
+    "candidate_actions": [
+      {
+        "action": "accept_delay",
+        "description": "accept the supplier ETA on RMPO038523; cover gaps with spot buys",
+        "est_cost": 0.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 0.0
+      },
+      {
+        "action": "expedite",
+        "description": "pay premium freight to pull RMPO038523 in by ~6 days (success odds 20% in this context)",
+        "est_cost": 38.66,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 38.66
+      },
+      {
+        "action": "switch_supplier",
+        "description": "cancel RMPO038523 and re-source from SUP0054 (lead 9d)",
+        "alt_supplier_id": "SUP0054",
+        "est_cost": 1200.0,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 1200.0
+      },
+      {
+        "action": "reallocate_stock",
+        "description": "transfer 21.2 ea from P02 (6d transit)",
+        "source_plant_id": "P02",
+        "est_cost": 405.86,
+        "stockout_days": 0,
+        "fg_units_at_risk": 0,
+        "direct_cost": 405.86
+      }
+    ],
+    "simulation_context": {
+      "on_hand_start": 58.55,
+      "daily_usage": 3.056,
+      "shortage_day_cost": 112.52,
+      "unit_price": 9.2056
+    },
+    "gold_best_action": "accept_delay",
+    "gold_reasoning": "accept_delay has the lowest simulated total cost (0: direct 0 + 0 stockout days) vs expedite 39/0d, reallocate_stock 406/0d, switch_supplier 1,200/0d.",
+    "trap": false,
+    "trap_precedent_event_id": null,
+    "actual_decision_taken": "accept_delay",
+    "actual_outcome": "success"
+  }
+]

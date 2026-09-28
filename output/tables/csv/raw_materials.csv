@@ -1,0 +1,135 @@
+rm_id,rm_name,rm_category,uom,std_unit_cost,criticality,is_single_source,is_hazmat,substitute_group_id
+RM0001,RSC Shipper 12ct,corrugate,ea,0.3964,A,0,0,
+RM0002,PP Label Stock,label_stock,m2,0.4371,A,0,0,
+RM0003,Shrink Film 60um,packaging_film,m2,0.1841,A,0,0,SG011
+RM0004,GMA Pallet,stretch_pallet,ea,4.7297,A,0,0,
+RM0005,Hot Melt HM-40,adhesive,kg,4.3006,A,1,0,SG002
+RM0006,HDPE Blow Grade,resin,kg,2.5312,A,0,0,
+RM0007,Tray 24ct,corrugate,ea,0.6985,A,1,0,
+RM0008,Paper Label Stock,label_stock,m2,0.3581,A,0,0,
+RM0009,BOPP Laminate,packaging_film,m2,0.2106,A,0,0,SG011
+RM0010,Stretch Hood,stretch_pallet,ea,8.471,A,0,0,
+RM0011,PVA Emulsion,adhesive,kg,5.8671,A,0,0,
+RM0012,PP Homopolymer,resin,kg,2.6637,A,0,0,SG015
+RM0013,Display Shipper,corrugate,ea,0.8278,A,0,0,
+RM0014,Enzyme Protease,actives,kg,32.7147,A,1,1,
+RM0015,Zinc Pyrithione,actives,kg,27.8889,A,0,0,SG001
+RM0016,Optical Brightener,actives,kg,20.6822,B,0,0,SG001
+RM0017,Chelant GLDA,actives,kg,30.395,A,1,0,SG001
+RM0018,Polymer Dispersant,actives,kg,29.2646,B,0,1,
+RM0019,Enzyme Protease G2,actives,kg,36.7916,B,0,0,
+RM0020,PSA Acrylic,adhesive,kg,3.6079,C,0,0,SG003
+RM0021,Hot Melt HM-40 G2,adhesive,kg,7.6206,B,0,0,
+RM0022,PVA Emulsion G2,adhesive,kg,3.1018,C,0,0,SG003
+RM0023,PSA Acrylic G2,adhesive,kg,8.9208,C,0,0,
+RM0024,Hot Melt HM-40 G3,adhesive,kg,8.1269,C,0,0,SG002
+RM0025,PVA Emulsion G3,adhesive,kg,4.4849,C,0,0,
+RM0026,PSA Acrylic G3,adhesive,kg,5.7144,C,0,0,
+RM0027,6061 Extrusion,aluminum_extrusion,kg,3.54,A,0,0,
+RM0028,6063 Profile,aluminum_extrusion,kg,5.47,A,0,0,
+RM0029,6061 Extrusion G2,aluminum_extrusion,kg,3.5676,B,0,0,SG004
+RM0030,6063 Profile G2,aluminum_extrusion,kg,4.2325,A,1,0,SG004
+RM0031,6061 Extrusion G3,aluminum_extrusion,kg,3.2767,A,1,0,
+RM0032,Ball Bearing 6204,bearing,ea,4.738,A,1,0,
+RM0033,Flip-Top Cap 28mm,closure,ea,0.1191,B,0,0,SG005
+RM0034,Trigger Sprayer,closure,ea,0.1279,C,0,0,
+RM0035,Pump Dispenser,closure,ea,0.0795,C,0,0,SG005
+RM0036,Screw Cap 38mm,closure,ea,0.1024,C,0,0,
+RM0037,Flip-Top Cap 28mm G2,closure,ea,0.1299,C,0,0,
+RM0038,Trigger Sprayer G2,closure,ea,0.1102,C,0,0,SG005
+RM0039,Blue Dye 1,colorant,kg,48.2209,B,0,0,
+RM0040,Green Pigment Disp,colorant,kg,15.7966,C,1,0,
+RM0041,TiO2 Slurry,colorant,kg,21.1466,C,1,0,
+RM0042,M6 Hex Bolt Kit,fasteners,ea,0.0501,B,0,0,
+RM0043,Self-Tap Screw No8,fasteners,ea,0.0945,A,1,0,SG006
+RM0044,Rivet Set,fasteners,ea,0.016,C,0,0,SG006
+RM0045,M6 Hex Bolt Kit G2,fasteners,ea,0.0976,B,0,0,
+RM0046,Self-Tap Screw No8 G2,fasteners,ea,0.0216,C,0,0,
+RM0047,Rivet Set G2,fasteners,ea,0.0855,C,0,0,SG006
+RM0048,Citrus Accord,fragrance,kg,52.768,A,0,0,
+RM0049,Fresh Linen Accord,fragrance,kg,18.9958,A,1,1,SG007
+RM0050,Floral Base,fragrance,kg,27.8217,B,0,0,SG008
+RM0051,Mint Oil,fragrance,kg,18.3209,C,0,1,
+RM0052,Ocean Accord,fragrance,kg,24.184,B,0,0,SG007
+RM0053,Citrus Accord G2,fragrance,kg,58.6551,B,0,1,
+RM0054,Fresh Linen Accord G2,fragrance,kg,59.1778,B,0,0,
+RM0055,Floral Base G2,fragrance,kg,46.3813,A,1,0,SG008
+RM0056,Mint Oil G2,fragrance,kg,55.2125,C,0,0,
+RM0057,Flexo Ink Black,ink,kg,13.522,C,0,0,
+RM0058,Flexo Ink Process Set,ink,kg,12.6895,C,0,0,
+RM0059,Overprint Varnish,ink,kg,16.8179,C,0,1,SG009
+RM0060,Flexo Ink Black G2,ink,kg,12.6139,C,1,0,SG009
+RM0061,Spunbond PP 15gsm,nonwoven,m2,0.1098,C,1,0,
+RM0062,SMS Nonwoven,nonwoven,m2,0.1336,C,1,0,SG010
+RM0063,Airlaid Core,nonwoven,m2,0.3754,C,0,0,
+RM0064,Spunbond PP 15gsm G2,nonwoven,m2,0.3494,C,0,0,SG010
+RM0065,Stretch Wrap,packaging_film,m2,0.3288,C,0,0,
+RM0066,Printed Pouch Film,packaging_film,m2,0.2558,C,0,0,
+RM0067,Shrink Film 60um G2,packaging_film,m2,0.2098,C,0,0,SG011
+RM0068,BOPP Laminate G2,packaging_film,m2,0.3179,C,1,0,
+RM0069,Fluff Pulp,pulp,kg,0.7416,B,0,0,
+RM0070,NBSK Pulp,pulp,kg,1.4089,B,0,0,
+RM0071,Hardwood Pulp,pulp,kg,0.9705,B,0,0,SG012
+RM0072,Fluff Pulp G2,pulp,kg,1.5383,B,0,0,SG012
+RM0073,NBSK Pulp G2,pulp,kg,1.5347,C,0,0,SG012
+RM0074,Hardwood Pulp G2,pulp,kg,0.9539,C,0,0,
+RM0075,Fluff Pulp G3,pulp,kg,1.4075,C,0,0,
+RM0076,SBS Board 18pt,pulp_board,kg,1.0625,B,0,0,SG013
+RM0077,CRB Board,pulp_board,kg,1.0699,B,0,0,
+RM0078,Kraftliner 42lb,pulp_board,kg,1.7322,B,0,0,SG013
+RM0079,SBS Board 18pt G2,pulp_board,kg,0.9226,B,0,0,SG013
+RM0080,CRB Board G2,pulp_board,kg,0.9704,B,0,0,
+RM0081,Kraftliner 42lb G2,pulp_board,kg,1.8225,A,1,0,
+RM0082,PET Bottle Grade,resin,kg,2.8109,A,0,0,SG016
+RM0083,LLDPE Film Grade,resin,kg,2.8564,A,0,0,
+RM0084,ABS General,resin,kg,1.1668,B,0,0,
+RM0085,HDPE Blow Grade G2,resin,kg,2.0871,B,0,0,SG016
+RM0086,PP Homopolymer G2,resin,kg,1.2963,B,0,0,
+RM0087,PET Bottle Grade G2,resin,kg,1.5208,B,0,0,
+RM0088,LLDPE Film Grade G2,resin,kg,1.86,B,0,0,
+RM0089,ABS General G2,resin,kg,1.662,B,0,0,SG014
+RM0090,HDPE Blow Grade G3,resin,kg,1.2894,C,1,0,
+RM0091,PP Homopolymer G3,resin,kg,2.3675,B,0,0,
+RM0092,PET Bottle Grade G3,resin,kg,1.739,C,0,0,SG015
+RM0093,LLDPE Film Grade G3,resin,kg,1.9855,C,0,0,SG017
+RM0094,ABS General G3,resin,kg,2.1439,C,0,0,
+RM0095,HDPE Blow Grade G4,resin,kg,2.4617,B,0,0,SG017
+RM0096,PP Homopolymer G4,resin,kg,2.1851,B,0,0,SG017
+RM0097,PET Bottle Grade G4,resin,kg,2.7635,C,0,0,
+RM0098,LLDPE Film Grade G4,resin,kg,2.019,C,0,0,
+RM0099,ABS General G4,resin,kg,1.5352,C,0,0,SG014
+RM0100,EPDM Compound,rubber_compound,kg,2.5621,B,0,0,SG018
+RM0101,NBR Compound,rubber_compound,kg,5.4571,B,0,0,SG018
+RM0102,EPDM Compound G2,rubber_compound,kg,3.5157,B,0,0,
+RM0103,NBR Compound G2,rubber_compound,kg,5.5283,B,0,0,
+RM0104,EPDM Compound G3,rubber_compound,kg,5.0589,B,0,0,
+RM0105,O-Ring Kit,seal_kit,ea,0.5639,B,0,0,
+RM0106,Propylene Glycol,solvent,L,1.2669,B,0,1,
+RM0107,Ethanol Denat,solvent,L,3.1645,B,0,1,
+RM0108,IPA 99,solvent,L,1.4914,C,0,0,
+RM0109,4140 Bar Stock,steel_bar,kg,1.6932,A,1,0,
+RM0110,CR Steel Coil 1.2mm,steel_coil,kg,1.7709,A,0,0,SG019
+RM0111,Galvanized Coil,steel_coil,kg,1.2878,A,1,0,
+RM0112,Stainless 304 Coil,steel_coil,kg,1.3207,A,0,0,
+RM0113,CR Steel Coil 1.2mm G2,steel_coil,kg,1.7419,A,0,0,SG019
+RM0114,Galvanized Coil G2,steel_coil,kg,1.5002,B,0,0,
+RM0115,Stainless 304 Coil G2,steel_coil,kg,1.3192,B,0,0,SG020
+RM0116,CR Steel Coil 1.2mm G3,steel_coil,kg,1.7211,B,0,0,SG020
+RM0117,Galvanized Coil G3,steel_coil,kg,1.1109,B,0,0,
+RM0118,SAP Grade A,superabsorbent,kg,2.9788,B,0,0,SG021
+RM0119,SAP Fine,superabsorbent,kg,3.3248,C,0,0,
+RM0120,SAP Grade A G2,superabsorbent,kg,2.2312,C,0,0,SG021
+RM0121,SAP Fine G2,superabsorbent,kg,2.4006,C,0,0,
+RM0122,SLES 70,surfactant,kg,2.4935,A,0,0,
+RM0123,LAS Acid,surfactant,kg,3.8193,A,0,0,SG023
+RM0124,Cocamidopropyl Betaine,surfactant,kg,2.2018,B,0,0,
+RM0125,AOS 40,surfactant,kg,3.66,A,0,0,
+RM0126,Nonionic Blend,surfactant,kg,3.0512,B,0,0,
+RM0127,SLES 70 G2,surfactant,kg,3.7796,B,0,0,
+RM0128,LAS Acid G2,surfactant,kg,2.0763,B,0,0,SG023
+RM0129,Cocamidopropyl Betaine G2,surfactant,kg,2.8779,B,0,0,SG022
+RM0130,AOS 40 G2,surfactant,kg,3.5339,B,0,1,SG022
+RM0131,Nonionic Blend G2,surfactant,kg,2.651,B,0,0,
+RM0132,Harness 6-Pin,wire_harness,ea,5.558,A,0,0,
+RM0133,Harness 12-Pin,wire_harness,ea,8.3148,A,0,0,
+RM0134,Harness 6-Pin G2,wire_harness,ea,4.3297,A,0,0,

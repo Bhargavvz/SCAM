@@ -1,0 +1,217 @@
+[
+  {
+    "name": "q4_slip_supplier",
+    "entities": {
+      "supplier_id": "SUP0118"
+    },
+    "description": "Supplier 118 (SUP0118) slips RM deliveries 7-14 days every November-December.",
+    "tables": [
+      "rm_purchase_orders",
+      "rm_po_revisions"
+    ],
+    "signal": "delay (received_at - promised_at) in Nov-Dec vs other months",
+    "recovery_test": {
+      "effect": 8.1,
+      "p_value": 1.8155645542402105e-56,
+      "metric": "mean delay diff (days) Nov-Dec vs rest",
+      "recovered": true
+    }
+  },
+  {
+    "name": "feb_port_country",
+    "entities": {
+      "country_code": "DE"
+    },
+    "description": "Port congestion hits RM shipments from DE every February (+5-12 days).",
+    "tables": [
+      "rm_purchase_orders",
+      "rm_po_revisions",
+      "disruption_events"
+    ],
+    "signal": "delay of POs promised in Feb vs other months, same country",
+    "recovery_test": {
+      "effect": 7.7,
+      "p_value": 0.0,
+      "metric": "mean delay diff (days) Feb vs rest",
+      "recovered": true
+    }
+  },
+  {
+    "name": "price_spike_shortage",
+    "entities": {
+      "rm_id": "RM0043",
+      "supplier_id": "SUP0185",
+      "spikes": [
+        "2024-04-13",
+        "2025-02-19",
+        "2025-11-04"
+      ]
+    },
+    "description": "Single-source Self-Tap Screw No8 (RM0043) goes on allocation 20-45 days after each price spike.",
+    "tables": [
+      "rm_supplier_catalog",
+      "rm_purchase_orders",
+      "rm_po_revisions"
+    ],
+    "signal": "late (>7d) rate of POs promised 20-65 days after a spike vs baseline",
+    "recovery_test": {
+      "effect": 2.55,
+      "p_value": 9.635483430775953e-07,
+      "metric": "late>7d rate ratio post-spike vs baseline",
+      "recovered": true
+    }
+  },
+  {
+    "name": "small_po_supplier",
+    "entities": {
+      "supplier_id": "SUP0179"
+    },
+    "description": "Supplier 179 (SUP0179) keeps delivery promises on small POs but misses on large ones (>1.5x MOQ).",
+    "tables": [
+      "rm_purchase_orders",
+      "rm_purchase_order_lines",
+      "rm_supplier_catalog",
+      "commitments"
+    ],
+    "signal": "late rate large vs small POs",
+    "recovery_test": {
+      "effect": 0.657,
+      "p_value": 6.985923034371508e-115,
+      "metric": "late-rate diff large vs small POs",
+      "recovered": true
+    }
+  },
+  {
+    "name": "expedite_cost_plant",
+    "entities": {
+      "plant_id": "P05"
+    },
+    "description": "Expedites into P05 cost ~2.1x the network average.",
+    "tables": [
+      "decisions",
+      "rm_purchase_order_lines"
+    ],
+    "signal": "expedite action_cost / expedited line value by plant",
+    "recovery_test": {
+      "effect": 2.12,
+      "p_value": 4.043371174834476e-36,
+      "metric": "expedite cost/value ratio plant vs others",
+      "recovered": true
+    }
+  },
+  {
+    "name": "q4_optimistic_notices",
+    "entities": {
+      "months": [
+        10,
+        11,
+        12
+      ]
+    },
+    "description": "Supplier ETA notices in Q4 understate the slip: first revised ETA is usually followed by a second slip.",
+    "tables": [
+      "rm_po_revisions"
+    ],
+    "signal": "share of slipped POs with >=2 supplier revisions, Q4 vs rest",
+    "recovery_test": {
+      "effect": 3.54,
+      "p_value": 0.0,
+      "metric": "multi-revision share ratio Q4 vs rest",
+      "recovered": true
+    }
+  },
+  {
+    "name": "secondary_quality_supplier",
+    "entities": {
+      "supplier_id": "SUP0089"
+    },
+    "description": "Lots from Supplier 089 (SUP0089) fail incoming QC ~10x more often.",
+    "tables": [
+      "rm_inventory_movements",
+      "rm_purchase_order_lines",
+      "supplier_scorecard_monthly"
+    ],
+    "signal": "QC reject (scrap) rate per received line",
+    "recovery_test": {
+      "effect": 8.26,
+      "p_value": 7.059954974177422e-41,
+      "metric": "QC reject rate ratio supplier vs others",
+      "recovered": true
+    }
+  },
+  {
+    "name": "lead_time_creep_supplier",
+    "entities": {
+      "supplier_id": "SUP0039",
+      "from": "2024-07-01"
+    },
+    "description": "Supplier 039 (SUP0039) actual lead times grow ~25% from 2024-07-01.",
+    "tables": [
+      "rm_purchase_orders"
+    ],
+    "signal": "received_at - ordered_at before vs after",
+    "recovery_test": {
+      "effect": 0.247,
+      "p_value": 1.0475171786004487e-38,
+      "metric": "relative actual lead-time increase",
+      "recovered": true
+    }
+  },
+  {
+    "name": "january_resin_increase",
+    "entities": {
+      "rm_category": "resin"
+    },
+    "description": "Resin RM prices step up every 1 January (index-linked).",
+    "tables": [
+      "rm_supplier_catalog",
+      "raw_materials"
+    ],
+    "signal": "share of resin price increases effective in January",
+    "recovery_test": {
+      "effect": 0.755,
+      "p_value": 2.3537276136913085e-94,
+      "metric": "share of resin price increases effective in January",
+      "recovered": true
+    }
+  },
+  {
+    "name": "summer_labor_plant",
+    "entities": {
+      "plant_id": "P02",
+      "months": [
+        7,
+        8
+      ]
+    },
+    "description": "Production delays at P02 in July-August are dominated by labor shortages.",
+    "tables": [
+      "production_runs"
+    ],
+    "signal": "share of 'labor' among delayed runs, plant Jul-Aug vs rest",
+    "recovery_test": {
+      "effect": 0.671,
+      "p_value": 0.0,
+      "metric": "labor share diff (plant Jul-Aug vs rest)",
+      "recovered": true
+    }
+  },
+  {
+    "name": "promo_underforecast_family",
+    "entities": {
+      "brand_family": "Evergreen"
+    },
+    "description": "Promo weeks of brand family Evergreen are under-forecast by ~35%.",
+    "tables": [
+      "product_demand_weekly",
+      "products_ext"
+    ],
+    "signal": "signed forecast error in promo weeks, family vs other families",
+    "recovery_test": {
+      "effect": -0.426,
+      "p_value": 3.7912943545993336e-48,
+      "metric": "signed promo forecast error diff (family vs others)",
+      "recovered": true
+    }
+  }
+]

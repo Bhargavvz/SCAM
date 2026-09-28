@@ -1,0 +1,306 @@
+{
+  "counts": {
+    "suppliers": 250,
+    "products": 2500,
+    "warehouses": 12,
+    "inventory_opening_balances": 30000,
+    "purchase_orders": 18000,
+    "purchase_order_lines": 53967,
+    "inventory_movements": 138436
+  },
+  "window": [
+    "2023-01-01",
+    "2025-12-31"
+  ],
+  "categories": [
+    "components",
+    "consumables",
+    "finished_goods",
+    "packaging",
+    "spares"
+  ],
+  "products_per_category": {
+    "components": 500,
+    "packaging": 500,
+    "finished_goods": 500,
+    "consumables": 500,
+    "spares": 500
+  },
+  "warehouses": [
+    "W001",
+    "W002",
+    "W003",
+    "W004",
+    "W005",
+    "W006",
+    "W007",
+    "W008",
+    "W009",
+    "W010",
+    "W011",
+    "W012"
+  ],
+  "warehouse_regions": {
+    "W001": "West",
+    "W002": "Southwest",
+    "W003": "Midwest",
+    "W004": "Northeast",
+    "W005": "Southeast",
+    "W006": "Canada",
+    "W007": "West",
+    "W008": "Southwest",
+    "W009": "Midwest",
+    "W010": "Northeast",
+    "W011": "Southeast",
+    "W012": "Canada"
+  },
+  "regions": [
+    "Canada",
+    "Midwest",
+    "Northeast",
+    "Southeast",
+    "Southwest",
+    "West"
+  ],
+  "countries": {
+    "DE": 42,
+    "PL": 38,
+    "CN": 37,
+    "CA": 35,
+    "VN": 34,
+    "US": 32,
+    "MX": 32
+  },
+  "id_patterns": {
+    "supplier": {
+      "prefix": "SUP",
+      "width": 4,
+      "example": "SUP0001"
+    },
+    "product": {
+      "prefix": "IP",
+      "width": 5,
+      "example": "IP00001"
+    },
+    "warehouse": {
+      "prefix": "W",
+      "width": 3,
+      "example": "W001"
+    },
+    "purchase_order": {
+      "prefix": "PO",
+      "width": 6,
+      "example": "PO000001"
+    },
+    "purchase_order_line": {
+      "prefix": "POL",
+      "width": 7,
+      "example": "POL0000001"
+    },
+    "movement": {
+      "prefix": "M",
+      "width": 8,
+      "example": "M00000001"
+    },
+    "transfer": {
+      "prefix": "T",
+      "width": 7,
+      "example": "T0000001"
+    },
+    "sku": {
+      "prefix": "SC-",
+      "width": 6,
+      "example": "SC-000001"
+    }
+  },
+  "supplier_lead_time": {
+    "count": 250.0,
+    "mean": 31.64,
+    "std": 15.77,
+    "min": 5.0,
+    "25%": 16.25,
+    "50%": 31.0,
+    "75%": 45.0,
+    "max": 60.0
+  },
+  "supplier_reliability": {
+    "count": 250.0,
+    "mean": 0.8894,
+    "std": 0.063,
+    "min": 0.784,
+    "25%": 0.832,
+    "50%": 0.895,
+    "75%": 0.9445,
+    "max": 0.995
+  },
+  "po_status_rate": {
+    "received": 0.8778,
+    "partial": 0.0737,
+    "open": 0.0259,
+    "cancelled": 0.0226
+  },
+  "po_late_rate": 0.7395,
+  "po_delay_days": {
+    "count": 17127.0,
+    "mean": 5.495,
+    "std": 5.195,
+    "min": -3.0,
+    "25%": 1.0,
+    "50%": 6.0,
+    "75%": 10.0,
+    "max": 14.0
+  },
+  "po_delay_values": [
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "po_lead_days": {
+    "count": 18000.0,
+    "mean": 31.34,
+    "std": 15.59,
+    "min": 5.0,
+    "25%": 16.0,
+    "50%": 30.0,
+    "75%": 45.0,
+    "max": 60.0
+  },
+  "delay_correlations": {
+    "delay": 1.0,
+    "reliability_score": -0.0088,
+    "lead_time_days": -0.0138
+  },
+  "delay_by_country": {
+    "CA": 5.425,
+    "CN": 5.505,
+    "DE": 5.516,
+    "MX": 5.531,
+    "PL": 5.578,
+    "US": 5.485,
+    "VN": 5.41
+  },
+  "delay_by_month": {
+    "1": 5.478,
+    "2": 5.471,
+    "3": 5.473,
+    "4": 5.591,
+    "5": 5.391,
+    "6": 5.68,
+    "7": 5.567,
+    "8": 5.55,
+    "9": 5.27,
+    "10": 5.593,
+    "11": 5.649,
+    "12": 5.17
+  },
+  "partial_line_rate": 0.07424907814034502,
+  "partial_fill_ratio": 0.5013670815759308,
+  "lines_per_po": {
+    "1": 3617,
+    "2": 3576,
+    "3": 3593,
+    "4": 3651,
+    "5": 3563
+  },
+  "sale_rows": 55441,
+  "sale_qty": {
+    "count": 55441.0,
+    "mean": 12.99,
+    "std": 7.19,
+    "min": 1.0,
+    "25%": 7.0,
+    "50%": 13.0,
+    "75%": 19.0,
+    "max": 25.0
+  },
+  "sale_rows_per_product_warehouse": {
+    "count": 25253.0,
+    "mean": 2.195,
+    "std": 1.2,
+    "min": 1.0,
+    "25%": 1.0,
+    "50%": 2.0,
+    "75%": 3.0,
+    "max": 9.0
+  },
+  "weekly_units_per_product": {
+    "count": 2500.0,
+    "mean": 1.8464,
+    "std": 0.4615,
+    "min": 0.5769,
+    "25%": 1.5192,
+    "50%": 1.8333,
+    "75%": 2.1474,
+    "max": 3.9103
+  },
+  "weeks_with_sales_share": 0.13254871794871795,
+  "sales_seasonality_month_index": {
+    "1": 1.029,
+    "2": 0.9713,
+    "3": 0.9953,
+    "4": 1.0087,
+    "5": 1.0017,
+    "6": 0.9926,
+    "7": 1.0021,
+    "8": 1.0064,
+    "9": 1.0066,
+    "10": 0.9998,
+    "11": 0.9698,
+    "12": 1.0166
+  },
+  "sales_trend_per_month_rel": -1e-05,
+  "revenue_gini_at_cost": 0.3705,
+  "stock_rows_at_or_below_zero": 25,
+  "stock_pw_at_or_below_zero": 14,
+  "stock_rows_at_or_below_rop_share": 0.2181547102078629,
+  "min_on_hand": -55.0,
+  "transfer_pairs": 12067,
+  "transfer_qty": {
+    "count": 12067.0,
+    "mean": 12.9,
+    "std": 7.25,
+    "min": 1.0,
+    "25%": 7.0,
+    "50%": 13.0,
+    "75%": 19.0,
+    "max": 25.0
+  },
+  "transfer_same_region_share": 0.09231789177094556,
+  "adjustment_neg_share": 0.4626268019220502,
+  "adjustment_qty": {
+    "count": 7492.0,
+    "mean": 0.16,
+    "std": 4.88,
+    "min": -8.0,
+    "25%": -4.0,
+    "50%": 1.0,
+    "75%": 4.0,
+    "max": 8.0
+  },
+  "receipt_matches_po": true,
+  "po_supplier_equals_product_supplier": 1.0,
+  "assumptions": [
+    "12 warehouses (not 6); 5 categories: components, consumables, finished_goods, packaging, spares.",
+    "FG PO delay is ~uniform over -3..14 days with corr(delay, reliability)=-0.009; FG lateness carries no supplier/country/month signal, so causal structure and planted patterns live in the new RM-side tables; FG anchors use the most extreme clusters.",
+    "Sales are intermittent: 2.19 sale rows per product-warehouse over the window; product_demand_weekly is therefore stored sparse (weeks with demand or a forecast).",
+    "Seasonality is flat (month index 0.97..1.03, per-day normalised) and trend ~-0.0000/month; forecasts use these fitted values.",
+    "FG stock touches <=0 in only 25 movement rows (14 product-warehouses): unfulfilled demand is rare and appears only there or in logged demand-shock weeks.",
+    "Make-products: the existing FG PO for a make-product is treated as the replenishment order to our own plant; its supplier_id is kept as recorded (read-only) and interpreted as the commercial counterparty.",
+    "RM quantities are decimal (kg, L, m2) or integer (ea); identities are checked to 1e-6 after 4-dp rounding."
+  ]
+}

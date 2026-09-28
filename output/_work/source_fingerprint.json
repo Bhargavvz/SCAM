@@ -1,0 +1,85 @@
+{
+  "suppliers": {
+    "rows": 250,
+    "columns": [
+      "supplier_id",
+      "supplier_name",
+      "country_code",
+      "lead_time_days",
+      "reliability_score"
+    ],
+    "sha256": "84aa6cb14e62ad7e5b2d7249a0e6c9436d7d86be741ae8bc55ffbd695108711d"
+  },
+  "products": {
+    "rows": 2500,
+    "columns": [
+      "product_id",
+      "supplier_id",
+      "sku",
+      "category",
+      "unit_cost",
+      "reorder_point"
+    ],
+    "sha256": "0e99b51abff6b2bafca833feb30c5ab92d474797389969124ffd1d9fa3fa591d"
+  },
+  "warehouses": {
+    "rows": 12,
+    "columns": [
+      "warehouse_id",
+      "warehouse_name",
+      "region",
+      "capacity_units"
+    ],
+    "sha256": "97ca44a01cb831cec75f81a69dd8e1a4e508f5abd5c756e5c041f796709b5496"
+  },
+  "inventory_opening_balances": {
+    "rows": 30000,
+    "columns": [
+      "opening_balance_id",
+      "product_id",
+      "warehouse_id",
+      "balance_date",
+      "opening_units"
+    ],
+    "sha256": "5b3e7f6c2a7547a19217057dc77598d0aa93a699e7696d795fbfaf7d114645a8"
+  },
+  "purchase_orders": {
+    "rows": 18000,
+    "columns": [
+      "purchase_order_id",
+      "supplier_id",
+      "warehouse_id",
+      "ordered_at",
+      "expected_at",
+      "received_at",
+      "status"
+    ],
+    "sha256": "5531dc647b36be746671f7b1ad74cde39555850e8ac7c93b372c25562ea40651"
+  },
+  "purchase_order_lines": {
+    "rows": 53967,
+    "columns": [
+      "purchase_order_line_id",
+      "purchase_order_id",
+      "product_id",
+      "quantity_ordered",
+      "quantity_received",
+      "unit_cost"
+    ],
+    "sha256": "cfe29718f1062b4fbd138636e85c07de94b445093cb6180b65665eb1c3a01746"
+  },
+  "inventory_movements": {
+    "rows": 138436,
+    "columns": [
+      "movement_id",
+      "product_id",
+      "warehouse_id",
+      "movement_at",
+      "movement_type",
+      "quantity_change",
+      "purchase_order_line_id",
+      "transfer_id"
+    ],
+    "sha256": "4773c52abb229da94caa4a0d756e587263a34eeed7ca16e381db6156fa4bd888"
+  }
+}
