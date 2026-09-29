@@ -15,27 +15,51 @@ The dataset (`dataset/`) is a read-only input. See `dataset/README.md`.
 
 ```mermaid
 flowchart LR
-  R[Disruption report] --> P[parse_report]
-  P --> S[simulate.py\nport of generator\nconsequence model]
-  P --> F{parallel evidence fan-out}
-  F --> H1[Hindsight recall: broad]
-  F --> H2[Hindsight recall: entity]
-  F --> H3[Hindsight recall: 120-day window]
-  F --> Q[sql_tools: commitments, scorecard,\nevents, links, prior decisions]
-  H1 & H2 & H3 --> AF[as-of filter +\nsupersession via DocIndex]
-  AF --> RF[reflect: native if safe,\nelse local synthesis]
-  S & AF & RF & Q --> L[Claude tool loop - effort low\nrecall / reflect / doc / sql / simulate]
-  L --> G{guardrails:\ncommitment breach, feasibility,\ncitations}
-  G -- reject --> L
-  G -- accept --> W[Claude rationale - effort high]
-  W --> N[number check vs simulator/DB]
-  N --> C[Decision card]
-  C -- --writeback --> LD[log_decision: decisions_live /\ncommitments_live + Hindsight retain\n+ MOCK external actions]
-  A[Any question] --> RT[capabilities.route] --> CH[capability handler:\nSQL ground truth + reflect\nbudget / response_schema] --> CA[Capability answer\n+ verified citations]
+
+  R["Disruption report"] --> P["parse_report"]
+
+  P --> S["simulate.py<br/>port of generator<br/>consequence model"]
+
+  P --> F{"parallel evidence fan-out"}
+
+  F --> H1["Hindsight recall: broad"]
+  F --> H2["Hindsight recall: entity"]
+  F --> H3["Hindsight recall: 120-day window"]
+  F --> Q["sql_tools: commitments, scorecard,<br/>events, links, prior decisions"]
+
+  H1 --> AF["as-of filter +<br/>supersession via DocIndex"]
+  H2 --> AF
+  H3 --> AF
+
+  AF --> RF["reflect: native if safe,<br/>else local synthesis"]
+
+  S --> L["Claude tool loop - effort low<br/>recall / reflect / doc / sql / simulate"]
+  AF --> L
+  RF --> L
+  Q --> L
+
+  L --> G{"guardrails:<br/>commitment breach, feasibility, citations"}
+
+  G -->|reject| L
+  G -->|accept| W["Claude rationale - effort high"]
+
+  W --> N["number check vs simulator / DB"]
+
+  N --> C["Decision card"]
+
+  C -->|writeback| LD["log_decision:<br/>decisions_live / commitments_live<br/>Hindsight retain + MOCK external actions"]
+
+  A["Any question"] --> RT["capabilities.route"]
+
+  RT --> CH["capability handler:<br/>SQL ground truth + reflect<br/>budget / response_schema"]
+
+  CH --> CA["Capability answer<br/>+ verified citations"]
+
   subgraph Data
-    DB[(dataset SQLite - read-only\nas-of TEMP views)]
-    LV[(live.sqlite - append-only)]
+    DB[("dataset SQLite - read-only<br/>as-of TEMP views")]
+    LV[("live.sqlite - append-only")]
   end
+
   Q --- DB
   Q --- LV
   S --- DB
