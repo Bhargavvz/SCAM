@@ -12,7 +12,13 @@
 
 **Tech Stack:** Python 3.11 (uv venv), `sqlite3` (stdlib), `anthropic` SDK (manual tool loop), `hindsight-client`, `pyyaml`, `python-dotenv`, `rich` (console), `pytest`.
 
-**Spec:** `docs/superpowers/specs/2026-09-29-sc-decision-agent-brief.md` is the user's brief verbatim, plus planning findings at the bottom. Read both before starting.
+**Also in scope (merged build prompt):** stand up Hindsight locally and configure the `supply-chain-memory` bank (mission, 8 directives, disposition). Ingest the 2,201 memory docs and create 12 pattern Mental Models behind a flag. Add a 7-capability question router and CLI on top of the agent. Add the eval extensions (recall/reflect mode, hop_count breakdown, pattern-detection probe with and without Mental Models) and the 7 capability demo queries.
+
+**Spec:**
+- `docs/superpowers/specs/2026-09-29-sc-decision-agent-brief.md`: the user's first brief verbatim, plus planning findings at the bottom. This is the primary spec.
+- `docs/superpowers/specs/2026-09-29-memory-agent-build-prompt-notes.md`: the second build prompt's requirements (mission, directives and demo queries verbatim) and where the dataset overrides it.
+
+Read both before starting.
 
 ## Global Constraints
 
@@ -27,6 +33,10 @@
 - Runtime writes go only to the live DB (`runtime/live.sqlite` by default; eval and demo use their own files). `decisions_live` / `commitments_live` are append-only (triggers abort UPDATE/DELETE).
 - External systems (ERP, supplier portal, email, MES, QMS) are never called. Their would-be actions are strings prefixed `[MOCK - no external call made]`.
 - Hindsight client calls pass only the kwargs the installed client accepts (signature introspection, same approach as `dataset/code/hindsight_loader.py`).
+- The Hindsight server runs locally in Docker (`ghcr.io/vectorize-io/hindsight`, API :8888, UI :9999, volume `hindsight-data`). It uses its own LLM credentials (`HINDSIGHT_API_LLM_PROVIDER`, `HINDSIGHT_API_LLM_API_KEY`, stable `HINDSIGHT_API_WORKER_ID`). These are read only by `scripts/start_hindsight.sh`, never by the agent.
+- One bank: `supply-chain-memory`. Mission and directives are copied verbatim from the merge-notes spec. The loader in `dataset/code/` is run unmodified, with `--log runtime/retention_log.jsonl` so nothing is written into `dataset/`.
+- Mental Models are gated by `MENTAL_MODELS_IN_REFLECT` (default `1`). With `0`, native reflect is called with `exclude_mental_models=True`. If the installed client cannot exclude them, construction fails loudly instead of silently including them. Mental Models never reach as-of runs before the corpus horizon, because they are only consulted by native reflect.
+- Installing the Docker image and running ingestion cost money and download data. Both need the user's go-ahead: show the loader's `--dry-run` token estimate first.
 - Commit messages end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ## Review Focus
@@ -46,7 +56,12 @@
 | `requirements.txt`, `pytest.ini`, `.env.example`, `.gitignore` | env + tooling |
 | `agent/config.py` | `Settings` from env; path resolution; validation |
 | `agent/setup_data.py` | unzip the SQLite copy into `data/` |
-| `agent/check_connectivity.py` | Stage 0 checks (DB + Hindsight known fact) |
+| `agent/check_connectivity.py` | Stage 0 checks (DB, Hindsight known fact, ingestion count) |
+| `scripts/start_hindsight.sh` | start / reuse the local Hindsight Docker container |
+| `agent/bank_setup.py` | bank mission, 8 directives, disposition - idempotent |
+| `agent/mental_models.py` | 12 pattern Mental Models (create / list / delete), tagged `planted-pattern` |
+| `agent/capabilities.py` | 7-capability router + handlers (reflect + SQL ground truth) + `CapabilityAnswer` |
+| `eval/run_pattern_probe.py`, `eval/pattern_probe.yaml` | pattern-detection probe (12 patterns, with/without Mental Models) |
 | `agent/db.py` | read-only connection, attached live DB, as-of TEMP views, live schema + append-only triggers |
 | `agent/sql_tools.py` | guarded `run_sql` + curated lookups (commitments, scorecard, events, links, decisions, record existence, schema) |
 | `agent/sim_rules.yaml` | constants and risk rules copied from the generator |
@@ -130,10 +145,17 @@ RETAIN_LEDGER_PATH=runtime/retain_ledger.jsonl
 CORPUS_PATH=dataset/memory_corpus.jsonl
 DATASET_DIR=dataset
 DEFAULT_AS_OF=2025-12-31
-# ---- Hindsight
+# ---- Hindsight (client side, used by the agent)
 HINDSIGHT_BASE_URL=http://localhost:8888
 HINDSIGHT_API_KEY=
 HINDSIGHT_BANK_ID=supply-chain-memory
+RETENTION_LOG_PATH=runtime/retention_log.jsonl
+# 1 = native reflect may use the 12 pattern Mental Models; 0 = exclude them (ablation)
+MENTAL_MODELS_IN_REFLECT=1
+# ---- Hindsight server (read only by scripts/start_hindsight.sh; the server's own LLM for extraction/reflect)
+HINDSIGHT_API_LLM_PROVIDER=openai
+HINDSIGHT_API_LLM_API_KEY=
+HINDSIGHT_API_WORKER_ID=sc-memory-worker-1
 # ---- Claude (credentials: ANTHROPIC_API_KEY or an `ant auth login` profile)
 LLM_MODEL=claude-opus-5
 LLM_STRUCTURED_EFFORT=low
@@ -161,7 +183,8 @@ import pytest
 from agent.config import ROOT, load_settings
 
 KEYS = ["DB_PATH", "LIVE_DB_PATH", "HINDSIGHT_BANK_ID", "LLM_MODEL", "LLM_STRUCTURED_EFFORT",
-        "LLM_RATIONALE_EFFORT", "LLM_TEMPERATURE_STRUCTURED", "DEFAULT_AS_OF", "WRITEBACK_RETAIN"]
+        "LLM_RATIONALE_EFFORT", "LLM_TEMPERATURE_STRUCTURED", "DEFAULT_AS_OF", "WRITEBACK_RETAIN",
+        "MENTAL_MODELS_IN_REFLECT", "RETENTION_LOG_PATH"]
 
 
 @pytest.fixture
@@ -179,6 +202,8 @@ def test_defaults_and_relative_paths(clean_env):
     assert s.llm_temperature_structured is None
     assert s.hindsight_bank_id == ""
     assert s.writeback_retain is True
+    assert s.mental_models_in_reflect is True
+    assert s.retention_log_path == ROOT / "runtime" / "retention_log.jsonl"
 
 
 def test_env_overrides(clean_env, monkeypatch, tmp_path):
@@ -251,6 +276,8 @@ class Settings:
     llm_temperature_structured: float | None
     llm_temperature_rationale: float | None
     writeback_retain: bool
+    retention_log_path: Path
+    mental_models_in_reflect: bool
 
 
 def load_settings(env_file: Path | None = None) -> Settings:
@@ -275,6 +302,8 @@ def load_settings(env_file: Path | None = None) -> Settings:
         llm_temperature_structured=_float_or_none(e("LLM_TEMPERATURE_STRUCTURED")),
         llm_temperature_rationale=_float_or_none(e("LLM_TEMPERATURE_RATIONALE")),
         writeback_retain=e("WRITEBACK_RETAIN", "1") == "1",
+        retention_log_path=_path(e("RETENTION_LOG_PATH", "runtime/retention_log.jsonl")),
+        mental_models_in_reflect=e("MENTAL_MODELS_IN_REFLECT", "1") == "1",
     )
     for name in ("llm_structured_effort", "llm_rationale_effort"):
         if getattr(s, name) not in EFFORTS:
@@ -405,10 +434,26 @@ def check_hindsight(settings: Settings) -> str:
                     c=_field(first, "context")))
 
 
+EXPECTED_MEMORY_DOCS = 2201  # split=memory rows in dataset/memory_corpus.jsonl
+
+
+def check_ingestion(settings: Settings) -> str:
+    import json
+
+    path = settings.retention_log_path
+    if not path.exists():
+        raise RuntimeError(f"{path} not found - run the loader (Task 1B)")
+    rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    ok = {r["doc_id"] for r in rows if r.get("status") == "ok"}
+    if len(ok) != EXPECTED_MEMORY_DOCS:
+        raise RuntimeError(f"{len(ok)}/{EXPECTED_MEMORY_DOCS} memory docs retained ok - re-run the loader (it resumes)")
+    return f"Ingestion ok: {len(ok)}/{EXPECTED_MEMORY_DOCS} memory docs retained"
+
+
 def main() -> int:
     s = load_settings()
     ok = True
-    for check in (check_db, check_hindsight):
+    for check in (check_db, check_ingestion, check_hindsight):
         try:
             print(check(s))
         except Exception as ex:  # report every failing check, not just the first
@@ -421,22 +466,506 @@ if __name__ == "__main__":
     raise SystemExit(main())
 ```
 
-- [ ] **Step 7: Run Stage 0 checks (manual gate)**
+- [ ] **Step 7: Run the DB half of Stage 0 (the Hindsight half runs at the end of Task 1B)**
 
-Run: `.venv/bin/python -m agent.setup_data && .venv/bin/python -m agent.check_connectivity`
+Run: `.venv/bin/python -m agent.setup_data && .venv/bin/python -c "from agent.config import load_settings; from agent.check_connectivity import check_db; print(check_db(load_settings()))"`
 Expected:
 ```
 .../data/inventory_supply_chain_v1_1_ext.sqlite
 DB ok: inventory_supply_chain_v1_1_ext.sqlite disruption_events=2696
-Hindsight ok: N results; known fact found; first hit document_id=DOC00.... mentioned_at=... context=...
 ```
-If `check_hindsight` fails, **stop and ask the user** for the correct `HINDSIGHT_BASE_URL` / `HINDSIGHT_BANK_ID` / API key. Nothing after Task 4 can be validated without the bank. Write down whether hits carry `document_id` (it drives Task 5's resolution path). Also note what `mentioned_at` looks like, e.g. whether it equals the doc timestamp.
+`python -m agent.check_connectivity` (all checks) is expected to fail on Hindsight until Tasks 1A and 1B have stood up and filled the bank.
 
 - [ ] **Step 8: Commit**
 
 ```bash
 git add requirements.txt pytest.ini .env.example .gitignore agent/ interface/__init__.py eval/__init__.py demo/__init__.py tests/ docs/
 git commit -m "feat: scaffold decision agent, config and Stage 0 connectivity checks
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 1A: Local Hindsight server and bank configuration
+
+**Files:**
+- Create: `scripts/start_hindsight.sh`, `agent/bank_setup.py`
+- Test: `tests/test_bank_setup.py`
+
+**Interfaces:**
+- Consumes: `Settings` (Task 1).
+- Produces: `agent.bank_setup.MISSION: str`, `TRAITS: list[str]`, `DIRECTIVES: list[tuple[str, str]]` (name, content; 8 items), `DISPOSITION: dict[str, int]`, `reflect_mission() -> str`, `make_client(settings)` (a `hindsight_client.Hindsight`), `configure_bank(client, bank_id: str, state_path: Path) -> list[str]` (log lines; idempotent), `main() -> int`.
+
+- [ ] **Step 1: Write the failing tests**
+
+`tests/test_bank_setup.py`:
+```python
+from agent.bank_setup import DIRECTIVES, DISPOSITION, MISSION, TRAITS, configure_bank, reflect_mission
+
+
+class FakeBankClient:
+    def __init__(self, with_list=True):
+        self.banks, self.config, self.directives = set(), {}, []
+        if not with_list:
+            self.list_directives = None  # simulate a client without the method
+
+    def create_bank(self, bank_id):
+        if bank_id in self.banks:
+            raise RuntimeError("409 bank exists")
+        self.banks.add(bank_id)
+
+    def update_bank_config(self, bank_id, **kw):
+        self.config[bank_id] = kw
+
+    def create_directive(self, bank_id, name, content):
+        self.directives.append((bank_id, name, content))
+
+    def list_directives(self, bank_id):
+        return [{"name": n} for b, n, _ in self.directives if b == bank_id]
+
+
+def test_configure_is_idempotent(tmp_path):
+    c = FakeBankClient()
+    configure_bank(c, "supply-chain-memory", tmp_path / "state.json")
+    configure_bank(c, "supply-chain-memory", tmp_path / "state.json")
+    assert len(c.directives) == 8
+    cfg = c.config["supply-chain-memory"]
+    assert cfg["reflect_mission"] == reflect_mission()
+    assert {k: cfg[k] for k in DISPOSITION} == {"disposition_skepticism": 4, "disposition_literalism": 4,
+                                                 "disposition_empathy": 2}
+
+
+def test_state_file_used_when_client_cannot_list(tmp_path):
+    c = FakeBankClient(with_list=False)
+    configure_bank(c, "b", tmp_path / "state.json")
+    configure_bank(c, "b", tmp_path / "state.json")
+    assert len(c.directives) == 8
+
+
+def test_prompt_text_is_verbatim():
+    assert MISSION.startswith("Institutional supply-chain memory for a multi-plant consumer-goods manufacturer.")
+    assert MISSION.endswith("recommend responses grounded in what worked before.")
+    assert len(DIRECTIVES) == 8 and len(TRAITS) == 4
+    assert DIRECTIVES[2][1] == ("Never recommend cancelling a purchase order without first checking open commitments "
+                                "with that supplier.")
+    assert all(t in reflect_mission() for t in TRAITS)
+```
+
+- [ ] **Step 2: Run to verify failure**
+
+Run: `.venv/bin/python -m pytest tests/test_bank_setup.py -v`
+Expected: ERROR `ModuleNotFoundError: No module named 'agent.bank_setup'`
+
+- [ ] **Step 3: Implement `agent/bank_setup.py`**
+
+```python
+"""Configure the `supply-chain-memory` bank: reflect mission (+ the four disposition traits), the 8 directives and
+Hindsight's numeric disposition. Idempotent - safe to run before and after ingestion.
+
+Hindsight's disposition is three 1-5 scales, so the build prompt's four traits map to skepticism 4 (cautious about
+switches), literalism 4 (data-driven, exact figures), empathy 2, and are also written into the reflect mission."""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+from agent.config import Settings, load_settings
+
+MISSION = (
+    "Institutional supply-chain memory for a multi-plant consumer-goods manufacturer. This bank stores the complete "
+    "operational history: suppliers, raw materials, plants, distribution centers, purchase orders, disruption events, "
+    "negotiations, commitments, and past decisions with their outcomes. Use it to recall specific historical facts "
+    "with evidence, connect causally related events across the supply chain, track open commitments and obligations, "
+    "evaluate consequences of candidate actions by referencing precedents, and recommend responses grounded in what "
+    "worked before.")
+TRAITS = [
+    "Cautious about supplier switches - always check commitment obligations first.",
+    "Data-driven - quantify cost and stockout-day impacts.",
+    "Precedent-aware - always look for similar past situations.",
+    "Proactive - flag risks even when not asked about them.",
+]
+DIRECTIVES = [
+    ("Cite evidence", "Cite the evidence (document dates and record IDs such as RPO, PO, EVT, DEC, CMT) behind every "
+                      "claim and recommendation."),
+    ("List affected commitments", "Always list open commitments that a recommended action could affect."),
+    ("Check commitments before cancelling", "Never recommend cancelling a purchase order without first checking open "
+                                            "commitments with that supplier."),
+    ("Prefer the latest document", "Prefer the most recent document when facts conflict; say which earlier statement "
+                                   "was superseded."),
+    ("Contrast precedents", "When citing a precedent, state how today's conditions differ from the precedent's "
+                            "conditions."),
+    ("Flag known supplier patterns", "When a supplier has a known pattern (seasonal delays, size-dependent reliability, "
+                                     "etc.), flag it explicitly."),
+    ("Show prediction, confidence, last time", "For decision recommendations, always show: predicted outcome, "
+                                               "confidence level, and what happened last time."),
+    ("Facts vs observations", "Distinguish between facts (from documents) and observations (consolidated patterns) in "
+                              "responses."),
+]
+DISPOSITION = {"disposition_skepticism": 4, "disposition_literalism": 4, "disposition_empathy": 2}
+
+
+def reflect_mission() -> str:
+    return MISSION + "\n\nHow you reason:\n" + "\n".join(f"- {t}" for t in TRAITS)
+
+
+def make_client(settings: Settings):
+    from hindsight_client import Hindsight
+
+    return Hindsight(base_url=settings.hindsight_base_url,
+                     **({"api_key": settings.hindsight_api_key} if settings.hindsight_api_key else {}))
+
+
+def _name(item):
+    return item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
+
+
+def _existing_directive_names(client, bank_id: str, state_path: Path) -> set[str]:
+    lister = getattr(client, "list_directives", None)
+    if lister is None:
+        return set(json.loads(state_path.read_text())) if state_path.exists() else set()
+    resp = lister(bank_id=bank_id)
+    items = resp if isinstance(resp, list) else (getattr(resp, "items", None) or getattr(resp, "directives", None) or [])
+    return {_name(i) for i in items}
+
+
+def configure_bank(client, bank_id: str, state_path: Path) -> list[str]:
+    log = []
+    try:
+        client.create_bank(bank_id=bank_id)
+        log.append(f"created bank {bank_id}")
+    except Exception as ex:  # the client raises when the bank already exists; real failures surface just below
+        log.append(f"bank {bank_id} already exists ({type(ex).__name__})")
+    client.update_bank_config(bank_id, reflect_mission=reflect_mission(), **DISPOSITION)
+    log.append(f"reflect mission + disposition {DISPOSITION} set")
+    have = _existing_directive_names(client, bank_id, state_path)
+    created = []
+    for name, content in DIRECTIVES:
+        if name not in have:
+            client.create_directive(bank_id=bank_id, name=name, content=content)
+            created.append(name)
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(sorted((have | set(created)) - {None})))
+    log.append(f"directives: {len(created)} created, {len(DIRECTIVES) - len(created)} already present")
+    return log
+
+
+def main() -> int:
+    s = load_settings()
+    if not s.hindsight_bank_id:
+        print("HINDSIGHT_BANK_ID is empty - set it in .env", file=sys.stderr)
+        return 1
+    for line in configure_bank(make_client(s), s.hindsight_bank_id,
+                               s.retention_log_path.with_name("bank_setup_state.json")):
+        print(line)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+- [ ] **Step 4: Run the tests**
+
+Run: `.venv/bin/python -m pytest tests/test_bank_setup.py -v`
+Expected: 3 passed
+
+- [ ] **Step 5: Write `scripts/start_hindsight.sh`**
+
+```bash
+#!/usr/bin/env bash
+# Start (or reuse) a local Hindsight server: API on :8888, Control Plane UI on :9999, data in volume hindsight-data.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+set -a; source .env; set +a
+: "${HINDSIGHT_API_LLM_API_KEY:?set HINDSIGHT_API_LLM_API_KEY in .env (the Hindsight server's own LLM key)}"
+if docker ps -a --format '{{.Names}}' | grep -qx hindsight; then
+  docker start hindsight >/dev/null
+else
+  docker run -d --name hindsight --restart unless-stopped --shm-size=1g -p 8888:8888 -p 9999:9999 \
+    -e HINDSIGHT_API_LLM_PROVIDER="${HINDSIGHT_API_LLM_PROVIDER:-openai}" \
+    -e HINDSIGHT_API_LLM_API_KEY="$HINDSIGHT_API_LLM_API_KEY" \
+    -e HINDSIGHT_API_WORKER_ID="${HINDSIGHT_API_WORKER_ID:-sc-memory-worker-1}" \
+    -v hindsight-data:/home/hindsight/.pg0 \
+    ghcr.io/vectorize-io/hindsight:latest >/dev/null
+fi
+for _ in $(seq 1 90); do
+  if curl -s -o /dev/null http://localhost:8888/; then echo "Hindsight API up on :8888, UI on :9999"; exit 0; fi
+  sleep 2
+done
+echo "Hindsight did not answer on :8888 within 3 minutes - see: docker logs hindsight" >&2
+exit 1
+```
+Then `chmod +x scripts/start_hindsight.sh`.
+
+- [ ] **Step 6: Start the server and configure the bank (live - ask the user first)**
+
+The first run pulls `ghcr.io/vectorize-io/hindsight:latest` (a multi-GB download). Ask the user before running it, and have them put the server LLM key in `.env` (`HINDSIGHT_API_LLM_PROVIDER`, `HINDSIGHT_API_LLM_API_KEY`).
+
+Run: `scripts/start_hindsight.sh && .venv/bin/python -m agent.bank_setup`
+Expected:
+```
+Hindsight API up on :8888, UI on :9999
+created bank supply-chain-memory
+reflect mission + disposition {...} set
+directives: 8 created, 0 already present
+```
+If the installed client's method names differ from `create_bank` / `update_bank_config` / `create_directive`, print `[m for m in dir(Hindsight) if not m.startswith('_')]`. Adapt `configure_bank`, and adapt the fake in the test first. Open http://localhost:9999 and confirm the mission, the 8 directives and the disposition are shown.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add scripts/start_hindsight.sh agent/bank_setup.py tests/test_bank_setup.py
+git commit -m "feat: local Hindsight server script and bank mission/directives/disposition setup
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 1B: Ingest the memory corpus, create the 12 pattern Mental Models, finish Stage 0
+
+**Files:**
+- Create: `agent/mental_models.py`
+- Test: `tests/test_mental_models.py`
+
+**Interfaces:**
+- Consumes: `make_client`, `configure_bank` (Task 1A); `check_connectivity` (Task 1); the unmodified `dataset/code/hindsight_loader.py`.
+- Produces: `agent.mental_models.TAG = "planted-pattern"`, `PATTERN_MODELS: dict[str, tuple[str, str]]` (pattern id → (name, source_query)), `model_name(pid) -> str`, `list_pattern_models(client, bank_id) -> dict[str, dict]` (name → {id, name, content}), `create_pattern_models(client, bank_id) -> list[str]`, `delete_pattern_models(client, bank_id) -> list[str]`, `main(argv=None) -> int` (`create | list | delete`).
+
+- [ ] **Step 1: Dry-run the loader and get the user's go-ahead**
+
+Run: `.venv/bin/python dataset/code/hindsight_loader.py --corpus dataset/memory_corpus.jsonl --bank supply-chain-memory --dry-run`
+Expected: `2201 memory docs (2023-01-02T... .. 2025-09-30T...), ~N tokens`, then the loader's own mission/directives and 3 sample payloads. The loader prints its own built-in mission. That is fine: Task 1A's configuration is the one applied, and Step 3 re-applies it.
+Show the user the token estimate (it is billed by the Hindsight server's LLM provider, and real extraction usage runs higher than the estimate). Wait for a yes.
+
+- [ ] **Step 2: Ingest (live, 15-30 min)**
+
+```bash
+.venv/bin/python dataset/code/hindsight_loader.py --corpus dataset/memory_corpus.jsonl --bank supply-chain-memory \
+  --base-url http://localhost:8888 --batch 25 --concurrency 5 --log runtime/retention_log.jsonl
+```
+Expected: progress lines `retained 25/2201 … retained 2201/2201`, with errors at 0 or close to it. The loader first tries `create_bank`, which fails harmlessly because Task 1A already created the bank. If errors > 0, re-run the same command: it resumes and skips docs logged `ok`.
+
+- [ ] **Step 3: Re-apply the bank configuration and run the full Stage 0 gate**
+
+Run: `.venv/bin/python -m agent.bank_setup && .venv/bin/python -m agent.check_connectivity`
+Expected:
+```
+... directives: 0 created, 8 already present
+DB ok: inventory_supply_chain_v1_1_ext.sqlite disruption_events=2696
+Ingestion ok: 2201/2201 memory docs retained
+Hindsight ok: N results; known fact found; first hit document_id=DOC00.... mentioned_at=... context=...
+```
+Write down whether hits carry `document_id` (it drives Task 5's resolution path), and what `mentioned_at` looks like (e.g. whether it equals the doc timestamp). If `check_hindsight` still fails, stop and show the user the error.
+
+- [ ] **Step 4: Write the failing Mental Model tests**
+
+`tests/test_mental_models.py`:
+```python
+import json
+
+from agent.mental_models import (PATTERN_MODELS, TAG, create_pattern_models, delete_pattern_models,
+                                 list_pattern_models, model_name)
+
+COUNTRY = {"CN": "China"}
+MONTH = {4: "April"}
+
+
+class FakeMMClient:
+    def __init__(self):
+        self.models, self.updates = {}, []
+
+    def create_mental_model(self, bank_id, name, source_query, tags):
+        mid = f"mm{len(self.models) + 1}"
+        self.models[mid] = {"id": mid, "name": name, "source_query": source_query, "tags": tags, "content": "..."}
+        return {"id": mid}
+
+    def update_mental_model(self, bank_id, mental_model_id, **kw):
+        self.updates.append((mental_model_id, kw))
+
+    def list_mental_models(self, bank_id, detail="content"):
+        return list(self.models.values())
+
+    def delete_mental_model(self, bank_id, mental_model_id):
+        del self.models[mental_model_id]
+
+
+def test_one_model_per_planted_pattern(base_settings):
+    patterns = json.loads((base_settings.dataset_dir / "planted_patterns.json").read_text())["patterns"]
+    assert sorted(PATTERN_MODELS) == sorted(p["pattern_id"] for p in patterns)
+    for p in patterns:
+        query = PATTERN_MODELS[p["pattern_id"]][1]
+        for v in p["entities"].values():
+            if isinstance(v, str):
+                assert v in query or COUNTRY.get(v, "\0") in query, (p["pattern_id"], v)
+            elif isinstance(v, int):
+                assert MONTH[v] in query
+        assert "%" not in query  # standing questions, not the answer key's effect sizes
+
+
+def test_create_is_idempotent_and_tagged():
+    c = FakeMMClient()
+    assert len(create_pattern_models(c, "b")) == 12
+    assert create_pattern_models(c, "b") == []
+    assert all(m["tags"][0] == TAG for m in c.models.values())
+    assert all(kw == {"trigger": {"refresh_after_consolidation": True}} for _, kw in c.updates)
+    assert model_name("P01") in list_pattern_models(c, "b")
+
+
+def test_delete_only_removes_pattern_models():
+    c = FakeMMClient()
+    c.create_mental_model("b", "Team notes", "unrelated", ["other"])
+    create_pattern_models(c, "b")
+    assert len(delete_pattern_models(c, "b")) == 12
+    assert [m["name"] for m in c.models.values()] == ["Team notes"]
+```
+
+- [ ] **Step 5: Run to verify failure**
+
+Run: `.venv/bin/python -m pytest tests/test_mental_models.py -v`
+Expected: ERROR `ModuleNotFoundError: No module named 'agent.mental_models'`
+
+- [ ] **Step 6: Implement `agent/mental_models.py`**
+
+```python
+"""The 12 planted-pattern Mental Models.
+
+Each one is a standing question that names the entity and the behaviour to watch, with no effect sizes. Hindsight
+answers it from the ingested memory and refreshes it after consolidation. All are tagged `planted-pattern` and named
+"[Pxx] ...", so they can be listed, excluded from reflect (MENTAL_MODELS_IN_REFLECT=0) or deleted as a group."""
+from __future__ import annotations
+
+import argparse
+
+from agent.bank_setup import make_client
+from agent.config import load_settings
+
+TAG = "planted-pattern"
+PATTERN_MODELS = {
+    "P01": ("SUP0247 Nov-Dec delivery reliability",
+            "How late do SUP0247 raw-material deliveries promised in November and December arrive compared with "
+            "other months, and what buffer should planners use for SUP0247 orders in Q4?"),
+    "P02": ("February delays from China-based suppliers",
+            "Do raw-material lots from China-based suppliers promised in February arrive later than in other months, "
+            "by how much, and how should critical February items be ordered?"),
+    "P03": ("RM0046 shortages after SUP0223 price increases",
+            "Does RM0046 (single-sourced from SUP0223) run short in the weeks after SUP0223 price increases, how "
+            "often has that happened, and what should we do when a new increase is announced?"),
+    "P04": ("SUP0091 reliability by order size",
+            "How does SUP0091's on-time delivery differ between small and large raw-material orders, and how should "
+            "large orders to SUP0091 be placed?"),
+    "P05": ("W005 expedite cost",
+            "How do expedite costs for finished goods delivered into warehouse W005 compare with expedites into "
+            "other warehouses, and how should expedites to W005 be handled?"),
+    "P06": ("P02 quarter-start maintenance overruns",
+            "How often are production runs at plant P02 planned in the first two weeks of a quarter delayed by "
+            "maintenance overruns, and how should P02 be scheduled?"),
+    "P07": ("RM0016 as substitute for RM0022 at P02",
+            "What happened to incoming QA rejects of RM0016 at plant P02 after product IP00973 switched from RM0022 "
+            "to RM0016, and what inspection or qualification is needed?"),
+    "P08": ("P03 as a transfer donor plant",
+            "How often do inter-plant raw-material transfers out of plant P03 leave P03 below safety stock compared "
+            "with other donor plants, and which plants should be preferred as donors?"),
+    "P09": ("SUP0237 recovery-date reliability",
+            "When SUP0237 re-promises a late raw-material lot, how often does it miss the new date compared with other "
+            "suppliers, and how should planners treat its revised dates?"),
+    "P10": ("Forecast bias for consumables",
+            "How do demand forecasts for the consumables category compare with actual demand, relative to other "
+            "categories, and how should consumables forecasts be adjusted?"),
+    "P11": ("SUP0179 lead-time trend",
+            "How have actual lead times from SUP0179 changed month by month since January 2025, and what should we "
+            "do about it?"),
+    "P12": ("SUP0005 April finished-goods lateness",
+            "How often are SUP0005 finished-goods purchase orders due in April late compared with other months, and "
+            "how should April deliveries from SUP0005 be handled?"),
+}
+
+
+def model_name(pid: str) -> str:
+    return f"[{pid}] {PATTERN_MODELS[pid][0]}"
+
+
+def _get(obj, *names):
+    for n in names:
+        v = obj.get(n) if isinstance(obj, dict) else getattr(obj, n, None)
+        if v is not None:
+            return v
+    return None
+
+
+def _items(resp) -> list:
+    return resp if isinstance(resp, list) else (_get(resp, "items", "mental_models") or [])
+
+
+def list_pattern_models(client, bank_id: str) -> dict[str, dict]:
+    names = {model_name(p) for p in PATTERN_MODELS}
+    out = {}
+    for m in _items(client.list_mental_models(bank_id=bank_id, detail="content")):
+        name = _get(m, "name")
+        if name in names:
+            out[name] = {"id": _get(m, "id", "mental_model_id"), "name": name, "content": _get(m, "content")}
+    return out
+
+
+def create_pattern_models(client, bank_id: str) -> list[str]:
+    have = list_pattern_models(client, bank_id)
+    created = []
+    for pid, (_, query) in PATTERN_MODELS.items():
+        name = model_name(pid)
+        if name in have:
+            continue
+        resp = client.create_mental_model(bank_id=bank_id, name=name, source_query=query, tags=[TAG, pid])
+        client.update_mental_model(bank_id=bank_id, mental_model_id=_get(resp, "id", "mental_model_id"),
+                                   trigger={"refresh_after_consolidation": True})
+        created.append(name)
+    return created
+
+
+def delete_pattern_models(client, bank_id: str) -> list[str]:
+    gone = []
+    for name, m in list_pattern_models(client, bank_id).items():
+        client.delete_mental_model(bank_id=bank_id, mental_model_id=m["id"])
+        gone.append(name)
+    return gone
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("action", choices=["create", "list", "delete"])
+    a = ap.parse_args(argv)
+    s = load_settings()
+    client = make_client(s)
+    if a.action == "create":
+        print("\n".join(create_pattern_models(client, s.hindsight_bank_id)) or "all 12 already exist")
+    elif a.action == "delete":
+        print("\n".join(delete_pattern_models(client, s.hindsight_bank_id)) or "none to delete")
+    else:
+        for name, m in sorted(list_pattern_models(client, s.hindsight_bank_id).items()):
+            print(f"{name}\n  {(m['content'] or '(content not generated yet)')[:300]}\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+- [ ] **Step 7: Run the tests**
+
+Run: `.venv/bin/python -m pytest tests/test_mental_models.py -v`
+Expected: 3 passed
+
+- [ ] **Step 8: Create the Mental Models for real**
+
+Run: `.venv/bin/python -m agent.mental_models create && .venv/bin/python -m agent.mental_models list`
+Expected: 12 names created; `list` shows 12 entries. Content may read "(content not generated yet)" until Hindsight finishes generating. Re-run `list` after a few minutes and paste 2-3 contents into the task notes. The P01 content should mention late November-December deliveries, or say memory is insufficient. Either way, record it: it is what the Mental Models actually learned from the corpus.
+
+- [ ] **Step 9: Commit**
+
+```bash
+git add agent/mental_models.py tests/test_mental_models.py agent/check_connectivity.py
+git commit -m "feat: ingest memory corpus and create 12 pattern mental models; Stage 0 green
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
@@ -479,9 +1008,7 @@ def db_factory(settings):
 
 `tests/test_db.py`:
 ```python
-import json
 import sqlite3
-from datetime import date, timedelta
 
 import pytest
 
@@ -867,7 +1394,10 @@ def test_prior_decisions_and_events(db_factory):
     con = db_factory("2025-10-14")
     decs = st.prior_decisions(con, "SUP0247", "RM0083", "2025-10-14")
     assert decs and all(d["decided_at"] <= "2025-10-14" for d in decs)
-    assert any(d["decision_type"] == "accept_delay" and d["outcome_label"] == "success" for d in decs)
+    # known outcomes rank before pending ones, so the trap precedent DEC00353 (accept_delay, success) is included
+    assert "DEC00353" in [d["decision_id"] for d in decs[:6]]
+    known = [d["outcome_label"] is not None for d in decs]
+    assert known == sorted(known, reverse=True)
     evs = st.prior_events(con, "SUP0247", "RM0083", "P01")
     assert evs and all(e["detected_at"] <= "2025-10-14" for e in evs)
     links = st.event_links_for(con, [e["event_id"] for e in evs])
@@ -1000,8 +1530,8 @@ def prior_events(con, supplier_id, rm_id, plant_id, limit: int = 12) -> list[dic
         FROM disruption_events e
         WHERE e.origin_entity_id IN (:sup, :rm, :plant)
            OR EXISTS (SELECT 1 FROM event_impacts i WHERE i.event_id = e.event_id AND i.entity_id = :rm)
-        ORDER BY same_rm DESC, e.detected_at DESC LIMIT :limit""",
-                 {"sup": supplier_id, "rm": rm_id, "plant": plant_id, "limit": limit})
+        ORDER BY same_rm DESC, e.detected_at DESC LIMIT :lim""",
+                 {"sup": supplier_id, "rm": rm_id, "plant": plant_id, "lim": limit})
 
 
 def event_links_for(con, event_ids: list[str]) -> list[dict]:
@@ -1014,21 +1544,26 @@ def event_links_for(con, event_ids: list[str]) -> list[dict]:
 
 
 def prior_decisions(con, supplier_id, rm_id, as_of: str, limit: int = 8) -> list[dict]:
+    """This deployment's own live decisions first, then historical decisions whose outcome is already known
+    on as_of (they carry lessons), then decisions still pending an outcome; newest first within each group.
+    Pure recency would hide the informative precedents: e.g. on 2025-10-14 the only SUP0247 accept_delay
+    with a known (successful) outcome is DEC00353, the 9th most recent decision."""
     return _rows(con, """
-        SELECT d.decision_id, d.event_id, d.decided_at, d.decision_type, d.chosen_option, d.expected_cost,
-               d.expected_stockout_days, d.actual_cost, d.actual_stockout_days, d.outcome_label, d.lesson_text,
-               d.outcome_attribution, d.source
-        FROM decisions d JOIN disruption_events e ON e.event_id = d.event_id
-        WHERE d.source = 'historical'
-          AND (e.origin_entity_id IN (:sup, :rm)
-               OR EXISTS (SELECT 1 FROM event_impacts i WHERE i.event_id = e.event_id AND i.entity_id = :rm))
-        UNION ALL
-        SELECT decision_id, event_ref, decided_at, decision_type, chosen_option, expected_cost,
-               expected_stockout_days, NULL, NULL, NULL, NULL, NULL, 'live'
-        FROM live.decisions_live
-        WHERE decided_at <= :as_of AND (supplier_id = :sup OR rm_id = :rm)
-        ORDER BY decided_at DESC LIMIT :limit""",
-                 {"sup": supplier_id, "rm": rm_id, "as_of": as_of, "limit": limit})
+        SELECT * FROM (
+            SELECT d.decision_id, d.event_id, d.decided_at, d.decision_type, d.chosen_option, d.expected_cost,
+                   d.expected_stockout_days, d.actual_cost, d.actual_stockout_days, d.outcome_label, d.lesson_text,
+                   d.outcome_attribution, d.source
+            FROM decisions d JOIN disruption_events e ON e.event_id = d.event_id
+            WHERE d.source = 'historical'
+              AND (e.origin_entity_id IN (:sup, :rm)
+                   OR EXISTS (SELECT 1 FROM event_impacts i WHERE i.event_id = e.event_id AND i.entity_id = :rm))
+            UNION ALL
+            SELECT decision_id, event_ref, decided_at, decision_type, chosen_option, expected_cost,
+                   expected_stockout_days, NULL, NULL, NULL, NULL, NULL, 'live'
+            FROM live.decisions_live
+            WHERE decided_at <= :as_of AND (supplier_id = :sup OR rm_id = :rm))
+        ORDER BY (source = 'live') DESC, (outcome_label IS NULL), decided_at DESC LIMIT :lim""",
+                 {"sup": supplier_id, "rm": rm_id, "as_of": as_of, "lim": limit})
 
 
 def record_exists(con, record_id: str) -> bool | None:
@@ -1125,10 +1660,6 @@ from agent.simulate import (SIMULATED, TAXONOMY, SimulationError, best_option, b
 @pytest.fixture(scope="module")
 def holdout(base_settings):
     return load_holdout(base_settings)
-
-
-def _ids(holdout):
-    return sorted(holdout)
 
 
 @pytest.mark.parametrize("sid", [f"HS{i:02d}" for i in range(1, 15)])
@@ -1410,7 +1941,8 @@ def _cancel(con, st: ScenarioState, rules, switch: dict, d_acc: int) -> dict:
     vol = [r["commitment_id"] for r in rows if "We order at least" in (r["commitment_text"] or "")]
     base = switch["cost"] if switch["feasible"] else d_acc * st.daily_block_cost
     penalty = rules["volume_breach_rate"] * st.lot_value * rules["volume_breach_multiplier"] if vol else 0
-    return _opt("cancel_po", arrival=switch.get("arrival", st.eta), stockout_days=switch.get("stockout_days", d_acc),
+    # the generator re-buys via the switch lane; with no alternative source the arrival is unknown (None)
+    return _opt("cancel_po", arrival=switch.get("arrival"), stockout_days=switch.get("stockout_days", d_acc),
                 cost=round(base + rules["cancel_fee_rate"] * st.lot_value + penalty, 0),
                 risk="high" if vol else "medium",
                 note=("cancelling would breach open volume commitment " + ", ".join(vol)) if vol
@@ -1455,7 +1987,7 @@ def simulate_options(con, st: ScenarioState, rules=None) -> list[dict]:
         if a["feasible"]:
             a["score"] = round(cq.total_score(a["cost"], 0, 0, a["risk"]), 0)
             a["service_impact_units"] = st.service_units if a["stockout_days"] > 0 else 0
-            a["arrival"] = a["arrival"].isoformat()
+            a["arrival"] = a["arrival"].isoformat() if a["arrival"] else None
     for action in TAXONOMY:
         if action not in SIMULATED:
             acts.append({"action": action, "feasible": False, "supported": False,
@@ -1560,16 +2092,17 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
   - `agent.hindsight_tools`:
     - `MemoryHit(text, fact_type, doc_id, doc_date, doc_type, source, superseded_by)` with `to_dict()`
     - `RecallResult(query, as_of, hits, raw_count, dropped_future, dropped_unresolved)` with `doc_ids()` and `to_payload(limit=25)`
-    - `ReflectResult(question, as_of, mode, text, doc_ids, hits)`, where `mode` is `"native"` or `"local_filtered"`
+    - `ReflectResult(question, as_of, mode, text, doc_ids, hits, structured=None)`, where `mode` is `"native"` or `"local_filtered"` and `structured` is the `response_schema` output (native only)
     - `RetainLedger(path)` with `entries()`, `append(entry)`, `max_timestamp(bank_id)`, `doc_ids(bank_id)`
-  - `HindsightMemory(client, bank_id, index, ledger, live_memory_ids, synthesizer=None, policy=("", []))` with:
+  - `HindsightMemory(client, bank_id, index, ledger, live_memory_ids, synthesizer=None, policy=("", []), use_mental_models=True)` with:
     - `recall(query, as_of, *, window_days=None, budget="mid", max_tokens=4096) -> RecallResult`
     - `native_reflect_allowed(as_of) -> bool`
-    - `reflect(question, as_of, *, budget="mid") -> ReflectResult`
+    - `reflect(question, as_of, *, budget="mid", response_schema=None) -> ReflectResult`
+    - `use_mental_models=False` passes `exclude_mental_models=True` to native reflect, and raises `ValueError` at construction if the client's `reflect` has no such parameter
     - `get_document(doc_id, as_of) -> dict | None`
     - `retain_experience(*, document_id, content, context, timestamp, metadata) -> str` (returns `"ok"` or `"error: ..."`)
     - attribute `policy_text: str`
-  - Other exports: `load_bank_policy(dataset_dir) -> tuple[str, list[str]]`; `build_memory(settings, live_memory_ids, synthesizer=None) -> HindsightMemory`.
+  - Other exports: `load_bank_policy() -> tuple[str, list[str]]` (the bank's mission + traits and the 8 directive texts from `agent.bank_setup`); `build_memory(settings, live_memory_ids, synthesizer=None) -> HindsightMemory`.
   - `synthesizer` signature: `(question: str, hits: list[MemoryHit], policy_text: str) -> str`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -1689,9 +2222,33 @@ def test_retain_logs_to_ledger(index, tmp_path):
     assert mem.ledger.doc_ids("bank") == {"DECL00001.ab12"}
 
 
-def test_bank_policy_loaded_from_loader(base_settings):
-    mission, directives = load_bank_policy(base_settings.dataset_dir)
-    assert "supply-chain memory" in mission and any("open commitments" in d for d in directives)
+def test_bank_policy_matches_bank_setup():
+    mission, directives = load_bank_policy()
+    assert "supply-chain memory" in mission and "Proactive" in mission
+    assert len(directives) == 8 and any("open commitments" in d for d in directives)
+
+
+class SchemaReflectClient(FakeHindsight):
+    def reflect(self, bank_id, query, budget="low", include_facts=False, response_schema=None,
+                exclude_mental_models=False):
+        self.calls.append(("reflect", dict(response_schema=response_schema, exclude=exclude_mental_models)))
+        return SimpleNamespace(text="t", structured_output={"recommendation": "x"},
+                               based_on=SimpleNamespace(memories=[]))
+
+
+def test_reflect_schema_and_mental_model_exclusion(index, tmp_path):
+    client = SchemaReflectClient()
+    mem = HindsightMemory(client, "bank", index, RetainLedger(tmp_path / "l.jsonl"), lambda: set(),
+                          use_mental_models=False)
+    r = mem.reflect("q", "2025-10-14", budget="high", response_schema={"type": "object"})
+    assert r.structured == {"recommendation": "x"}
+    assert client.calls[-1] == ("reflect", {"response_schema": {"type": "object"}, "exclude": True})
+
+
+def test_mental_model_exclusion_unsupported_fails_loudly(index, tmp_path):
+    with pytest.raises(ValueError, match="exclude_mental_models"):
+        HindsightMemory(FakeHindsight(), "bank", index, RetainLedger(tmp_path / "l.jsonl"), lambda: set(),
+                        use_mental_models=False)
 ```
 
 - [ ] **Step 2: Run to verify failure**
@@ -1808,11 +2365,11 @@ Hindsight recall has no hard "nothing after date X" filter and reflect has no da
   from the holdout split, or unresolvable is dropped and counted;
 * reflect runs natively only when nothing in the bank can be newer than as_of (corpus horizon and the
   bank-wide retain ledger); otherwise it is an as-of-filtered recall + local synthesis guided by the
-  bank's own mission and directives (imported from dataset/code/hindsight_loader.py).
+  bank's own mission, traits and directives (agent/bank_setup.py). Mental Models are only ever consulted
+  by native reflect, so they obey the same guard.
 """
 from __future__ import annotations
 
-import importlib.util
 import inspect
 import json
 from dataclasses import asdict, dataclass, field
@@ -1820,17 +2377,15 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
 
+from agent.bank_setup import DIRECTIVES, make_client, reflect_mission
 from agent.config import Settings
 from agent.corpus import DocIndex, as_of_end, load_index, parse_ts
 
 LIVE_PREFIX = "DECL"
 
 
-def load_bank_policy(dataset_dir: Path) -> tuple[str, list[str]]:
-    spec = importlib.util.spec_from_file_location("sc_hindsight_loader", dataset_dir / "code" / "hindsight_loader.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.MISSION, list(mod.DIRECTIVES)
+def load_bank_policy() -> tuple[str, list[str]]:
+    return reflect_mission(), [content for _, content in DIRECTIVES]
 
 
 def _field(obj, name, default=None):
@@ -1886,6 +2441,7 @@ class ReflectResult:
     text: str | None
     doc_ids: list[str]
     hits: list[MemoryHit]
+    structured: dict | None = None
 
 
 class RetainLedger:
@@ -1919,11 +2475,16 @@ class HindsightMemory:
     def __init__(self, client, bank_id: str, index: DocIndex, ledger: RetainLedger,
                  live_memory_ids: Callable[[], set[str]],
                  synthesizer: Callable[[str, list[MemoryHit], str], str] | None = None,
-                 policy: tuple[str, list[str]] = ("", [])):
+                 policy: tuple[str, list[str]] = ("", []), use_mental_models: bool = True):
         if not bank_id:
             raise ValueError("HINDSIGHT_BANK_ID is empty - set it in .env")
+        if not use_mental_models and "exclude_mental_models" not in inspect.signature(client.reflect).parameters:
+            raise ValueError("MENTAL_MODELS_IN_REFLECT=0 but the installed hindsight-client reflect() has no "
+                             "exclude_mental_models parameter; run `python -m agent.mental_models delete` for the "
+                             "ablation instead")
         self.client, self.bank_id, self.index, self.ledger = client, bank_id, index, ledger
         self.live_memory_ids, self.synthesizer = live_memory_ids, synthesizer
+        self.use_mental_models = use_mental_models
         mission, directives = policy
         self.policy_text = f"Mission: {mission}\nDirectives:\n" + "\n".join(f"- {d}" for d in directives)
 
@@ -1973,13 +2534,20 @@ class HindsightMemory:
             return False
         return self.ledger.doc_ids(self.bank_id) <= self.live_memory_ids()
 
-    def reflect(self, question: str, as_of: str, *, budget: str = "mid") -> ReflectResult:
+    def reflect(self, question: str, as_of: str, *, budget: str = "mid",
+                response_schema: dict | None = None) -> ReflectResult:
         if self.native_reflect_allowed(as_of):
-            resp = _call(self.client.reflect, bank_id=self.bank_id, query=question, budget=budget, include_facts=True)
+            kw = dict(bank_id=self.bank_id, query=question, budget=budget, include_facts=True)
+            if response_schema is not None:
+                kw["response_schema"] = response_schema
+            if not self.use_mental_models:
+                kw["exclude_mental_models"] = True
+            resp = _call(self.client.reflect, **kw)
             based = _field(_field(resp, "based_on"), "memories") or []
             hits = [h for h, _ in (self._resolve(m, as_of) for m in based) if h]
             return ReflectResult(question, as_of, "native", _field(resp, "text"),
-                                 sorted({h.doc_id for h in hits if h.doc_id}), hits)
+                                 sorted({h.doc_id for h in hits if h.doc_id}), hits,
+                                 structured=_field(resp, "structured_output"))
         rec = self.recall(question, as_of, budget="high")
         text = self.synthesizer(question, rec.hits, self.policy_text) if self.synthesizer else None
         return ReflectResult(question, as_of, "local_filtered", text, rec.doc_ids(), rec.hits)
@@ -2008,19 +2576,15 @@ class HindsightMemory:
 
 def build_memory(settings: Settings, live_memory_ids: Callable[[], set[str]],
                  synthesizer: Callable[[str, list[MemoryHit], str], str] | None = None) -> HindsightMemory:
-    from hindsight_client import Hindsight
-
-    client = Hindsight(base_url=settings.hindsight_base_url,
-                       **({"api_key": settings.hindsight_api_key} if settings.hindsight_api_key else {}))
-    return HindsightMemory(client, settings.hindsight_bank_id, load_index(settings.corpus_path),
+    return HindsightMemory(make_client(settings), settings.hindsight_bank_id, load_index(settings.corpus_path),
                            RetainLedger(settings.retain_ledger_path), live_memory_ids, synthesizer,
-                           load_bank_policy(settings.dataset_dir))
+                           load_bank_policy(), use_mental_models=settings.mental_models_in_reflect)
 ```
 
 - [ ] **Step 5: Run the unit tests**
 
 Run: `.venv/bin/python -m pytest tests/test_hindsight_tools.py -v`
-Expected: 9 passed
+Expected: 11 passed
 
 - [ ] **Step 6: Add and run a live recall test (Stage 1 gate on the real bank)**
 
@@ -2103,7 +2667,7 @@ class FakeClient:
 
 def test_request_shape_with_fallback(settings):
     c = FakeClient(_resp())
-    llm = LLM(settings, client=c)
+    llm = LLM(replace(settings, llm_refusal_fallback="default"), client=c)
     llm.create(system="sys", messages=[{"role": "user", "content": "hi"}], tools=[{"name": "t"}], effort="low")
     assert c.path == "beta"
     assert c.kw["betas"] == ["server-side-fallback-2026-07-01"] and c.kw["fallbacks"] == "default"
@@ -2615,8 +3179,9 @@ class FakeLLM:
 
 
 class FakeMemory:
-    def __init__(self, hits=(), fail=False):
+    def __init__(self, hits=(), fail=False, reflect_text="fake reflection"):
         self.hits, self.fail, self.recalls, self.retained = list(hits), fail, [], []
+        self.reflect_text = reflect_text
 
     def recall(self, query, as_of, *, window_days=None, budget="mid", max_tokens=4096):
         if self.fail:
@@ -2624,9 +3189,11 @@ class FakeMemory:
         self.recalls.append((query, as_of, window_days))
         return RecallResult(query, as_of, list(self.hits), len(self.hits), 0, 0)
 
-    def reflect(self, question, as_of, *, budget="mid"):
-        return ReflectResult(question, as_of, "local_filtered", "fake reflection",
-                             sorted({h.doc_id for h in self.hits if h.doc_id}), list(self.hits))
+    def reflect(self, question, as_of, *, budget="mid", response_schema=None):
+        self.reflects = getattr(self, "reflects", []) + [(question, as_of, budget, response_schema)]
+        return ReflectResult(question, as_of, "local_filtered", self.reflect_text,
+                             sorted({h.doc_id for h in self.hits if h.doc_id}), list(self.hits),
+                             structured={"confidence": "medium"} if response_schema else None)
 
     def get_document(self, doc_id, as_of):
         return None
@@ -2645,6 +3212,7 @@ def corpus_hit(doc_id, date, text="memory fact"):
 `tests/test_agent_core.py`:
 ```python
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -2665,6 +3233,9 @@ def hs05(base_settings):
 
 
 def agent(settings, script, hits=(), fail=False):
+    # pin the knobs the assertions depend on, whatever the developer's .env says
+    settings = replace(settings, llm_structured_effort="low", llm_rationale_effort="high",
+                       llm_temperature_structured=None, llm_temperature_rationale=None)
     llm, mem = FakeLLM(script), FakeMemory(hits, fail)
     return DecisionAgent(settings, llm, mem, settings.live_db_path), llm, mem
 
@@ -2751,6 +3322,18 @@ def test_sql_guard_error_goes_back_to_model(settings, hs05):
     assert "only SELECT" in json.loads(result["content"])["error"]
 
 
+def test_reflect_tool_available_to_model(settings, hs05):
+    a, llm, _ = agent(settings, [
+        response(tool_use("hindsight_reflect", {"question": "What happened with SUP0247 before?"})),
+        response(tool_use("submit_recommendation", submission("switch_supplier", cited_doc_ids=["DOC000001"]))),
+        response(text("ok"), stop="end_turn"),
+    ], hits=[corpus_hit("DOC000001", "2023-01-02")])
+    card = a.run(hs05["day0_report"], as_of=hs05["day0"], context=holdout_context(hs05))
+    out = json.loads(llm.calls[1]["messages"][-1]["content"][0]["content"])
+    assert out["mode"] == "local_filtered" and out["doc_ids"] == ["DOC000001"]
+    assert card.cited_doc_ids == ["DOC000001"]
+
+
 def test_memory_failure_is_reported(settings, hs05):
     a, _, _ = agent(settings, [], fail=True)
     with pytest.raises(MemoryUnavailable, match="HINDSIGHT_BASE_URL"):
@@ -2820,6 +3403,10 @@ TOOL_RECALL = _strict("hindsight_recall",
                       "supersede it.",
                       {"query": {"type": "string"},
                        "window_days": {"type": ["integer", "null"], "description": "only the last N days before as_of, or null"}})
+TOOL_REFLECT = _strict("hindsight_reflect",
+                       "Synthesis over memory guided by the bank's mission and directives (what happened, what was "
+                       "tried, what worked, what is still open). Respects as_of; returns the doc_ids it drew on.",
+                       {"question": {"type": "string"}})
 TOOL_DOC = _strict("memory_get_document", "Read the full text of a memory document by doc_id (only if dated on or before as_of).",
                    {"doc_id": {"type": "string"}})
 TOOL_SQL = _strict("sql_query",
@@ -2848,8 +3435,8 @@ TOOL_SUBMIT = _strict("submit_recommendation", "Submit the final structured reco
 TOOL_ANSWER = _strict("submit_answer", "Submit the final answer (call exactly once).", {
     "answer": {"type": "string"}, "cited_doc_ids": _STR_LIST, "cited_record_ids": _STR_LIST,
     "confidence": {"type": "string", "enum": ["low", "medium", "high"]}})
-DECIDE_TOOLS = [TOOL_RECALL, TOOL_DOC, TOOL_SQL, TOOL_SIM, TOOL_SUBMIT]
-QA_TOOLS = [TOOL_RECALL, TOOL_DOC, TOOL_SQL, TOOL_ANSWER]
+DECIDE_TOOLS = [TOOL_RECALL, TOOL_REFLECT, TOOL_DOC, TOOL_SQL, TOOL_SIM, TOOL_SUBMIT]
+QA_TOOLS = [TOOL_RECALL, TOOL_REFLECT, TOOL_DOC, TOOL_SQL, TOOL_ANSWER]
 
 SYSTEM_DECIDE = """You are the Supply Chain Memory & Decision Agent for a multi-plant consumer-goods manufacturer.
 You get a disruption report and an evidence pack: memory hits from the Hindsight bank (each with a doc_id), structured
@@ -2944,6 +3531,14 @@ class DecisionAgent:
                     raise AgentError(f"Hindsight recall failed: {ex}") from ex
                 seen_docs.update(h.doc_id for h in r.hits if h.doc_id)
                 out = r.to_payload()
+            elif name == "hindsight_reflect":
+                try:
+                    refl = self.memory.reflect(inp["question"], as_of)
+                except Exception as ex:  # external service error goes back to the model as a tool error
+                    raise AgentError(f"Hindsight reflect failed: {ex}") from ex
+                seen_docs.update(h.doc_id for h in refl.hits if h.doc_id)
+                out = {"mode": refl.mode, "text": refl.text, "doc_ids": refl.doc_ids,
+                       "memories": [h.to_dict() for h in refl.hits[:15]]}
             elif name == "memory_get_document":
                 out = self.memory.get_document(inp["doc_id"], as_of) or {
                     "error": f"{inp['doc_id']} does not exist or is dated after {as_of}"}
@@ -3243,7 +3838,7 @@ Note: the synthesizer shares the agent's `LLM`, so its tokens are counted in the
 - [ ] **Step 6: Run the tests**
 
 Run: `.venv/bin/python -m pytest tests/test_agent_core.py -v`
-Expected: 7 passed
+Expected: 8 passed
 
 - [ ] **Step 7: Stage 2 gate - run HS05 end to end against the real bank and Claude**
 
@@ -3586,7 +4181,7 @@ def render_card(card: DecisionCard, console: Console, show_trace: bool = False) 
     for o in card.options:
         mark = ("★" if o["action"] == card.recommended_action else "") + ("▲" if o["action"] == card.simulator_best_action else "")
         if o.get("feasible"):
-            t.add_row(mark, o["action"], o["arrival"], str(o["stockout_days"]), _money(o["cost"]), o["risk"],
+            t.add_row(mark, o["action"], o["arrival"] or "-", str(o["stockout_days"]), _money(o["cost"]), o["risk"],
                       _money(o["score"]), str(o["service_impact_units"]), ", ".join(o["breaches_commitments"]) or "-",
                       o.get("note", ""))
         else:
@@ -3733,6 +4328,429 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ---
 
+### Task 10A: Seven-capability router, handlers and `--ask` (merged build prompt)
+
+**Files:**
+- Create: `agent/capabilities.py`
+- Modify: `interface/decision_console.py` (add `--ask` + `render_capability`)
+- Test: `tests/test_capabilities.py`
+
+**Interfaces:**
+- Consumes: `DecisionAgent` (`.memory`, `.settings`, `._connect(as_of)`), `sql_tools` curated lookups, `record_exists`, `parse_report`, `HindsightMemory.reflect(question, as_of, budget=, response_schema=)`, `get_document`.
+- Produces:
+  - `CAPABILITIES`, `route(question) -> str`, `BUDGET: dict[str, str]`, `PRECEDENT_SCHEMA`, `OUTCOME_SCHEMA`
+  - `CapabilityAnswer` (dataclass: `question, capability, as_of, budget, reflect_mode, answer, structured, ground_truth, cited_doc_ids, cited_record_ids, unverifiable_citations, commitments_checked, warnings, confidence, latency_s`; `to_dict()`)
+  - `ask(agent, question: str, as_of: str | None = None) -> CapabilityAnswer`
+  - `interface.decision_console.render_capability(ans, console) -> None`
+
+- [ ] **Step 1: Write the failing tests**
+
+`tests/test_capabilities.py`:
+```python
+import pytest
+from rich.console import Console
+
+from agent.agent_core import DecisionAgent
+from agent.capabilities import OUTCOME_SCHEMA, PRECEDENT_SCHEMA, ask, route
+from tests.fakes import FakeLLM, FakeMemory, corpus_hit
+
+DEMO = [
+    ("What is SUP0247's delivery track record in November and December? Should we trust their current promise "
+     "for a November delivery?", "supplier_reliability"),
+    ("What open commitments do we have with SUP0091? If we switch suppliers, what obligations would we breach?",
+     "commitments"),
+    ("Our primary RM supplier just had a 35% supply reduction. We're deciding between prioritizing high-margin "
+     "products vs. switching to the backup supplier. What happened last time we faced this?", "decision_precedent"),
+    ("Have we ever accepted partial shipments from suppliers? How many times has this exception been granted this "
+     "quarter, and should we escalate for a policy review?", "exceptions"),
+    ("We're seeing corrosion on steel components from a supplier that had humidity issues before. Are their "
+     "corrective controls still in place, or has the problem recurred?", "quality_root_cause"),
+    ("We need to renegotiate with SUP0179 whose lead times keep getting longer. What negotiation strategies have "
+     "worked with them before?", "negotiation"),
+    ("How accurate have our past 'switch to cheaper supplier' decisions been? Should we trust our cost-savings "
+     "projections?", "decision_outcome_learning"),
+]
+
+
+@pytest.mark.parametrize("question,expected", DEMO + [("Tell me something useful.", "general")])
+def test_route(question, expected):
+    assert route(question) == expected
+
+
+def _agent(settings, text="fake reflection", hits=()):
+    mem = FakeMemory(hits, reflect_text=text)
+    return DecisionAgent(settings, FakeLLM([]), mem, settings.live_db_path), mem
+
+
+def test_supplier_reliability_grounded(settings):
+    agent, mem = _agent(settings, "SUP0247 slips in Nov-Dec [DOC000001, 2023-01-02]; see RPO000412 and EVT99999.",
+                        [corpus_hit("DOC000001", "2023-01-02")])
+    ans = ask(agent, DEMO[0][0], as_of="2025-12-31")
+    assert ans.capability == "supplier_reliability" and ans.budget == "high"
+    months = {r["month"] for r in ans.ground_truth["delay_by_promised_month"]}
+    assert {"11", "12"} <= months
+    assert ans.cited_doc_ids == ["DOC000001"] and "RPO000412" in ans.cited_record_ids
+    assert "EVT99999" in ans.unverifiable_citations
+    question_sent = mem.reflects[-1][0]
+    assert "delay_by_promised_month" in question_sent and mem.reflects[-1][2] == "high"
+
+
+def test_commitments_checked_before_switch(settings):
+    agent, _ = _agent(settings, "See CMT00560.")
+    ans = ask(agent, DEMO[1][0], as_of="2025-06-30")
+    assert ans.capability == "commitments" and ans.commitments_checked is True
+    assert "open_commitments" in ans.ground_truth and "contracts_in_force" in ans.ground_truth
+
+
+def test_switch_without_named_supplier_warns_and_uses_schema(settings):
+    # one verifiable citation, so the structured confidence ("medium" from the fake) is used
+    agent, mem = _agent(settings, "No record found of a 35% supply reduction; closest precedent DEC00006.")
+    ans = ask(agent, DEMO[2][0], as_of="2025-12-31")
+    assert ans.commitments_checked is False
+    assert any("no supplier" in w for w in ans.warnings)
+    assert mem.reflects[-1][3] == PRECEDENT_SCHEMA and ans.confidence == "medium"
+
+
+def test_outcome_learning_accuracy_table(settings):
+    agent, mem = _agent(settings, "DEC00006 ...")
+    ans = ask(agent, DEMO[6][0], as_of="2025-12-31")
+    rows = ans.ground_truth["decision_accuracy"]
+    assert [r["decision_type"] for r in rows] == ["switch_supplier"] and rows[0]["n"] > 0
+    assert mem.reflects[-1][3] == OUTCOME_SCHEMA
+
+
+def test_no_citations_means_low_confidence(settings):
+    agent, _ = _agent(settings, "No record found.")
+    ans = ask(agent, DEMO[4][0], as_of="2025-12-31")
+    assert ans.confidence == "low" and any("no evidence citations" in w for w in ans.warnings)
+
+
+def test_render_capability(settings):
+    from interface.decision_console import render_capability
+
+    agent, _ = _agent(settings, "SUP0179 conceded price [RPO000412].")
+    console = Console(record=True, width=160)
+    render_capability(ask(agent, DEMO[5][0], as_of="2025-12-31"), console)
+    out = console.export_text()
+    assert "negotiation" in out and "RPO000412" in out and "negotiations" in out
+```
+
+- [ ] **Step 2: Run to verify failure**
+
+Run: `.venv/bin/python -m pytest tests/test_capabilities.py -v`
+Expected: ERROR `ModuleNotFoundError: No module named 'agent.capabilities'`
+
+- [ ] **Step 3: Implement `agent/capabilities.py`**
+
+```python
+"""The seven capabilities from the build prompt, routed from a natural-language question.
+
+Each handler makes one Hindsight reflect call (budget / response_schema as the prompt specifies). The query carries
+deterministic ground truth from the as-of SQL views (delays by month, scorecards, commitments, contracts,
+negotiations, decision accuracy). Afterwards the answer is checked:
+- record ids in it must exist;
+- doc ids must be visible memory docs;
+- any question about switching suppliers or cancelling a PO gets the open commitments attached.
+"""
+from __future__ import annotations
+
+import json
+import re
+import time
+from dataclasses import asdict, dataclass, field
+
+from agent import sql_tools
+from agent.parsing import parse_report
+
+CAPABILITIES = ("supplier_reliability", "commitments", "decision_precedent", "exceptions", "quality_root_cause",
+                "negotiation", "decision_outcome_learning", "general")
+ROUTES = [  # first match wins
+    ("commitments", r"\bcommitments?\b|\bobligations?\b|\bowe[sd]?\b"),
+    ("negotiation", r"negotiat|\blevers?\b|\bconce(?:ssion|ded)"),
+    ("decision_outcome_learning", r"\baccura(?:te|cy)\b|\bpredicted\b|\bprojections?\b|\bunderestimat|\boverestimat"),
+    ("quality_root_cause", r"\bdefects?\b|\bcorrosion\b|\bquality\b|\broot cause\b|\breject|\bcorrective\b"),
+    ("exceptions", r"\bexceptions?\b|\bpartial shipments?\b|\bpolicy review\b"),
+    ("decision_precedent", r"\blast time\b|\bprecedents?\b|\bsimilar situation|\bdeciding between\b"),
+    ("supplier_reliability", r"\btrack record\b|\breliab|\bon[- ]time\b|\blate\b|\bdelay|\btrust their\b"),
+]
+BUDGET = {"supplier_reliability": "high", "commitments": "mid", "decision_precedent": "high", "exceptions": "mid",
+          "quality_root_cause": "high", "negotiation": "high", "decision_outcome_learning": "high", "general": "mid"}
+INSTRUCTIONS = {
+    "supplier_reliability": "Give the complete delivery and failure history: what went wrong, when, what action we "
+                            "took, whether it worked, and what to do now. Flag any recurring pattern (seasonal, "
+                            "size-dependent, lead-time trend).",
+    "commitments": "List every open commitment with this counterparty: who promised what, by when, the penalty or "
+                   "credit for breach, and current status. Say which ones a supplier switch or PO cancellation would "
+                   "breach.",
+    "decision_precedent": "Find the most similar past situations. For each give situation, decision, reasoning, "
+                          "outcome, lesson and how today's conditions differ. Then recommend, with the predicted "
+                          "outcome and a confidence level.",
+    "exceptions": "Find past exceptions to this policy: how many, when, the justification, who approved them and the "
+                  "outcome. Say whether the frequency warrants a policy review.",
+    "quality_root_cause": "Has this issue occurred before? Give the root cause, the corrective action promised, "
+                          "whether it was verified, and whether the problem recurred.",
+    "negotiation": "Summarize every negotiation with this supplier: our ask, their offer, concessions each way and "
+                   "the outcome. Then say which levers worked, what the supplier values and what to lead with next.",
+    "decision_outcome_learning": "Compare predicted and actual outcomes for these past decisions: prediction "
+                                 "accuracy, systematic biases (cost, stockout days) and an updated confidence level.",
+    "general": "Answer from memory.",
+}
+COMMON = ("Cite document dates and record ids for every claim. Distinguish facts (documents) from observations "
+          "(consolidated patterns). If memory holds no evidence for something, say 'No record found' instead of "
+          "guessing.")
+_STR = {"type": "string"}
+PRECEDENT_SCHEMA = {"type": "object", "properties": {
+    "precedents": {"type": "array", "items": {"type": "object", "properties": {
+        "decision_id": _STR, "situation": _STR, "decision": _STR, "outcome": _STR, "how_today_differs": _STR},
+        "required": ["decision_id", "situation", "decision", "outcome", "how_today_differs"]}},
+    "recommendation": _STR, "predicted_outcome": _STR,
+    "confidence": {"type": "string", "enum": ["low", "medium", "high"]}},
+    "required": ["precedents", "recommendation", "predicted_outcome", "confidence"]}
+OUTCOME_SCHEMA = {"type": "object", "properties": {
+    "decision_type": _STR, "decisions_reviewed": {"type": "array", "items": _STR}, "prediction_accuracy": _STR,
+    "systematic_biases": {"type": "array", "items": _STR}, "updated_confidence": _STR,
+    "confidence": {"type": "string", "enum": ["low", "medium", "high"]}},
+    "required": ["decision_type", "decisions_reviewed", "prediction_accuracy", "systematic_biases",
+                 "updated_confidence", "confidence"]}
+SCHEMAS = {"decision_precedent": PRECEDENT_SCHEMA, "decision_outcome_learning": OUTCOME_SCHEMA}
+_SWITCH_OR_CANCEL = re.compile(r"\bswitch\w*|\bcancel\w*|\bbackup supplier|\balternat\w* supplier", re.I)
+_ACTION_MENTIONS = {
+    "switch_supplier": r"switch\w*(?: to)?(?: a| the)?(?: cheaper| backup| alternat\w*)? supplier",
+    "expedite": r"\bexpedit", "cancel_po": r"\bcancel", "reallocate_stock": r"\btransfer|\breallocat",
+    "substitute_rm": r"\bsubstitut", "accept_delay": r"\baccept\w* (?:the )?delay",
+    "build_safety_stock": r"\bsafety stock", "renegotiate": r"\brenegotiat", "reduce_allocation": r"\breduc\w* allocation",
+}
+_RECORD_ID = re.compile(r"\b(?:DECL|CMTL|RPOL|RPO|REV|EVT|DEC|CMT|NEG|CTR|CAT|POL|PR|PO|RT|SUP|RM|IP)\d+\b|\b[PW]\d{2,3}\b")
+_DOC_ID = re.compile(r"\bDOC\d{6}\b")
+MAX_GROUND_TRUTH_CHARS = 6000
+
+
+@dataclass
+class CapabilityAnswer:
+    question: str
+    capability: str
+    as_of: str
+    budget: str
+    reflect_mode: str | None = None
+    answer: str = ""
+    structured: dict | None = None
+    ground_truth: dict = field(default_factory=dict)
+    cited_doc_ids: list[str] = field(default_factory=list)
+    cited_record_ids: list[str] = field(default_factory=list)
+    unverifiable_citations: list[str] = field(default_factory=list)
+    commitments_checked: bool | None = None
+    warnings: list[str] = field(default_factory=list)
+    confidence: str = "low"
+    latency_s: float = 0.0
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+def route(question: str) -> str:
+    for cap, pattern in ROUTES:
+        if re.search(pattern, question, re.I):
+            return cap
+    return "general"
+
+
+def _q(con, sql: str, params=()) -> list[dict]:
+    return [dict(r) for r in con.execute(sql, params).fetchall()]
+
+
+def _delay_by_promised_month(con, supplier_id: str) -> list[dict]:
+    return _q(con, """
+        SELECT strftime('%m', promised_at) AS month, COUNT(*) AS n_received,
+               ROUND(AVG(MAX(0, julianday(received_at) - julianday(promised_at))), 1) AS avg_delay_days,
+               ROUND(AVG(julianday(received_at) > julianday(promised_at)), 2) AS late_share
+        FROM rm_purchase_orders WHERE supplier_id = ? AND received_at IS NOT NULL
+        GROUP BY month ORDER BY month""", (supplier_id,))
+
+
+def _lead_time_by_month(con, supplier_id: str) -> list[dict]:
+    return _q(con, """
+        SELECT substr(ordered_at, 1, 7) AS ordered_month, COUNT(*) AS n,
+               ROUND(AVG(julianday(received_at) - julianday(ordered_at)), 1) AS avg_lead_days
+        FROM rm_purchase_orders WHERE supplier_id = ? AND received_at IS NOT NULL
+        GROUP BY ordered_month ORDER BY ordered_month DESC LIMIT 12""", (supplier_id,))
+
+
+def _decision_accuracy(con, types: list[str]) -> tuple[list[dict], list[dict]]:
+    where = "outcome_label IS NOT NULL AND source = 'historical'"
+    params: tuple = ()
+    if types:
+        where += f" AND decision_type IN ({','.join('?' * len(types))})"
+        params = tuple(types)
+    summary = _q(con, f"""
+        SELECT decision_type, COUNT(*) AS n,
+               ROUND(SUM(actual_cost) / NULLIF(SUM(expected_cost), 0), 2) AS actual_to_expected_cost,
+               ROUND(AVG(actual_stockout_days - expected_stockout_days), 2) AS extra_stockout_days,
+               SUM(outcome_label = 'success') AS success, SUM(outcome_label = 'partial') AS partial,
+               SUM(outcome_label = 'failed') AS failed
+        FROM decisions WHERE {where} GROUP BY decision_type ORDER BY decision_type""", params)
+    examples = _q(con, f"""
+        SELECT decision_id, decision_type, decided_at, expected_cost, actual_cost, expected_stockout_days,
+               actual_stockout_days, outcome_label, outcome_attribution
+        FROM decisions WHERE {where} ORDER BY decided_at DESC LIMIT 10""", params)
+    return summary, examples
+
+
+def _ground_truth(con, cap: str, question: str, as_of: str) -> tuple[dict, bool | None, list[str]]:
+    ents = parse_report(question)
+    sup = ents.supplier_ids[0] if ents.supplier_ids else None
+    rm = ents.rm_ids[0] if ents.rm_ids else None
+    parties = ents.supplier_ids + ents.plant_ids
+    gt: dict = {}
+    warnings: list[str] = []
+    if cap == "supplier_reliability" and sup:
+        gt["delay_by_promised_month"] = _delay_by_promised_month(con, sup)
+        gt["scorecard_recent"] = sql_tools.supplier_scorecard(con, sup, 6)
+        gt["prior_decisions"] = sql_tools.prior_decisions(con, sup, rm, as_of)
+    elif cap == "commitments" and parties:
+        gt["open_commitments"] = sql_tools.open_commitments(con, parties, as_of)
+        gt["contracts_in_force"] = _q(con, """SELECT contract_id, scope, valid_from, valid_to, price_terms, min_volume,
+                                              penalty_clause, force_majeure_flag FROM contracts
+                                              WHERE supplier_id = ? AND valid_from <= ? AND valid_to >= ?""",
+                                      (sup, as_of, as_of)) if sup else []
+    elif cap == "decision_precedent":
+        gt["prior_decisions"] = (sql_tools.prior_decisions(con, sup, rm, as_of) if (sup or rm)
+                                 else _decision_accuracy(con, [])[1])
+    elif cap == "negotiation" and sup:
+        gt["negotiations"] = _q(con, "SELECT * FROM negotiations WHERE supplier_id = ? ORDER BY started_at", (sup,))
+        gt["lead_time_by_month"] = _lead_time_by_month(con, sup)
+    elif cap == "decision_outcome_learning":
+        types = [a for a, p in _ACTION_MENTIONS.items() if re.search(p, question, re.I)]
+        gt["decision_accuracy"], gt["decision_examples"] = _decision_accuracy(con, types)
+    checked = None
+    if _SWITCH_OR_CANCEL.search(question):
+        if parties:
+            gt.setdefault("open_commitments", sql_tools.open_commitments(con, parties, as_of))
+            checked = True
+        else:
+            checked = False
+            warnings.append("The question involves a supplier switch or cancellation but names no supplier id; open "
+                            "commitments could not be checked - name the supplier (SUPxxxx) to check them.")
+    elif cap == "commitments":
+        checked = bool(parties)
+    return gt, checked, warnings
+
+
+def _verify(con, memory, text: str, seen_docs: set[str], as_of: str) -> tuple[list[str], list[str], list[str]]:
+    docs, recs, bad = [], [], []
+    for d in dict.fromkeys(_DOC_ID.findall(text)):
+        (docs if d in seen_docs or memory.get_document(d, as_of) else bad).append(d)
+    for r in dict.fromkeys(_RECORD_ID.findall(text)):
+        (recs if sql_tools.record_exists(con, r) else bad).append(r)
+    return docs, recs, bad
+
+
+def ask(agent, question: str, as_of: str | None = None) -> CapabilityAnswer:
+    t0 = time.monotonic()
+    as_of = as_of or agent.settings.default_as_of
+    cap = route(question)
+    ans = CapabilityAnswer(question=question, capability=cap, as_of=as_of, budget=BUDGET[cap])
+    con = agent._connect(as_of)
+    try:
+        gt, ans.commitments_checked, ans.warnings = _ground_truth(con, cap, question, as_of)
+        ans.ground_truth = gt
+        facts = json.dumps(gt, default=str)[:MAX_GROUND_TRUTH_CHARS] if gt else "(none for this question)"
+        query = (f"{question}\n\nTask: {INSTRUCTIONS[cap]} {COMMON}\nAs of: {as_of}.\n"
+                 f"Authoritative database records (quote their ids):\n{facts}")
+        refl = agent.memory.reflect(query, as_of, budget=ans.budget, response_schema=SCHEMAS.get(cap))
+        ans.reflect_mode, ans.structured = refl.mode, refl.structured
+        ans.answer = refl.text or ""
+        text = ans.answer + (" " + json.dumps(refl.structured) if refl.structured else "")
+        ans.cited_doc_ids, ans.cited_record_ids, ans.unverifiable_citations = _verify(
+            con, agent.memory, text, set(refl.doc_ids), as_of)
+    finally:
+        con.close()
+    n_cites = len(ans.cited_doc_ids) + len(ans.cited_record_ids)
+    stated = (ans.structured or {}).get("confidence")
+    if n_cites == 0:
+        ans.confidence = "low"
+        ans.warnings.append("The answer contains no evidence citations (document ids or record ids).")
+    elif stated in ("low", "medium", "high"):
+        ans.confidence = stated
+    else:
+        ans.confidence = "high" if n_cites >= 3 else "medium"
+    ans.latency_s = round(time.monotonic() - t0, 2)
+    return ans
+```
+
+- [ ] **Step 4: Run the tests**
+
+Run: `.venv/bin/python -m pytest tests/test_capabilities.py -v`
+Expected: 13 passed (8 routing + 5 handler tests), 1 failed. `test_render_capability` fails with `ImportError: cannot import name 'render_capability'` until Step 5.
+
+- [ ] **Step 5: Add `--ask` and `render_capability` to `interface/decision_console.py`**
+
+Add after `render_answer`:
+```python
+def render_capability(ans, console: Console) -> None:
+    head = (f"[bold]{ans.capability}[/] | budget {ans.budget} | reflect {ans.reflect_mode} | as_of {ans.as_of} | "
+            f"confidence {ans.confidence}")
+    console.print(Panel(f"{head}\n\n{ans.answer}", title=ans.question))
+    if ans.structured:
+        console.print(Panel(json.dumps(ans.structured, indent=1), title="Structured output"))
+    for name, rows in ans.ground_truth.items():
+        t = Table(title=f"{name} (database, as of {ans.as_of})")
+        cols = list(rows[0]) if rows else ["(no rows)"]
+        for c in cols:
+            t.add_column(c)
+        for r in rows[:15]:
+            t.add_row(*[str(r.get(c)) for c in cols])
+        console.print(t)
+    checked = {True: "[green]checked[/]", False: "[red]NOT checked[/]", None: "n/a"}[ans.commitments_checked]
+    cites = (f"Docs: {', '.join(ans.cited_doc_ids) or '-'}\nRecords: {', '.join(ans.cited_record_ids) or '-'}\n"
+             f"Open commitments: {checked}")
+    if ans.unverifiable_citations:
+        cites += f"\n[yellow]Unverifiable: {', '.join(ans.unverifiable_citations)}[/]"
+    console.print(Panel(cites, title="Evidence"))
+    if ans.warnings:
+        console.print(Panel("\n".join(ans.warnings), title="Warnings", border_style="yellow"))
+```
+In `main()`, add `src.add_argument("--ask", help="ask any supply-chain question (routed to one of 7 capabilities)")` to the mutually exclusive group. Then add this branch before `if a.question:` inside the `try`:
+```python
+        if a.ask:
+            from agent.capabilities import ask
+            from agent.parsing import parse_report
+
+            if parse_report(a.ask).rpo_ids:  # a disruption report: run the simulated decision loop instead
+                card = agent.run(a.ask, as_of=a.as_of)
+                render_card(card, console, show_trace=a.trace)
+                out = card.to_dict()
+            else:
+                ans = ask(agent, a.ask, a.as_of)
+                render_capability(ans, console)
+                out = ans.to_dict()
+        elif a.question:
+```
+(Change the existing `if a.question:` to that `elif`.)
+
+- [ ] **Step 6: Run the tests**
+
+Run: `.venv/bin/python -m pytest tests/test_capabilities.py tests/test_console.py -v`
+Expected: all pass
+
+- [ ] **Step 7: Try one live capability (live)**
+
+Run: `.venv/bin/python -m interface.decision_console --ask "What is SUP0247's delivery track record in November and December? Should we trust their current promise for a November delivery?"`
+Expected:
+- capability `supplier_reliability`, reflect `native` (as_of 2025-12-31 is after the corpus horizon);
+- a `delay_by_promised_month` table whose months 11 and 12 show much higher `avg_delay_days`;
+- an answer that flags the Nov-Dec pattern and cites docs and records.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add agent/capabilities.py interface/decision_console.py tests/test_capabilities.py
+git commit -m "feat: seven-capability router with grounded reflect handlers and --ask
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+```
+
+---
+
 ### Task 11: Eval scoring and `run_eval_questions.py`
 
 **Files:**
@@ -3749,14 +4767,16 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
     - `citation_pr(pred, gold) -> tuple[float|None, float|None]`
     - `select_questions(questions, per_type: int, seed: int = 7, types=None) -> list[dict]`
     - `llm_judge(llm, question, gold, answer) -> bool`
-  - `eval.scorecard`: `summarize_questions(rows) -> dict`, `summarize_holdout(rows) -> dict`, `write_scorecard(out_dir: Path) -> Path`
-  - `eval.run_eval_questions.main(argv=None) -> int`. It writes `eval/out/questions_results.jsonl` and then calls `write_scorecard`.
+  - `eval.scorecard`: `summarize_questions(rows) -> dict` (incl. `by_hop_count`, `single_hop_fact_recall_accuracy`), `summarize_holdout(rows) -> dict`, `summarize_patterns(rows) -> dict`, `write_scorecard(out_dir: Path) -> Path` (merges whichever of `questions_results.jsonl`, `questions_results_hindsight.jsonl`, `holdout_results.jsonl`, `pattern_results.jsonl` exist)
+  - `eval.run_eval_questions.hindsight_answer(agent, q) -> QAResult`; `main(argv=None) -> int` with `--mode agent|hindsight`. It writes `eval/out/questions_results.jsonl` (or `questions_results_hindsight.jsonl`) and then calls `write_scorecard`.
 
 - [ ] **Step 1: Write the failing tests**
 
 `tests/test_eval_scoring.py`:
 ```python
 import json
+
+import pytest
 
 from eval.scorecard import summarize_holdout, summarize_questions, write_scorecard
 from eval.scoring import answer_score, citation_pr, key_facts, select_questions
@@ -3770,7 +4790,8 @@ def test_key_facts_extracts_ids_dates_numbers_and_words():
 def test_answer_score_full_and_partial():
     gold = "2023-06-08 after the expedite (supersedes 2023-06-22)."
     assert answer_score(gold, "Latest ETA is 2023-06-08 (the 2023-06-22 date was superseded by the expedite).") == 1.0
-    assert answer_score(gold, "The ETA is 2023-06-22.") == 0.5
+    # key facts: 2023-06-08, 2023-06-22, @expedite -> only the stale date matches
+    assert answer_score(gold, "The ETA is 2023-06-22.") == pytest.approx(1 / 3)
     assert answer_score("switch supplier + cancel original PO (DEC00006)", "They chose switch_supplier (DEC00006) and cancel_po.") == 1.0
 
 
@@ -3787,7 +4808,7 @@ def test_select_questions_is_stratified_and_deterministic():
 
 
 def test_scorecard_files(tmp_path):
-    q = [{"question_id": "Q1", "type": "temporal", "score": 1.0, "correct": True, "doc_precision": 1.0, "doc_recall": 0.5,
+    q = [{"question_id": "Q1", "type": "temporal", "hop_count": 1, "score": 1.0, "correct": True, "doc_precision": 1.0, "doc_recall": 0.5,
           "record_precision": None, "record_recall": 1.0, "future_doc_citations": [], "latency_s": 2.0,
           "usage": {"input_tokens": 10, "output_tokens": 5, "cost_usd": 0.01}, "error": None}]
     h = [{"scenario_id": "HS05", "correct": True, "trap": True, "trap_pass": True, "precedent_recall": 1 / 3,
@@ -3795,10 +4816,16 @@ def test_scorecard_files(tmp_path):
           "usage": {"input_tokens": 100, "output_tokens": 50, "cost_usd": 0.2}, "error": None}]
     (tmp_path / "questions_results.jsonl").write_text("\n".join(json.dumps(r) for r in q))
     (tmp_path / "holdout_results.jsonl").write_text("\n".join(json.dumps(r) for r in h))
-    assert summarize_questions(q)["by_type"]["temporal"]["accuracy"] == 1.0
+    p = [{"pattern_id": "P01", "mental_models": True, "detected": True},
+         {"pattern_id": "P01", "mental_models": False, "detected": False}]
+    (tmp_path / "pattern_results.jsonl").write_text("\n".join(json.dumps(r) for r in p))
+    s = summarize_questions(q)
+    assert s["by_type"]["temporal"]["accuracy"] == 1.0 and s["by_hop_count"]["1"]["n"] == 1
+    assert s["single_hop_fact_recall_accuracy"] is None  # no fact_recall rows
     assert summarize_holdout(h)["trap_accuracy"] == 1.0
     md = write_scorecard(tmp_path).read_text()
-    assert "temporal" in md and "HS05" in md and (tmp_path / "scorecard.json").exists()
+    assert "temporal" in md and "HS05" in md and "| hop_count |" in md and "1/12 with Mental Models" in md
+    assert (tmp_path / "scorecard.json").exists()
 ```
 
 - [ ] **Step 2: Run to verify failure**
@@ -3928,10 +4955,17 @@ def summarize_questions(rows: list[dict]) -> dict:
     by = defaultdict(list)
     for r in rows:
         by[r["type"]].append(r)
+    hops = defaultdict(list)
+    for r in rows:
+        hops[str(r.get("hop_count"))].append(r)
     return {
         "n": len(rows), "accuracy": _mean([float(r["correct"]) for r in rows]),
         "by_type": {t: {"n": len(rs), "accuracy": _mean([float(r["correct"]) for r in rs]),
                         "mean_score": _mean([r["score"] for r in rs])} for t, rs in sorted(by.items())},
+        "by_hop_count": {h: {"n": len(rs), "accuracy": _mean([float(r["correct"]) for r in rs])}
+                         for h, rs in sorted(hops.items())},
+        "single_hop_fact_recall_accuracy": _mean([float(r["correct"]) for r in rows
+                                                  if r["type"] == "fact_recall" and r.get("hop_count") == 1]),
         "citations": {k: _mean([r.get(k) for r in rows]) for k in
                       ("doc_precision", "doc_recall", "record_precision", "record_recall")},
         "future_doc_citations": sum(len(r.get("future_doc_citations") or []) for r in rows),
@@ -3956,25 +4990,55 @@ def summarize_holdout(rows: list[dict]) -> dict:
     }
 
 
+def summarize_patterns(rows: list[dict]) -> dict:
+    per = defaultdict(dict)
+    for r in rows:
+        per[r["pattern_id"]]["on" if r["mental_models"] else "off"] = r["detected"]
+    return {"per_pattern": dict(sorted(per.items())),
+            "detected_with_mental_models": sum(1 for v in per.values() if v.get("on")),
+            "detected_without_mental_models": sum(1 for v in per.values() if v.get("off"))}
+
+
 def _read(path: Path) -> list[dict]:
     return [json.loads(l) for l in path.read_text().splitlines() if l.strip()] if path.exists() else []
 
 
+def _question_section(title: str, s: dict) -> list[str]:
+    lines = [f"## {title} (n={s['n']}, accuracy {s['accuracy']}, single-hop fact recall "
+             f"{s['single_hop_fact_recall_accuracy']}, errors {s['errors']}, future-dated doc citations "
+             f"{s['future_doc_citations']})", "",
+             "| type | n | accuracy | mean key-fact score |", "|---|---|---|---|"]
+    lines += [f"| {t} | {v['n']} | {v['accuracy']} | {v['mean_score']} |" for t, v in s["by_type"].items()]
+    lines += ["", "| hop_count | n | accuracy |", "|---|---|---|"]
+    lines += [f"| {h} | {v['n']} | {v['accuracy']} |" for h, v in s["by_hop_count"].items()]
+    c = s["citations"]
+    lines += ["", f"Citation precision/recall - docs {c['doc_precision']}/{c['doc_recall']}, records "
+                  f"{c['record_precision']}/{c['record_recall']}",
+              f"Latency {s['latency']} | tokens {s['tokens']} | cost {s['cost']}", ""]
+    return lines
+
+
 def write_scorecard(out_dir: Path) -> Path:
     q, h = _read(out_dir / "questions_results.jsonl"), _read(out_dir / "holdout_results.jsonl")
-    data = {"questions": summarize_questions(q) if q else None, "holdout": summarize_holdout(h) if h else None}
+    qh, p = _read(out_dir / "questions_results_hindsight.jsonl"), _read(out_dir / "pattern_results.jsonl")
+    data = {"questions": summarize_questions(q) if q else None,
+            "questions_hindsight_mode": summarize_questions(qh) if qh else None,
+            "holdout": summarize_holdout(h) if h else None,
+            "patterns": summarize_patterns(p) if p else None}
     (out_dir / "scorecard.json").write_text(json.dumps(data, indent=2))
     lines = ["# Scorecard", ""]
     if data["questions"]:
-        s = data["questions"]
-        lines += [f"## Eval questions (n={s['n']}, accuracy {s['accuracy']}, errors {s['errors']}, "
-                  f"future-dated doc citations {s['future_doc_citations']})", "",
-                  "| type | n | accuracy | mean key-fact score |", "|---|---|---|---|"]
-        lines += [f"| {t} | {v['n']} | {v['accuracy']} | {v['mean_score']} |" for t, v in s["by_type"].items()]
-        c = s["citations"]
-        lines += ["", f"Citation precision/recall - docs {c['doc_precision']}/{c['doc_recall']}, records "
-                      f"{c['record_precision']}/{c['record_recall']}",
-                  f"Latency {s['latency']} | tokens {s['tokens']} | cost {s['cost']}", ""]
+        lines += _question_section("Eval questions - agent mode", data["questions"])
+    if data["questions_hindsight_mode"]:
+        lines += _question_section("Eval questions - hindsight mode (recall/reflect only)",
+                                   data["questions_hindsight_mode"])
+    if data["patterns"]:
+        s = data["patterns"]
+        lines += [f"## Pattern detection ({s['detected_with_mental_models']}/12 with Mental Models, "
+                  f"{s['detected_without_mental_models']}/12 without)", "",
+                  "| pattern | with Mental Models | without |", "|---|---|---|"]
+        lines += [f"| {pid} | {v.get('on')} | {v.get('off')} |" for pid, v in s["per_pattern"].items()]
+        lines.append("")
     if data["holdout"]:
         s = data["holdout"]
         lines += [f"## Holdout scenarios (n={s['n']}, accuracy {s['accuracy']}, trap accuracy {s['trap_accuracy']} "
@@ -4008,8 +5072,35 @@ from agent.agent_core import build_agent
 from agent.config import ROOT, load_settings
 from agent.corpus import as_of_end, load_index
 from agent.setup_data import ensure_db
+import re
+import time
+
+from agent.card import QAResult
+from agent.sql_tools import record_exists
 from eval.scorecard import write_scorecard
 from eval.scoring import CORRECT_THRESHOLD, answer_score, citation_pr, llm_judge, select_questions
+
+_RECORD_ID = re.compile(r"\b(?:DECL|CMTL|RPOL|RPO|REV|EVT|DEC|CMT|NEG|CTR|CAT|POL|PR|PO|RT|SUP|RM|IP)\d+\b|\b[PW]\d{2,3}\b")
+
+
+def hindsight_answer(agent, q: dict) -> QAResult:
+    """The build prompt's eval strategy, as-of safe: recall(mid) for single-hop fact recall, reflect(high) otherwise
+    (reflect falls back to local synthesis over as-of-filtered recall when native reflect could see later memory)."""
+    t0 = time.monotonic()
+    agent.llm.usage = type(agent.llm.usage)()
+    if q["type"] == "fact_recall" and q["hop_count"] == 1:
+        r = agent.memory.recall(q["question"], q["as_of_date"], budget="mid")
+        answer, docs = "\n".join(h.text for h in r.hits[:10]), r.doc_ids()
+    else:
+        r = agent.memory.reflect(q["question"], q["as_of_date"], budget="high")
+        answer, docs = r.text or "", r.doc_ids
+    con = agent._connect(q["as_of_date"])
+    try:
+        recs = [x for x in dict.fromkeys(_RECORD_ID.findall(answer)) if record_exists(con, x)]
+    finally:
+        con.close()
+    return QAResult(question=q["question"], as_of=q["as_of_date"], answer=answer, cited_doc_ids=docs,
+                    cited_record_ids=recs, usage=agent.llm.usage.to_dict(), latency_s=round(time.monotonic() - t0, 2))
 
 
 def main(argv=None) -> int:
@@ -4019,6 +5110,9 @@ def main(argv=None) -> int:
     ap.add_argument("--types", nargs="*", help="restrict to these question types")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--judge", action="store_true", help="also grade with an LLM judge; correct = judge verdict")
+    ap.add_argument("--mode", choices=["agent", "hindsight"], default="agent",
+                    help="agent = QA tool loop; hindsight = the build prompt's strategy (recall budget=mid for "
+                         "single-hop fact_recall, reflect budget=high otherwise), still as-of filtered")
     ap.add_argument("--out", default=str(ROOT / "eval" / "out"))
     a = ap.parse_args(argv)
 
@@ -4032,12 +5126,14 @@ def main(argv=None) -> int:
     index = load_index(settings.corpus_path)
     qs = [json.loads(l) for l in (settings.dataset_dir / "eval_questions.jsonl").open()]
     selected = qs if a.all else select_questions(qs, a.per_type, a.seed, a.types)
-    results_path = out / "questions_results.jsonl"
+    results_path = out / ("questions_results.jsonl" if a.mode == "agent" else "questions_results_hindsight.jsonl")
     results_path.write_text("")
     for i, q in enumerate(selected, 1):
-        row = {"question_id": q["question_id"], "type": q["type"], "as_of": q["as_of_date"], "gold": q["gold_answer"]}
+        row = {"question_id": q["question_id"], "type": q["type"], "hop_count": q["hop_count"], "mode": a.mode,
+               "as_of": q["as_of_date"], "gold": q["gold_answer"]}
         try:
-            res = agent.answer_question(q["question"], q["as_of_date"])
+            res = (agent.answer_question(q["question"], q["as_of_date"]) if a.mode == "agent"
+                   else hindsight_answer(agent, q))
         except Exception as ex:  # harness: one failed question must not abort the run; it is recorded and scored wrong
             row.update(error=f"{type(ex).__name__}: {ex}", score=0.0, correct=False, answer="", latency_s=None, usage={},
                        doc_precision=None, doc_recall=0.0, record_precision=None, record_recall=0.0,
@@ -4068,7 +5164,7 @@ if __name__ == "__main__":
 
 - [ ] **Step 7: Smoke-run on a tiny sample (live)**
 
-Run: `.venv/bin/python -m eval.run_eval_questions --per-type 1`
+Run: `.venv/bin/python -m eval.run_eval_questions --per-type 1` and then `.venv/bin/python -m eval.run_eval_questions --per-type 1 --mode hindsight`
 Expected: 8 lines, one per type. `eval/out/questions_results.jsonl` has 8 rows and `eval/out/scorecard.md` is written. `future_doc_citations` must be 0. Any non-zero value is a leakage bug: stop and fix it before continuing.
 
 - [ ] **Step 8: Commit**
@@ -4218,6 +5314,193 @@ Record the headline numbers exactly as produced; do not tune prompts inside this
 ```bash
 git add eval/run_holdout_scenarios.py tests/test_holdout_harness.py eval/out/scorecard.md eval/out/scorecard.json eval/out/holdout_results.jsonl eval/out/questions_results.jsonl
 git commit -m "feat: holdout harness and first scorecard
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+```
+
+---
+
+### Task 12A: Pattern-detection probe (with and without Mental Models) and the build prompt's eval mode
+
+**Files:**
+- Create: `eval/pattern_probe.yaml`, `eval/run_pattern_probe.py`
+- Test: `tests/test_pattern_probe.py`
+
+**Interfaces:**
+- Consumes: `build_agent`, `capabilities.ask`, `write_scorecard` / `summarize_patterns` (Task 11), `Settings.mental_models_in_reflect`.
+- Produces: `load_probes() -> list[dict]` (keys `id, question, rules`), `detected(text: str, rules: list[str]) -> bool`, `main(argv=None) -> int`. `main` writes `eval/out/pattern_results.jsonl` with keys `pattern_id, mental_models, question, capability, reflect_mode, detected, answer, cited_doc_ids, cited_record_ids, latency_s, error`.
+
+- [ ] **Step 1: Write `eval/pattern_probe.yaml`**
+
+Each question names the entity but not the behaviour. A pattern counts as detected only when every rule (a case-insensitive regex) matches the answer.
+```yaml
+- id: P01
+  question: How reliable are SUP0247's raw-material deliveries, and is there anything planners should watch for?
+  rules: ["nov|dec|q4|year[- ]end", "late|delay|slip"]
+- id: P02
+  question: What delivery risks should we plan for with raw materials from China-based suppliers?
+  rules: ["feb|lunar|chinese new year", "late|delay|congest"]
+- id: P03
+  question: What supply risks should we know about for RM0046 from SUP0223?
+  rules: ["price", "short|stockout|stock-out|ran out"]
+- id: P04
+  question: How reliable is SUP0091 on raw-material orders?
+  rules: ["large|big|size|small|volume", "late|on[- ]time|reliab|miss"]
+- id: P05
+  question: What should we know before expediting finished goods into warehouse W005?
+  rules: ["cost|premium|expens", "2x|twice|double|higher|more"]
+- id: P06
+  question: What scheduling risks exist for production runs at plant P02?
+  rules: ["quarter|first (?:two )?weeks|weeks? 1", "maint"]
+- id: P07
+  question: Are there any quality concerns with RM0016 at plant P02?
+  rules: ["reject|qa\\b|quality", "RM0022|substitut|switch"]
+- id: P08
+  question: Is plant P03 a good donor plant for raw-material transfers?
+  rules: ["safety stock|below|short|deplet", "\\bnot\\b|avoid|risk|caution"]
+- id: P09
+  question: Can we rely on SUP0237's revised delivery dates when a lot is late?
+  rules: ["miss|broken|slip(?:s|ped)? again|unreliab|not reliable|cannot rely|can't rely"]
+- id: P10
+  question: How do our demand forecasts compare with actual demand across product categories?
+  rules: ["consumables", "over|above|bias|too high|higher"]
+- id: P11
+  question: How are SUP0179's lead times trending, and what does that mean for us?
+  rules: ["lengthen|increas|creep|longer|grow|rising|worsen"]
+- id: P12
+  question: What should we know about finished-goods deliveries from SUP0005?
+  rules: ["april|\\bapr\\b", "late|delay"]
+```
+
+- [ ] **Step 2: Write the failing tests**
+
+`tests/test_pattern_probe.py`:
+```python
+import json
+import re
+
+from eval.run_pattern_probe import detected, load_probes
+
+
+def test_probes_cover_all_patterns_neutrally(base_settings):
+    patterns = json.loads((base_settings.dataset_dir / "planted_patterns.json").read_text())["patterns"]
+    probes = load_probes()
+    assert [p["id"] for p in probes] == [p["pattern_id"] for p in patterns]
+    for p in probes:
+        assert not re.search(r"\d+\s*%|\bdays?\b.*\blate\b|november|february|april|quarter", p["question"], re.I), p["id"]
+        for r in p["rules"]:
+            re.compile(r)
+
+
+def test_detected_requires_every_rule():
+    rules = ["nov|dec", "late|delay"]
+    assert detected("SUP0247 deliveries promised in November arrive ~13 days late.", rules)
+    assert not detected("SUP0247 is usually late.", rules)
+```
+
+- [ ] **Step 3: Run to verify failure**
+
+Run: `.venv/bin/python -m pytest tests/test_pattern_probe.py -v`
+Expected: ERROR `ModuleNotFoundError: No module named 'eval.run_pattern_probe'`
+
+- [ ] **Step 4: Implement `eval/run_pattern_probe.py`**
+
+```python
+"""Pattern-detection probe: for each planted pattern, ask a neutral question about its entity and check whether the
+answer surfaces the pattern. Runs with the Mental Models and without them (MENTAL_MODELS_IN_REFLECT=0), so the score
+is not just the answer key being read back."""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from dataclasses import replace
+from pathlib import Path
+
+import yaml
+
+from agent.agent_core import build_agent
+from agent.capabilities import ask
+from agent.config import ROOT, load_settings
+from agent.setup_data import ensure_db
+from eval.scorecard import write_scorecard
+
+PROBES = Path(__file__).with_name("pattern_probe.yaml")
+
+
+def load_probes() -> list[dict]:
+    return yaml.safe_load(PROBES.read_text())
+
+
+def detected(text: str, rules: list[str]) -> bool:
+    return all(re.search(r, text, re.I) for r in rules)
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--mental-models", choices=["on", "off", "both"], default="both")
+    ap.add_argument("--out", default=str(ROOT / "eval" / "out"))
+    a = ap.parse_args(argv)
+    base = load_settings()
+    ensure_db(base)
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    results = out / "pattern_results.jsonl"
+    results.write_text("")
+    modes = {"on": [True], "off": [False], "both": [True, False]}[a.mental_models]
+    for flag in modes:
+        live = out / "pattern_live.sqlite"
+        live.unlink(missing_ok=True)
+        try:
+            agent = build_agent(replace(base, mental_models_in_reflect=flag), live_db_path=live)
+        except ValueError as ex:  # client cannot exclude mental models: say so instead of mislabelling results
+            print(f"mental_models={flag}: skipped - {ex}")
+            continue
+        for p in load_probes():
+            row = {"pattern_id": p["id"], "mental_models": flag, "question": p["question"]}
+            try:
+                ans = ask(agent, p["question"], base.default_as_of)
+            except Exception as ex:  # harness: record and continue
+                row.update(detected=False, error=f"{type(ex).__name__}: {ex}")
+            else:
+                text = ans.answer + " " + json.dumps(ans.structured or {})
+                row.update(capability=ans.capability, reflect_mode=ans.reflect_mode, detected=detected(text, p["rules"]),
+                           answer=ans.answer, cited_doc_ids=ans.cited_doc_ids, cited_record_ids=ans.cited_record_ids,
+                           latency_s=ans.latency_s,
+                           error=None if ans.reflect_mode == "native" else
+                           "native reflect unavailable (runtime retains in the bank) - Mental Models not consulted")
+            with results.open("a") as fh:
+                fh.write(json.dumps(row) + "\n")
+            print(f"{p['id']} mental_models={flag} detected={row['detected']} {row.get('error') or ''}")
+    print(f"scorecard: {write_scorecard(out)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+- [ ] **Step 5: Run the tests**
+
+Run: `.venv/bin/python -m pytest tests/test_pattern_probe.py tests/test_eval_scoring.py -v`
+Expected: all pass
+
+- [ ] **Step 6: Stage 4 gate, part 2 (live, costs money; run BEFORE the demo's write-back step)**
+
+Tell the user the expected spend first: 24 probe calls, plus 40 questions in hindsight mode, at the per-call cost measured in Task 11 Step 7.
+```bash
+.venv/bin/python -m eval.run_pattern_probe
+.venv/bin/python -m eval.run_eval_questions --per-type 5 --mode hindsight
+```
+Expected:
+- `eval/out/scorecard.md` gains a "Pattern detection (x/12 with Mental Models, y/12 without)" section and a "hindsight mode" question section with hop_count rows.
+- Every probe row has `reflect_mode` = `native`. If not, runtime retains exist in the bank and the Mental Model comparison is invalid, so fix that first.
+
+Compare with the build prompt's targets: pattern detection at least 8/12 with Mental Models, and single-hop fact recall at least 60%. Report the numbers as produced, whether or not they meet the targets.
+
+```bash
+git add eval/pattern_probe.yaml eval/run_pattern_probe.py tests/test_pattern_probe.py eval/out/scorecard.md eval/out/scorecard.json eval/out/pattern_results.jsonl eval/out/questions_results_hindsight.jsonl
+git commit -m "feat: pattern-detection probe with/without mental models and hindsight-mode eval
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
@@ -4444,7 +5727,7 @@ check) and `demo/out/demo_console.txt` (the rendered cards).
 | id | scenario | expected behaviour | where to look on the card |
 |---|---|---|---|
 | D1 | HS01 - SUP0192 moves RPO023175 (RM0079, P04) to 2025-10-30 | `switch_supplier` (spot lot from SUP0177, risk-adjusted score 36, 0 stockout days). accept_delay would cost $25,386 (9 stockout days). Open plant commitments CMT00786 / CMT00802 are flagged. | options table ★▲, Open commitments |
-| D2 | HS05 - SUP0247 moves RPO023030 (RM0083, P01) to 2025-12-07 | **Trap.** Recent SUP0247 accept_delay decisions (DEC00353, DEC00364, DEC00373, DEC00377) all succeeded, but the new ETA falls in Nov-Dec, when SUP0247 historically slips another 7-14 days. accept_delay is high risk (score 31,826) against 2 for `switch_supplier`. The card marks those precedents "no - misleading if copied" and recommends switch_supplier. | Precedents table, rationale |
+| D2 | HS05 - SUP0247 moves RPO023030 (RM0083, P01) to 2025-12-07 | **Trap.** The most similar precedent, DEC00353 (accept_delay, 2025-08-28), succeeded, and three later SUP0247 accept_delay decisions (DEC00364/373/377) are still awaiting an outcome on 2025-10-14. But the new ETA falls in Nov-Dec, when SUP0247 historically slips another 7-14 days. accept_delay is high risk (score 31,826) against 2 for `switch_supplier`. The card marks DEC00353 "no - misleading if copied" and recommends switch_supplier. | Precedents table, rationale |
 | D3 | EVT01987 - SUP0169 moves RPO016183 (RM0100, P03) to 2025-03-10; the buyer proposes cancelling | **Commitment conflict.** CMT00560 ("We order at least 44,060 m of Elastic Film Laminate from SUP0169…", open until 2025-12-30) is caught twice: in the pre-check on the proposed action, and in the guardrail if the model submits cancel_po. Recommendation is `switch_supplier` or `reallocate_stock` (both score 1). | Guardrails panel, Open commitments "Affected by: cancel_po" |
 | D4 | Q0020 - "What is the latest ETA for RPO003179?" as of 2023-06-11 | **Supersession.** DOC000248 (2023-06-02) says 2023-06-22; DOC000254 (2023-06-04) supersedes it with an expedite ETA of 2023-06-08. The answer is 2023-06-08, cites DOC000254 and names the superseded date. | Answer panel |
 | D5 | HS05 with write-back, then HS08 (same supplier, 2025-10-19) | **Closing the loop.** HS05 writes DECL00001 + CMTL00001 to `demo/out/live_demo.sqlite` and retains a summary in Hindsight. The ERP/portal steps print as `[MOCK - no external call made]`. HS08's precedents table then lists DECL00001 with source `live`. | Write-back panel, second card's Precedents |
@@ -4567,7 +5850,7 @@ Expected: all tests pass, and the `live` tests are skipped.
 - [ ] **Step 3: Live test suite**
 
 Run: `RUN_LIVE=1 .venv/bin/python -m pytest -m live -q`
-Expected: 3 passed (Hindsight recall, LLM round trip, ...). Report any failure verbatim.
+Expected: 2 passed (`test_live_recall_is_resolvable`, `test_live_round_trip`). Report any failure verbatim.
 
 - [ ] **Step 4: Commit**
 
