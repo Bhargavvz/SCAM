@@ -74,7 +74,7 @@ flowchart LR
 | Memory | `agent/corpus.py`, `agent/hindsight_tools.py` |
 | Decision | `agent/simulate.py` + `agent/sim_rules.yaml`, `agent/guardrails.py`, `agent/agent_core.py`, `agent/log_decision.py` |
 | Capabilities | `agent/capabilities.py` |
-| Interface | `interface/decision_console.py` |
+| Interface | `interface/decision_console.py` (CLI), `api/server.py` (FastAPI) + `web/` (React UI) |
 | Eval | `eval/run_eval_questions.py`, `eval/run_holdout_scenarios.py`, `eval/run_pattern_probe.py`, `eval/scorecard.py` |
 | Demo | `demo/scenarios.yaml`, `demo/run_demo.py`, `demo/EXPECTED.md` |
 
@@ -115,25 +115,36 @@ RUN_LIVE=1 .venv/bin/python -m pytest -m live          # needs Hindsight + Claud
 
 All eval scripts write into `eval/out/` and regenerate `eval/out/scorecard.md`.
 
-## Web demo (for presentations)
+## Web demo (React UI)
+
+A React + TypeScript single-page app (`web/`, Vite) on top of a FastAPI backend (`api/server.py`) that wraps the agent.
 
 ```bash
-scripts/run_ui.sh        # or: .venv/bin/python -m streamlit run interface/app.py  -> http://localhost:8501
+scripts/run_ui.sh      # first run: npm install + build; then serves UI + API on http://localhost:8000
+scripts/dev_ui.sh      # development: API with reload on :8000 + Vite hot reload on http://localhost:5173
 ```
 
-| Tab | What it shows |
+| Page | What it shows |
 |---|---|
-| Disruption decision | Pick a holdout scenario (traps are marked) or type a report, then **Decide**. The decision card shows the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with the cited memory documents, and optional write-back ("Initiate the response"). |
-| Ask the memory | The 7 capability questions, or your own question: reflect answer, database ground-truth tables, citations, and the open-commitment check. |
-| History question | As-of QA. The default is the supersession example (RPO003179 as of 2023-06-11). |
-| Demo walkthrough | The 12 scripted scenarios, each with an expected-vs-actual check table. |
-| Results | `eval/out/scorecard.md`, `demo/out/demo_report.md` and the saved holdout decision cards. |
+| 🚨 Disruption decision | Pick a holdout scenario (traps are marked) or a free-text report, then **Decide**. The decision card shows: the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with clickable memory documents, and an optional "Initiate the response" write-back. |
+| 💬 Ask the memory | The 7 capability questions, or your own: the answer, database ground-truth tables, citations and the commitment check. |
+| 🕰️ History question | As-of QA examples, including supersession (RPO003179 before and after the expedite). |
+| 🎬 Demo walkthrough | The 12 scripted scenarios, each run with an expected-vs-actual PASS/FAIL table. |
+| 📊 Results | Eval scorecard, demo report and the saved holdout decision cards. |
+
+API endpoints (JSON):
+- `GET /api/config`, `GET /api/scenarios`
+- `POST /api/decide`, `POST /api/ask`, `POST /api/question`
+- `GET /api/demo/specs`, `POST /api/demo/run`
+- `GET /api/docs/{doc_id}?as_of=`
+- `GET /api/results`, `GET /api/results/cards/{id}`
+- `POST /api/live/reset`
 
 Suggested 5-minute demo:
 1. HS05 (trap).
-2. The free-text report that is prefilled (commitment conflict with CMT00560).
-3. The History tab (supersession).
-4. The SUP0247 capability question.
+2. Free-text report (commitment conflict with CMT00560).
+3. History question (supersession).
+4. SUP0247 capability question.
 5. D5 in the walkthrough (closing the loop).
 
 ## Helper scripts
@@ -142,12 +153,12 @@ Suggested 5-minute demo:
 |---|---|
 | `scripts/finish_ingestion.sh` | Resume ingestion (skips stored docs), re-apply the bank config, create the Mental Models, run the Stage 0 checks. |
 | `scripts/run_live_evals.sh` | Pattern probe, 14 holdout scenarios, eval questions, demo. Scores go to `eval/out/scorecard.md`. |
-| `scripts/run_ui.sh` | Start the web demo. |
+| `scripts/run_ui.sh` / `scripts/dev_ui.sh` | Start the React web demo (production build / hot-reload dev mode). |
 
 ## Status and next steps (2026-09-29)
 
 **Done**
-- The code for every deliverable (agent, console, web UI, eval harness, demo, docs).
+- The code for every deliverable (agent, console, React web UI + FastAPI backend, eval harness, demo, docs).
 - 167 offline tests, green as of the last test run. Code added after that (web UI, the minor fixes) has not been tested.
 - A live end-to-end decision on HS05 was correct: switch_supplier; the trap precedent was rejected and the commitments were listed.
 
