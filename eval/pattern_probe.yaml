@@ -1,0 +1,38 @@
+# Each question names the entity but not the behaviour. A pattern counts as detected only when every rule
+# (case-insensitive regex) matches the answer.
+- id: P01
+  question: How reliable are SUP0247's raw-material deliveries, and is there anything planners should watch for?
+  rules: ["nov|dec|q4|year[- ]end", "late|delay|slip"]
+- id: P02
+  question: What delivery risks should we plan for with raw materials from China-based suppliers?
+  rules: ["feb|lunar|chinese new year", "late|delay|congest"]
+- id: P03
+  question: What supply risks should we know about for RM0046 from SUP0223?
+  rules: ["price", "short|stockout|stock-out|ran out"]
+- id: P04
+  question: How reliable is SUP0091 on raw-material orders?
+  rules: ["large|big|size|small|volume", "late|on[- ]time|reliab|miss"]
+- id: P05
+  question: What should we know before expediting finished goods into warehouse W005?
+  rules: ["cost|premium|expens", "2x|twice|double|higher|more"]
+- id: P06
+  question: What scheduling risks exist for production runs at plant P02?
+  rules: ["quarter|first (?:two )?weeks|weeks? 1", "maint"]
+- id: P07
+  question: Are there any quality concerns with RM0016 at plant P02?
+  rules: ["reject|qa\\b|quality", "RM0022|substitut|switch"]
+- id: P08
+  question: Is plant P03 a good donor plant for raw-material transfers?
+  rules: ["safety stock|below|short|deplet", "\\bnot\\b|avoid|risk|caution"]
+- id: P09
+  question: Can we rely on SUP0237's revised delivery dates when a lot is late?
+  rules: ["miss|broken|slip(?:s|ped)? again|unreliab|not reliable|cannot rely|can't rely"]
+- id: P10
+  question: How do our demand forecasts compare with actual demand across product categories?
+  rules: ["consumables", "over|above|bias|too high|higher"]
+- id: P11
+  question: How are SUP0179's lead times trending, and what does that mean for us?
+  rules: ["lengthen|increas|creep|longer|grow|rising|worsen"]
+- id: P12
+  question: What should we know about finished-goods deliveries from SUP0005?
+  rules: ["april|\\bapr\\b", "late|delay"]
