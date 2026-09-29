@@ -1,0 +1,231 @@
+{
+  "questions": null,
+  "questions_hindsight_mode": null,
+  "holdout": {
+    "n": 14,
+    "accuracy": 1.0,
+    "trap_n": 4,
+    "trap_accuracy": 1.0,
+    "trap_results": {
+      "HS02": "PASS",
+      "HS05": "PASS",
+      "HS08": "PASS",
+      "HS10": "PASS"
+    },
+    "precedent_recall": 0.69,
+    "commitments_recall": 1.0,
+    "simulator_parity_ok": 14,
+    "errors": 0,
+    "latency": {
+      "mean_s": 59.555,
+      "p50_s": 65.49,
+      "max_s": 99.42
+    },
+    "tokens": {
+      "mean_input": 5739.214,
+      "mean_output": 1307.357
+    },
+    "cost": {
+      "mean_usd": null,
+      "total_usd": null
+    },
+    "per_scenario": [
+      {
+        "scenario_id": "HS01",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 20.19
+      },
+      {
+        "scenario_id": "HS02",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": true,
+        "trap_pass": true,
+        "precedent_recall": 0.333,
+        "commitments_recall": 1.0,
+        "latency_s": 86.07
+      },
+      {
+        "scenario_id": "HS03",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 59.96
+      },
+      {
+        "scenario_id": "HS04",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 0.333,
+        "commitments_recall": null,
+        "latency_s": 26.72
+      },
+      {
+        "scenario_id": "HS05",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": true,
+        "trap_pass": true,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 86.16
+      },
+      {
+        "scenario_id": "HS06",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 63.94
+      },
+      {
+        "scenario_id": "HS07",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 99.42
+      },
+      {
+        "scenario_id": "HS08",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": true,
+        "trap_pass": true,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 67.04
+      },
+      {
+        "scenario_id": "HS09",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 0.0,
+        "commitments_recall": 1.0,
+        "latency_s": 25.23
+      },
+      {
+        "scenario_id": "HS10",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": true,
+        "trap_pass": true,
+        "precedent_recall": 0.667,
+        "commitments_recall": 1.0,
+        "latency_s": 88.08
+      },
+      {
+        "scenario_id": "HS11",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 1.0,
+        "commitments_recall": 1.0,
+        "latency_s": 23.02
+      },
+      {
+        "scenario_id": "HS12",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 0.333,
+        "commitments_recall": 1.0,
+        "latency_s": 80.49
+      },
+      {
+        "scenario_id": "HS13",
+        "gold": "switch_supplier",
+        "chosen": "switch_supplier",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 0.333,
+        "commitments_recall": 1.0,
+        "latency_s": 20.98
+      },
+      {
+        "scenario_id": "HS14",
+        "gold": "reallocate_stock",
+        "chosen": "reallocate_stock",
+        "correct": true,
+        "trap": false,
+        "trap_pass": null,
+        "precedent_recall": 0.667,
+        "commitments_recall": 1.0,
+        "latency_s": 86.47
+      }
+    ]
+  },
+  "patterns": {
+    "per_pattern": {
+      "P01": {
+        "off": true
+      },
+      "P02": {
+        "off": false
+      },
+      "P03": {
+        "off": true
+      },
+      "P04": {
+        "off": false
+      },
+      "P05": {
+        "off": false
+      },
+      "P06": {
+        "off": false
+      },
+      "P07": {
+        "off": false
+      },
+      "P08": {
+        "off": false
+      },
+      "P09": {
+        "off": true
+      },
+      "P10": {
+        "off": false
+      },
+      "P11": {
+        "off": false
+      },
+      "P12": {
+        "off": false
+      }
+    },
+    "detected_with_mental_models": 0,
+    "detected_without_mental_models": 3
+  }
+}
