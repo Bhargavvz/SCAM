@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { api, DecisionCard } from "../api";
+import { api, DecisionCard, Results } from "../api";
 import { Markdown, Panel } from "../components/common";
 import { DecisionCardView } from "../components/results";
 
 export function ResultsView() {
-  const [data, setData] = useState<{ scorecard_md: string | null; demo_report_md: string | null; cards: string[] } | null>(null);
+  const [data, setData] = useState<Results | null>(null);
   const [card, setCard] = useState<DecisionCard | null>(null);
   const [pick, setPick] = useState("");
 

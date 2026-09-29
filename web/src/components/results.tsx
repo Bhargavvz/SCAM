@@ -1,4 +1,5 @@
 import { CapabilityAnswer, DecisionCard, QAResult, Row } from "../api";
+import { HBars, StepBars, Timeline, Tone } from "./charts";
 import { Alerts, Citations, DataTable, Markdown, Metric, Panel, fmt, money } from "./common";
 
 export function DecisionCardView({ card }: { card: DecisionCard }) {
@@ -28,6 +29,33 @@ export function DecisionCardView({ card }: { card: DecisionCard }) {
         <Metric k="Time · model calls" v={`${card.latency_s}s · ${card.usage?.calls ?? 0}`} />
       </div>
       <Alerts errors={card.guardrail_events} warnings={warnings} infos={card.situation_summary ? [card.situation_summary] : []} />
+
+      <div className="grid cols-2">
+        <Panel title="Risk-adjusted cost by option" right={<span className="muted">log scale · lower is better</span>}>
+          <HBars log items={card.options.filter((o) => o.supported !== false).map((o) => ({
+            label: o.action.replace(/_/g, " "),
+            value: o.feasible ? o.score ?? null : null,
+            display: o.feasible ? `${money(o.score)} · ${o.stockout_days}d` : "",
+            tone: (!o.feasible ? "muted" : o.breaches_commitments?.length ? "bad" : o.action === rec ? "good" : "ink") as Tone,
+            note: o.note,
+          }))} />
+          <div className="legend">
+            <span><i style={{ background: "#1c6b3f" }} />recommended</span>
+            <span><i style={{ background: "#16181d" }} />alternative</span>
+            <span><i style={{ background: "#a52a2a" }} />breaks a commitment</span>
+            <span className="muted">label: cost · stockout days</span>
+          </div>
+        </Panel>
+        <Panel title="Precedents over time" right={<span className="muted">green worked · red failed · grey pending</span>}>
+          <Timeline today={card.as_of} points={card.precedents.filter((pr) => pr.decided_at).map((pr) => ({
+            date: String(pr.decided_at),
+            label: `${String(pr.decision_type).replace(/_/g, " ")}${pr.applies_today ? "" : " ✗"}`,
+            tone: (pr.outcome_label === "success" ? "good" : pr.outcome_label === "failed" ? "bad" : pr.outcome_label === "partial" ? "warn" : "muted") as Tone,
+            detail: `${pr.decision_id} · ${pr.outcome_label ?? "outcome unknown"} · ${pr.note}`,
+          }))} />
+          <div className="muted">✗ = the same action would not be the best choice today</div>
+        </Panel>
+      </div>
 
       <Panel title="Options (simulated)" right={<span className="muted">★ recommended · ▲ lowest risk-adjusted score</span>}>
         <DataTable rows={options} rowClass={(r) => (String(r[""]).includes("★") ? "rec" : r.feasible ? "" : "dim")} />
@@ -74,6 +102,12 @@ export function DecisionCardView({ card }: { card: DecisionCard }) {
             <summary>Memory reflection</summary>
             <Markdown text={card.reflection} />
           </details>
+        )}
+        {card.trace.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <div className="label">Where the time went</div>
+            <StepBars steps={card.trace.map((s) => ({ name: String(s.name), kind: String(s.kind), ms: Number(s.ms) || 0 }))} />
+          </div>
         )}
         {card.trace.length > 0 && (
           <details style={{ marginTop: 10 }}>

@@ -126,6 +126,7 @@ scripts/dev_ui.sh      # development: API with reload on :8000 + Vite hot reload
 
 | Page | What it shows |
 |---|---|
+| Overview | Hackathon summary built from the real eval results: held-out accuracy, traps avoided, simulator parity, commitments surfaced, scenario grid, question accuracy by type, pattern grid, pipeline, guarantees, data coverage. |
 | Decide | Pick a holdout scenario (traps are marked) or a free-text report, then **Decide**. The decision card shows: the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with clickable memory documents, and an optional "Initiate the response" write-back. |
 | Ask | The 7 capability questions, or your own: the answer, database ground-truth tables, citations and the commitment check. |
 | History | As-of QA examples, including supersession (RPO003179 before and after the expedite). |
@@ -151,7 +152,7 @@ Suggested 5-minute demo:
 
 | Script | Purpose |
 |---|---|
-| `scripts/finish_ingestion.sh` | Resume ingestion (skips stored docs), re-apply the bank config, create the Mental Models, run the Stage 0 checks. |
+| `scripts/finish_ingestion.sh` | Probe Hindsight with one write, then resume ingestion with live progress (`agent/ingest.py`, stops after 5 consecutive failures), re-apply the bank config, create the Mental Models, run the Stage 0 checks. |
 | `scripts/run_live_evals.sh` | Pattern probe, 14 holdout scenarios, eval questions, demo. Scores go to `eval/out/scorecard.md`. |
 | `scripts/run_ui.sh` / `scripts/dev_ui.sh` | Start the React web demo (production build / hot-reload dev mode). |
 

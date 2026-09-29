@@ -132,6 +132,74 @@ export interface MemoryDoc {
   superseded_by: { doc_id: string; date: string }[];
 }
 
+export interface HoldoutRow {
+  scenario_id: string;
+  gold: string;
+  chosen: string | null;
+  correct: boolean;
+  trap: boolean;
+  trap_pass: boolean | null;
+  precedent_recall: number | null;
+  commitments_recall: number | null;
+  latency_s: number | null;
+}
+
+export interface QuestionSummary {
+  n: number;
+  accuracy: number | null;
+  by_type: Record<string, { n: number; accuracy: number | null; mean_score: number | null }>;
+  by_hop_count: Record<string, { n: number; accuracy: number | null }>;
+  single_hop_fact_recall_accuracy: number | null;
+  citations: Record<string, number | null>;
+  future_doc_citations: number;
+  latency: { mean_s: number | null };
+}
+
+export interface Scorecard {
+  questions: QuestionSummary | null;
+  questions_hindsight_mode: QuestionSummary | null;
+  holdout: {
+    n: number;
+    accuracy: number | null;
+    trap_n: number;
+    trap_accuracy: number | null;
+    precedent_recall: number | null;
+    commitments_recall: number | null;
+    simulator_parity_ok: number;
+    errors: number;
+    latency: { mean_s: number | null; p50_s: number | null; max_s: number | null };
+    tokens: { mean_input: number | null; mean_output: number | null };
+    per_scenario: HoldoutRow[];
+  } | null;
+  patterns: {
+    per_pattern: Record<string, { on?: boolean; off?: boolean }>;
+    detected_with_mental_models: number;
+    detected_without_mental_models: number;
+  } | null;
+}
+
+export interface Coverage {
+  memory_docs_stored: number;
+  memory_docs_total: number;
+  holdout_docs: number;
+  eval_questions: number;
+  holdout_scenarios: number;
+  planted_patterns: number;
+  disruption_events: number;
+  decisions: number;
+  commitments: number;
+  negotiations: number;
+  rm_purchase_orders: number;
+}
+
+export interface Results {
+  scorecard_md: string | null;
+  demo_report_md: string | null;
+  cards: string[];
+  scorecard: Scorecard | null;
+  coverage: Coverage;
+}
+
 async function call<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(path, body === undefined ? undefined : {
     method: "POST",
@@ -160,7 +228,7 @@ export const api = {
   demoSpecs: () => call<DemoSpec[]>("/api/demo/specs"),
   demoRun: (id: string) => call<{ spec: DemoSpec; result: DemoResult; checks: Check[] }>("/api/demo/run", { id }),
   doc: (id: string, asOf: string) => call<MemoryDoc>(`/api/docs/${id}?as_of=${encodeURIComponent(asOf)}`),
-  results: () => call<{ scorecard_md: string | null; demo_report_md: string | null; cards: string[] }>("/api/results"),
+  results: () => call<Results>("/api/results"),
   resultCard: (id: string) => call<DecisionCard>(`/api/results/cards/${id}`),
   resetLive: () => call<{ ok: boolean; message: string }>("/api/live/reset", {}),
 };

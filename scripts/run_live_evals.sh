@@ -2,6 +2,7 @@
 # Full live evaluation batch; logs in runtime/live_*.log, results in eval/out/ and demo/out/.
 # Order matters: the demo writes back into the bank (D5), so it runs last.
 cd "$(dirname "$0")/.."
+export PYTHONUNBUFFERED=1
 mkdir -p runtime
 F='unclosed|client_session|connector|connections'
 echo "== pattern probe $(date +%H:%M)"; .venv/bin/python -m eval.run_pattern_probe --mental-models "${MM:-both}" 2>&1 | grep -viE "$F" > runtime/live_probe.log; tail -1 runtime/live_probe.log

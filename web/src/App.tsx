@@ -3,10 +3,12 @@ import { api, Config } from "./api";
 import { AskView } from "./views/AskView";
 import { DecideView } from "./views/DecideView";
 import { DemoView } from "./views/DemoView";
+import { OverviewView } from "./views/OverviewView";
 import { QuestionView } from "./views/QuestionView";
 import { ResultsView } from "./views/ResultsView";
 
 const TABS = [
+  { id: "overview", label: "Overview" },
   { id: "decide", label: "Decide" },
   { id: "ask", label: "Ask" },
   { id: "history", label: "History" },
@@ -17,7 +19,7 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 export default function App() {
-  const [tab, setTab] = useState<TabId>("decide");
+  const [tab, setTab] = useState<TabId>("overview");
   const [config, setConfig] = useState<Config | null>(null);
   const [offline, setOffline] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -63,6 +65,7 @@ export default function App() {
       <main>
         {offline && <div className="alert error"><span className="tag">Offline</span>The API is not reachable. Start it with scripts/run_ui.sh.</div>}
         {notice && <div className="alert info">{notice}</div>}
+        {tab === "overview" && <OverviewView onOpen={setTab} />}
         {tab === "decide" && <DecideView />}
         {tab === "ask" && <AskView defaultAsOf={config?.default_as_of ?? "2025-12-31"} />}
         {tab === "history" && <QuestionView />}

@@ -141,7 +141,28 @@ def results():
     score = ROOT / "eval" / "out" / "scorecard.json"
     return {"scorecard_md": read(ROOT / "eval" / "out" / "scorecard.md"),
             "scorecard": json.loads(score.read_text()) if score.exists() else None,
-            "demo_report_md": read(ROOT / "demo" / "out" / "demo_report.md"), "cards": cards}
+            "demo_report_md": read(ROOT / "demo" / "out" / "demo_report.md"), "cards": cards,
+            "coverage": _coverage()}
+
+
+def _coverage() -> dict:
+    """What the prototype runs on: memory stored vs corpus, structured records, eval assets."""
+    import sqlite3
+
+    log = SETTINGS.retention_log_path
+    stored = len({r["doc_id"] for r in map(json.loads, log.read_text().splitlines()) if r.get("status") == "ok"}) \
+        if log.exists() else 0
+    splits = [json.loads(line)["split"] for line in SETTINGS.corpus_path.open()]
+    con = sqlite3.connect(f"file:{SETTINGS.db_path}?mode=ro", uri=True)
+    try:
+        counts = {t: con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+                  for t in ("disruption_events", "decisions", "commitments", "negotiations", "rm_purchase_orders")}
+    finally:
+        con.close()
+    return {"memory_docs_stored": stored, "memory_docs_total": splits.count("memory"),
+            "holdout_docs": splits.count("holdout"), "eval_questions": sum(1 for _ in (SETTINGS.dataset_dir /
+                                                                                         "eval_questions.jsonl").open()),
+            "holdout_scenarios": len(load_holdout(SETTINGS)), "planted_patterns": 12, **counts}
 
 
 @app.get("/api/results/cards/{sid}")
