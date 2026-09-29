@@ -76,6 +76,7 @@ def log_decision(settings: Settings, live_db_path: Path, memory, card: DecisionC
     con = open_live_writer(live_db_path)
     try:
         with con:
+            con.execute("BEGIN IMMEDIATE")  # serialise concurrent writers so COUNT(*)+1 ids cannot collide
             dec_id = _next_id(con, "decisions_live", "DECL")
             cmt_id = _next_id(con, "commitments_live", "CMTL")
             con.execute("""INSERT INTO decisions_live (decision_id, event_ref, supplier_id, rm_id, plant_id, rpo_id,

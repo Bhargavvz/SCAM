@@ -68,6 +68,35 @@ def check_expectations(spec: dict, result: dict) -> list[dict]:
     return out
 
 
+def load_specs() -> list[dict]:
+    return yaml.safe_load((DEMO_DIR / "scenarios.yaml").read_text())
+
+
+def run_spec(agent, spec: dict, holdout: dict) -> dict:
+    """Run one demo scenario; returns {"card"|"answer"|"capability"|"cards": ...} (or {"error": ...})."""
+    from agent.capabilities import ask
+    from agent.scenarios import holdout_context
+
+    try:
+        if spec["kind"] == "holdout":
+            s = holdout[spec["scenario"]]
+            return {"card": agent.run(s["day0_report"], as_of=s["day0"], context=holdout_context(s)).to_dict()}
+        if spec["kind"] == "report":
+            return {"card": agent.run(spec["report"], as_of=spec["as_of"], context=spec.get("context")).to_dict()}
+        if spec["kind"] == "question":
+            return {"answer": agent.answer_question(spec["question"], spec["as_of"]).to_dict()}
+        if spec["kind"] == "ask":
+            return {"capability": ask(agent, spec["question"], spec.get("as_of")).to_dict()}
+        cards = []  # chain: first step writes back, the next one should see it
+        for i, sid in enumerate(spec["steps"]):
+            s = holdout[sid]
+            cards.append(agent.run(s["day0_report"], as_of=s["day0"], context=holdout_context(s),
+                                   writeback=(i == 0)).to_dict())
+        return {"cards": cards}
+    except Exception as ex:  # demo harness: the failure is the actual result
+        return {"error": f"{type(ex).__name__}: {ex}"}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--only", nargs="*", help="demo ids to run, e.g. D2 D3")
@@ -75,9 +104,10 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
 
     from agent.agent_core import build_agent
-    from agent.capabilities import ask
+    from agent.capabilities import CapabilityAnswer
+    from agent.card import DecisionCard, QAResult
     from agent.config import load_settings
-    from agent.scenarios import holdout_context, load_holdout
+    from agent.scenarios import load_holdout
     from agent.setup_data import ensure_db
     from interface.decision_console import render_answer, render_capability, render_card
 
@@ -92,40 +122,21 @@ def main(argv=None) -> int:
     agent = build_agent(settings, live_db_path=live)
     holdout = load_holdout(settings)
     console = Console(record=True, width=170)
-    specs = [s for s in yaml.safe_load((DEMO_DIR / "scenarios.yaml").read_text()) if not a.only or s["id"] in a.only]
+    specs = [s for s in load_specs() if not a.only or s["id"] in a.only]
     report = ["# Demo walkthrough - expected vs actual", ""]
     all_ok = True
     for spec in specs:
         console.rule(f"{spec['id']} - {spec['title']}")
-        try:
-            if spec["kind"] == "holdout":
-                s = holdout[spec["scenario"]]
-                card = agent.run(s["day0_report"], as_of=s["day0"], context=holdout_context(s))
-                render_card(card, console)
-                result = {"card": card.to_dict()}
-            elif spec["kind"] == "report":
-                card = agent.run(spec["report"], as_of=spec["as_of"], context=spec.get("context"))
-                render_card(card, console)
-                result = {"card": card.to_dict()}
-            elif spec["kind"] == "question":
-                res = agent.answer_question(spec["question"], spec["as_of"])
-                render_answer(res, console)
-                result = {"answer": res.to_dict()}
-            elif spec["kind"] == "ask":
-                cap = ask(agent, spec["question"], spec.get("as_of"))
-                render_capability(cap, console)
-                result = {"capability": cap.to_dict()}
-            else:  # chain: first step writes back, the next one should see it
-                cards = []
-                for i, sid in enumerate(spec["steps"]):
-                    s = holdout[sid]
-                    card = agent.run(s["day0_report"], as_of=s["day0"], context=holdout_context(s), writeback=(i == 0))
-                    render_card(card, console)
-                    cards.append(card.to_dict())
-                result = {"cards": cards}
-        except Exception as ex:  # demo harness: record the failure as the actual result and continue
-            console.print(f"[red]{spec['id']} failed: {type(ex).__name__}: {ex}[/]")
-            result = {"error": f"{type(ex).__name__}: {ex}"}
+        result = run_spec(agent, spec, holdout)
+        if "error" in result:
+            console.print(f"[red]{spec['id']} failed: {result['error']}[/]")
+        for c in [result.get("card"), *(result.get("cards") or [])]:
+            if c:
+                render_card(DecisionCard(**c), console)
+        if result.get("answer"):
+            render_answer(QAResult(**result["answer"]), console)
+        if result.get("capability"):
+            render_capability(CapabilityAnswer(**result["capability"]), console)
         (out / f"{spec['id']}.json").write_text(json.dumps(result, indent=2, default=str))
         checks = check_expectations(spec["expect"], result)
         all_ok &= all(c["ok"] for c in checks)

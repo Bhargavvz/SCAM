@@ -140,6 +140,8 @@ class HindsightMemory:
             if ts is None or ts > as_of_end(as_of):
                 return None, "future"
             return MemoryHit(text, ftype, str(doc_id).split(".")[0], ts.date().isoformat(), "agent_decision", "live"), "ok"
+        if doc_id and doc_id not in self.index.by_id:
+            return None, "unresolved"  # a document id we do not know: never guess a corpus doc from its timestamp
         doc = self.index.resolve(doc_id, mentioned, ctx)
         if doc is None:
             return None, "unresolved"

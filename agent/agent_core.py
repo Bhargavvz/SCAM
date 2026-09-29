@@ -376,6 +376,13 @@ class DecisionAgent:
 
             # rationale (high effort), then number check
             card.rationale = self._rationale(card)
+            # models often name record ids in prose but leave cited_record_ids empty: verify and add them
+            mentioned = sql_tools.RECORD_ID_RE.findall(" ".join([card.rationale, *card.key_reasons]))
+            for rid in dict.fromkeys(mentioned):
+                if rid not in card.cited_record_ids and sql_tools.record_exists(con, rid):
+                    card.cited_record_ids.append(rid)
+            if card.cited_record_ids and "The recommendation cites no traceable evidence." in card.warnings:
+                card.warnings.remove("The recommendation cites no traceable evidence.")
             extra = [v for p in card.precedents for v in (p.get("expected_cost"), p.get("actual_cost"))]
             bad = ungrounded_numbers(card.rationale, card.options, extra)
             if bad:

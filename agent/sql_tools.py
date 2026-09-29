@@ -10,7 +10,7 @@ import sqlite3
 import time
 
 _LITERAL = re.compile(r"'(?:[^']|'')*'")
-_FORBIDDEN = re.compile(r"\b(insert|update|delete|drop|create|alter|replace|attach|detach|pragma|vacuum|"
+_FORBIDDEN = re.compile(r"\b(insert|update|delete|drop|create|alter|attach|detach|pragma|vacuum|"
                         r"reindex|analyze|begin|commit|rollback|savepoint)\b", re.I)
 _QUALIFIED = re.compile(r"\b(main|live|temp)\s*\.", re.I)
 
@@ -26,6 +26,10 @@ _RECORD_TABLES = [  # longest prefix first
     ("SUP", "suppliers", "supplier_id"), ("RM", "raw_materials", "rm_id"), ("IP", "products", "product_id"),
     ("W", "warehouses", "warehouse_id"), ("P", "plants", "plant_id"),
 ]
+
+
+RECORD_ID_RE = re.compile(r"\b(?:DECL|CMTL|RPOL|RPO|REV|EVT|DEC|CMT|NEG|CTR|CAT|POL|PR|PO|RT|SUP|RM|IP)\d+\b"
+                          r"|\b[PW]\d{2,3}\b")
 
 
 class SQLGuardError(ValueError):

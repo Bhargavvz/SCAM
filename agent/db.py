@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 import secrets
+from datetime import date
 import sqlite3
 from pathlib import Path
 
@@ -100,6 +101,10 @@ def _masked(cols, cond: str) -> str:
 def asof_views(as_of: str) -> dict[str, str]:
     if not DATE_RE.match(as_of or ""):
         raise ValueError(f"as_of must be YYYY-MM-DD, got {as_of!r}")
+    try:
+        date.fromisoformat(as_of)
+    except ValueError as ex:
+        raise ValueError(f"as_of {as_of!r} is not a real calendar date") from ex
     A = f"'{as_of}'"
     resolved = "NULLIF(resolved_at, '')"
     concluded = "NULLIF(concluded_at, '')"

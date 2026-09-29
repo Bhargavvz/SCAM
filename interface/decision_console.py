@@ -185,7 +185,7 @@ def main(argv: list[str] | None = None) -> int:
             card = agent.run(report, as_of=as_of, context=ctx, writeback=a.writeback)
             render_card(card, console, show_trace=a.trace)
             out = card.to_dict()
-    except (AgentError, LLMRefusal, LLMUnavailable) as ex:
+    except (AgentError, LLMRefusal, LLMUnavailable, ValueError) as ex:
         console.print(f"[red]{type(ex).__name__}:[/] {ex}")
         return 1
     if a.json_out:

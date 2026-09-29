@@ -91,6 +91,53 @@ RUN_LIVE=1 .venv/bin/python -m pytest -m live          # needs Hindsight + Claud
 
 All eval scripts write into `eval/out/` and regenerate `eval/out/scorecard.md`.
 
+## Web demo (for presentations)
+
+```bash
+scripts/run_ui.sh        # or: .venv/bin/python -m streamlit run interface/app.py  -> http://localhost:8501
+```
+
+| Tab | What it shows |
+|---|---|
+| Disruption decision | Pick a holdout scenario (traps are marked) or type a report, then **Decide**. The decision card shows the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with the cited memory documents, and optional write-back ("Initiate the response"). |
+| Ask the memory | The 7 capability questions, or your own question: reflect answer, database ground-truth tables, citations, and the open-commitment check. |
+| History question | As-of QA. The default is the supersession example (RPO003179 as of 2023-06-11). |
+| Demo walkthrough | The 12 scripted scenarios, each with an expected-vs-actual check table. |
+| Results | `eval/out/scorecard.md`, `demo/out/demo_report.md` and the saved holdout decision cards. |
+
+Suggested 5-minute demo:
+1. HS05 (trap).
+2. The free-text report that is prefilled (commitment conflict with CMT00560).
+3. The History tab (supersession).
+4. The SUP0247 capability question.
+5. D5 in the walkthrough (closing the loop).
+
+## Helper scripts
+
+| Script | Purpose |
+|---|---|
+| `scripts/finish_ingestion.sh` | Resume ingestion (skips stored docs), re-apply the bank config, create the Mental Models, run the Stage 0 checks. |
+| `scripts/run_live_evals.sh` | Pattern probe, 14 holdout scenarios, eval questions, demo. Scores go to `eval/out/scorecard.md`. |
+| `scripts/run_ui.sh` | Start the web demo. |
+
+## Status and next steps (2026-09-29)
+
+**Done**
+- The code for every deliverable (agent, console, web UI, eval harness, demo, docs).
+- 167 offline tests, green as of the last test run. Code added after that (web UI, the minor fixes) has not been tested.
+- A live end-to-end decision on HS05 was correct: switch_supplier; the trap precedent was rejected and the commitments were listed.
+
+**Open, in order**
+1. **Finish ingestion.** Hindsight Cloud stopped accepting writes at 2025-08-06 in the corpus, with a 504 on retain and a consolidation job failing with "connection is closed". 1,983 of 2,201 docs are stored. Check the Hindsight dashboard, plan limits or support. When writes work again, run `scripts/finish_ingestion.sh`. It also creates the 12 Mental Models, which need writes.
+2. **Run the evals.** Run `scripts/run_live_evals.sh`; on free Groq with compact mode this takes about 1.5-2 h. Then copy the headline numbers from `eval/out/scorecard.md` into "Results" below.
+3. **Decide on the LLM.** Groq's free tier (8,000 tokens/min) forces compact mode: less evidence reaches the model, and runs are slow. For the full-quality agent, either upgrade Groq to the Dev tier and set `LLM_COMPACT=0`, or use Claude (`LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, `LLM_MAX_TOKENS=16000`), which the brief specifies.
+4. **Run the test suite** (`.venv/bin/python -m pytest -q`) once time allows. It covers the code added after the last green run.
+5. **Security.** Rotate the Hindsight and Groq keys that were shared in chat.
+6. **Nice to have.**
+   - Simulate the 3 unmodelled actions (build_safety_stock, renegotiate, reduce_allocation).
+   - Derive the affected production runs automatically from MRP data instead of passing them in.
+   - Add an LLM judge (`--judge`) to the eval runs.
+
 ## How the hard rules are enforced
 
 - **Numbers come only from the simulator.**
@@ -130,4 +177,5 @@ Fill this in from `eval/out/scorecard.md` and `demo/out/demo_report.md` after th
 - Current Claude models reject `temperature`, so "low vs normal temperature" is implemented as effort low vs high (Groq gpt-oss: `reasoning_effort` low/high).
 - The agent LLM is pluggable (`LLM_PROVIDER=anthropic|groq`). The brief names Claude; this deployment runs Groq `openai/gpt-oss-120b` at the user's request. Groq does not enforce strict tool schemas, so malformed tool calls come back to the model as tool errors. Groq per-token prices are not built in: set `LLM_PRICE_INPUT_PER_MTOK` / `LLM_PRICE_OUTPUT_PER_MTOK` for cost reporting, otherwise cost shows as unknown.
 - Hindsight runs on Hindsight Cloud (`HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io`); `scripts/start_hindsight.sh` is only for a local server.
+- `rm_purchase_orders` shows `cancelled` status even before the cancellation was known: the dataset has no cancellation date.
 - The corpus has no records for corrosion, humidity, partial-shipment exceptions, customer churn or "cheaper supplier" switches. The corresponding capability demos can only answer "no record".
