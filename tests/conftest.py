@@ -27,3 +27,19 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "live" in item.keywords:
             item.add_marker(skip)
+
+
+@pytest.fixture
+def db_factory(settings):
+    from agent.db import connect
+
+    opened = []
+
+    def make(as_of):
+        con = connect(settings.db_path, settings.live_db_path, as_of)
+        opened.append(con)
+        return con
+
+    yield make
+    for con in opened:
+        con.close()
