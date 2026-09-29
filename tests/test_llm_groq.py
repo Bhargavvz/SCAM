@@ -102,3 +102,27 @@ def test_build_agent_uses_configured_provider(settings):
 
     agent = build_agent(_groq_settings(settings), memory=FakeMemory())
     assert isinstance(agent.llm, GroqLLM)
+
+
+def test_provider_errors_become_llm_unavailable_with_groq_message(settings):
+    from agent.llm import LLMUnavailable
+
+    body = {"error": {"message": "Request too large ... tokens per minute (TPM): Limit 8000, Requested 20438",
+                      "code": "rate_limit_exceeded"}}
+    llm = GroqLLM(_groq_settings(settings), http_client=_client([(413, body)], []))
+    with pytest.raises(LLMUnavailable, match="tokens per minute"):
+        llm.create(system="s", messages=[{"role": "user", "content": "q"}])
+
+
+def test_console_reports_llm_errors_without_traceback(monkeypatch, capsys):
+    from agent import agent_core
+    from agent.llm import LLMUnavailable
+    from interface import decision_console
+
+    class Boom:
+        def run(self, *a, **kw):
+            raise LLMUnavailable("Groq 413: tokens per minute")
+
+    monkeypatch.setattr(agent_core, "build_agent", lambda *a, **kw: Boom())
+    assert decision_console.main(["--scenario", "HS05"]) == 1
+    assert "tokens per minute" in capsys.readouterr().out

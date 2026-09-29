@@ -22,6 +22,10 @@ class LLMRefusal(RuntimeError):
     """The model (and any fallback) declined the request."""
 
 
+class LLMUnavailable(RuntimeError):
+    """The LLM provider rejected the request (quota, size limit, auth, outage) after retries."""
+
+
 @dataclass
 class Usage:
     calls: int = 0

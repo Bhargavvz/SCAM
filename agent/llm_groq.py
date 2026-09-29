@@ -13,7 +13,7 @@ from types import SimpleNamespace
 import httpx
 
 from agent.config import Settings
-from agent.llm import LLMRefusal, Usage
+from agent.llm import LLMRefusal, LLMUnavailable, Usage
 
 _EFFORT = {"low": "low", "medium": "medium", "high": "high", "xhigh": "high", "max": "high"}
 _STOP = {"tool_calls": "tool_use", "stop": "end_turn", "length": "max_tokens", "content_filter": "refusal"}
@@ -72,9 +72,14 @@ class GroqLLM:
     def _post(self, body: dict) -> dict:
         for attempt in range(MAX_RETRIES + 1):
             r = self.http.post(self.url, json=body, headers=self.headers)
-            if r.status_code not in RETRY_STATUSES or attempt == MAX_RETRIES:
-                r.raise_for_status()
+            if r.status_code < 400:
                 return r.json()
+            if r.status_code not in RETRY_STATUSES or attempt == MAX_RETRIES:
+                try:
+                    detail = r.json().get("error", {}).get("message") or r.text
+                except ValueError:
+                    detail = r.text
+                raise LLMUnavailable(f"Groq {r.status_code}: {detail[:400]}")
             wait = float(r.headers.get("retry-after") or 2 ** attempt)
             time.sleep(min(wait, 30))
         raise RuntimeError("unreachable")

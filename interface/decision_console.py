@@ -145,14 +145,16 @@ def main(argv: list[str] | None = None) -> int:
     if a.question and not a.as_of:
         ap.error("--question needs --as-of")
 
-    from agent.agent_core import AgentError, build_agent
+    from agent import agent_core
+    from agent.agent_core import AgentError
+    from agent.llm import LLMRefusal, LLMUnavailable
     from agent.config import load_settings
     from agent.scenarios import holdout_context, load_holdout
     from agent.setup_data import ensure_db
 
     settings = load_settings()
     ensure_db(settings)
-    agent = build_agent(settings, live_db_path=Path(a.live_db) if a.live_db else None)
+    agent = agent_core.build_agent(settings, live_db_path=Path(a.live_db) if a.live_db else None)
     console = Console()
     try:
         if a.ask:
@@ -183,8 +185,8 @@ def main(argv: list[str] | None = None) -> int:
             card = agent.run(report, as_of=as_of, context=ctx, writeback=a.writeback)
             render_card(card, console, show_trace=a.trace)
             out = card.to_dict()
-    except AgentError as ex:
-        console.print(f"[red]Agent error:[/] {ex}")
+    except (AgentError, LLMRefusal, LLMUnavailable) as ex:
+        console.print(f"[red]{type(ex).__name__}:[/] {ex}")
         return 1
     if a.json_out:
         Path(a.json_out).write_text(json.dumps(out, indent=2, default=str))
