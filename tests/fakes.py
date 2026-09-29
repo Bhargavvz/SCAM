@@ -4,7 +4,7 @@ from __future__ import annotations
 import itertools
 from types import SimpleNamespace
 
-from agent.hindsight_tools import MemoryHit, RecallResult, ReflectResult
+from agent.hindsight_tools import MemoryHit, RecallResult, ReflectResult  # noqa: F401 (re-exported for tests)
 from agent.llm import Usage
 
 _ids = itertools.count(1)

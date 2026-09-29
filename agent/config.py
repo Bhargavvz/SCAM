@@ -49,6 +49,8 @@ class Settings:
     groq_base_url: str = "https://api.groq.com/openai/v1"
     llm_price_input_per_mtok: float | None = None
     llm_price_output_per_mtok: float | None = None
+    llm_compact: bool = False
+    llm_tokens_per_minute: int | None = None
 
 
 def load_settings(env_file: Path | None = None) -> Settings:
@@ -80,6 +82,8 @@ def load_settings(env_file: Path | None = None) -> Settings:
         groq_base_url=e("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),
         llm_price_input_per_mtok=_float_or_none(e("LLM_PRICE_INPUT_PER_MTOK")),
         llm_price_output_per_mtok=_float_or_none(e("LLM_PRICE_OUTPUT_PER_MTOK")),
+        llm_compact=e("LLM_COMPACT", "0") == "1",
+        llm_tokens_per_minute=int(e("LLM_TOKENS_PER_MINUTE")) if e("LLM_TOKENS_PER_MINUTE") else None,
     )
     if s.llm_provider not in PROVIDERS:
         raise ValueError(f"LLM_PROVIDER must be one of {PROVIDERS}, got {s.llm_provider!r}")

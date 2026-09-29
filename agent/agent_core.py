@@ -25,6 +25,14 @@ from agent.simulate import TAXONOMY, SimulationError, best_option, build_state, 
 
 MAX_STEPS = 10
 MAX_REJECTIONS = 2
+# How much evidence reaches the model. COMPACT keeps a request under ~7k tokens (prompt + reserved reply) so the
+# agent fits small per-minute token limits such as Groq's free tier (LLM_COMPACT=1).
+FULL_LIMITS = dict(hits=30, hit_chars=None, precedents=6, events=12, links=None, commitments=None, commit_chars=None,
+                   schema_columns=True, tool_chars=None, reflection_chars=None, max_steps=MAX_STEPS, scorecard=6)
+COMPACT_LIMITS = dict(hits=6, hit_chars=200, precedents=4, events=4, links=6, commitments=6, commit_chars=120,
+                      schema_columns=False, tool_chars=1500, reflection_chars=600, max_steps=5, scorecard=2)
+_OPTION_KEYS = ("action", "feasible", "arrival", "stockout_days", "cost", "risk", "score", "service_impact_units",
+                "breaches_commitments", "note")
 
 
 class AgentError(RuntimeError):
@@ -151,6 +159,18 @@ def _missing_fields(inp, tool: dict) -> list[str]:
     return [k for k in tool["input_schema"]["required"] if k not in inp]
 
 
+def _clip(s, n):
+    return s if n is None or s is None or len(s) <= n else s[:n] + "..."
+
+
+def _compact_rows(rows, keys=None, limit=None, text_chars=None):
+    out = []
+    for r in rows[:limit] if limit else rows:
+        r = {k: r.get(k) for k in keys} if keys else dict(r)
+        out.append({k: _clip(v, text_chars) if isinstance(v, str) else v for k, v in r.items()})
+    return out
+
+
 def _short(obj, n: int = 600) -> str:
     s = obj if isinstance(obj, str) else _j(obj)
     return s if len(s) <= n else s[:n] + "..."
@@ -159,6 +179,7 @@ def _short(obj, n: int = 600) -> str:
 class DecisionAgent:
     def __init__(self, settings: Settings, llm, memory, live_db_path: Path):
         self.settings, self.llm, self.memory, self.live_db_path = settings, llm, memory, live_db_path
+        self.limits = COMPACT_LIMITS if getattr(settings, "llm_compact", False) else FULL_LIMITS
 
     # ---------------------------------------------------------------- helpers
     def _connect(self, as_of: str) -> sqlite3.Connection:
@@ -214,7 +235,9 @@ class DecisionAgent:
         except (KeyError, TypeError) as ex:  # non-strict providers can omit or mistype arguments
             out = {"error": f"missing or invalid argument {ex} for {name}"}
         self._trace(trace, "tool", name, inp, out, t0)
-        return _j(out)
+        s = _j(out)
+        cap = self.limits["tool_chars"]
+        return s if cap is None or len(s) <= cap else s[:cap - 12] + "[truncated]"
 
     def _gather(self, report: str, ent_str: str, as_of: str) -> dict:
         queries = {"broad": (report, None),
@@ -272,7 +295,7 @@ class DecisionAgent:
             ent_str = ", ".join(x for x in (sup, rm, plant, rpo, *runs) if x) or report[:200]
             recalls = self._gather(report, ent_str, as_of)
             commitments = sql_tools.open_commitments(con, [sup, plant], as_of)
-            scorecard = sql_tools.supplier_scorecard(con, sup) if sup else []
+            scorecard = sql_tools.supplier_scorecard(con, sup, self.limits["scorecard"]) if sup else []
             events = sql_tools.prior_events(con, sup, rm, plant)
             links = sql_tools.event_links_for(con, [e["event_id"] for e in events])
             decisions = sql_tools.prior_decisions(con, sup, rm, as_of)
@@ -315,16 +338,29 @@ class DecisionAgent:
                 return self._finish(card, t0)
 
             # 4-6. decide (low effort, guarded)
+            lim = self.limits
+            opts = card.options if lim["tool_chars"] is None else _compact_rows(card.options, _OPTION_KEYS, None, 90)
             evidence = {
-                "as_of": as_of, "report": report, "entities": card.entities, "scenario_state": card.scenario_state,
-                "options": card.options, "simulator_best_action": card.simulator_best_action,
-                "precedents": card.precedents, "open_commitments": card.open_commitments,
-                "supplier_scorecard_recent": scorecard, "prior_events": events, "event_links": links,
-                "memory_hits": [h.to_dict() for h in hits[:30]],
-                "reflection": {"mode": refl.mode, "text": refl.text},
+                "as_of": as_of, "report": report, "scenario_state": card.scenario_state,
+                "options": opts, "simulator_best_action": card.simulator_best_action,
+                "precedents": _compact_rows(card.precedents, None if lim["tool_chars"] is None else
+                                            ("decision_id", "decided_at", "decision_type", "outcome_label",
+                                             "applies_today", "note"), lim["precedents"], lim["hit_chars"]),
+                "open_commitments": _compact_rows(card.open_commitments, None if lim["tool_chars"] is None else
+                                                  ("commitment_id", "counterparty_id", "due_date", "commitment_text",
+                                                   "affected_by"), lim["commitments"], lim["commit_chars"]),
+                "supplier_scorecard_recent": scorecard,
+                "prior_events": _compact_rows(events, None if lim["tool_chars"] is None else
+                                              ("event_id", "event_type", "detected_at", "origin_entity_id"),
+                                              lim["events"]),
+                "event_links": links[:lim["links"]] if lim["links"] else links,
+                "memory_hits": [{**h.to_dict(), "text": _clip(h.text, lim["hit_chars"])} for h in hits[:lim["hits"]]],
+                "reflection": {"mode": refl.mode, "text": _clip(refl.text, lim["reflection_chars"])},
                 "guardrail_prechecks": card.guardrail_events, "decision_taxonomy": list(TAXONOMY),
-                "schema": sql_tools.schema_summary(con),
+                "schema": sql_tools.schema_summary(con, columns=lim["schema_columns"]),
             }
+            if lim["tool_chars"] is None:
+                evidence["entities"] = card.entities
             sub = self._decide(con, evidence, card, seen_docs, as_of, state)
             card.recommended_action = sub["recommended_action"]
             card.situation_summary = sub["situation_summary"]
@@ -358,7 +394,7 @@ class DecisionAgent:
         messages = [{"role": "user", "content": "Evidence pack (JSON):\n" + _j(evidence)
                      + "\n\nDecide. Use tools only if something is missing, then call submit_recommendation."}]
         rejections = 0
-        for _ in range(MAX_STEPS):
+        for _ in range(self.limits["max_steps"]):
             ts = time.monotonic()
             resp = self.llm.create(system=SYSTEM_DECIDE, messages=messages, tools=DECIDE_TOOLS,
                                    effort=self.settings.llm_structured_effort,
@@ -399,14 +435,25 @@ class DecisionAgent:
             messages.append({"role": "user", "content": results})
             if accepted:
                 return accepted
-        raise AgentError(f"no recommendation after {MAX_STEPS} model turns")
+        raise AgentError(f"no recommendation after {self.limits['max_steps']} model turns")
 
     def _rationale(self, card: DecisionCard) -> str:
+        lim = self.limits
+        compact = lim["tool_chars"] is not None
+        feasible = [o for o in card.options if o.get("feasible")]
         facts = {"as_of": card.as_of, "recommended_action": card.recommended_action,
                  "simulator_best_action": card.simulator_best_action, "situation_summary": card.situation_summary,
-                 "key_reasons": card.key_reasons, "options": [o for o in card.options if o.get("feasible")],
-                 "precedents": card.precedents, "precedent_assessments": card.precedent_assessments,
-                 "open_commitments": card.open_commitments, "cited_doc_ids": card.cited_doc_ids,
+                 "key_reasons": card.key_reasons,
+                 "options": _compact_rows(feasible, _OPTION_KEYS, None, 90) if compact else feasible,
+                 "precedents": _compact_rows(card.precedents, ("decision_id", "decided_at", "decision_type",
+                                                               "outcome_label", "applies_today", "note"),
+                                             lim["precedents"], lim["hit_chars"]) if compact else card.precedents,
+                 "precedent_assessments": card.precedent_assessments,
+                 "open_commitments": _compact_rows(card.open_commitments, ("commitment_id", "counterparty_id",
+                                                                           "due_date", "commitment_text", "affected_by"),
+                                                   lim["commitments"], lim["commit_chars"]) if compact
+                 else card.open_commitments,
+                 "cited_doc_ids": card.cited_doc_ids,
                  "cited_record_ids": card.cited_record_ids, "ungrounded_claims": card.ungrounded_claims,
                  "guardrail_events": card.guardrail_events}
         ts = time.monotonic()
@@ -435,9 +482,14 @@ class DecisionAgent:
                 raise MemoryUnavailable(f"Hindsight recall failed ({ex}); check HINDSIGHT_BASE_URL") from ex
             res.memory_hits, res.dropped_future_hits = len(rec.hits), rec.dropped_future
             seen = set(rec.doc_ids())
+            lim = self.limits
+            payload = rec.to_payload(lim["hits"] if lim["tool_chars"] is not None else 25)
+            for h in payload["hits"]:
+                h["text"] = _clip(h["text"], lim["hit_chars"])
             messages = [{"role": "user", "content": f"as_of: {as_of}\nQuestion: {question}\n\nInitial memory recall "
-                         f"(JSON):\n{_j(rec.to_payload())}\n\nSchema:\n{sql_tools.schema_summary(con)}"}]
-            for _ in range(MAX_STEPS):
+                         f"(JSON):\n{_j(payload)}\n\nSchema:\n"
+                         f"{sql_tools.schema_summary(con, columns=lim['schema_columns'])}"}]
+            for _ in range(lim["max_steps"]):
                 ts = time.monotonic()
                 resp = self.llm.create(system=SYSTEM_QA, messages=messages, tools=QA_TOOLS,
                                        effort=self.settings.llm_structured_effort,
@@ -468,18 +520,20 @@ class DecisionAgent:
                     res.usage = self.llm.usage.to_dict()
                     res.latency_s = round(time.monotonic() - t0, 2)
                     return res
-            raise AgentError(f"no answer after {MAX_STEPS} model turns")
+            raise AgentError(f"no answer after {self.limits['max_steps']} model turns")
         finally:
             con.close()
 
 
 def make_synthesizer(llm, settings: Settings):
     """Local stand-in for Hindsight reflect when native reflect could see post-as_of memory."""
+    lim = COMPACT_LIMITS if getattr(settings, "llm_compact", False) else FULL_LIMITS
+
     def synthesize(question: str, hits, policy_text: str) -> str:
         resp = llm.create(system=policy_text + "\nSynthesize only from the memories given. Cite doc_ids in "
                                                "brackets. Say what is uncertain or missing.",
-                          messages=[{"role": "user", "content": _j({"question": question,
-                                                                    "memories": [h.to_dict() for h in hits[:40]]})}],
+                          messages=[{"role": "user", "content": _j({"question": question, "memories": [
+                              {**h.to_dict(), "text": _clip(h.text, lim["hit_chars"])} for h in hits[:lim["hits"] * 2]]})}],
                           effort=settings.llm_structured_effort, temperature=settings.llm_temperature_structured)
         return "".join(b.text for b in resp.content if b.type == "text").strip()
     return synthesize

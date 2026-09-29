@@ -7,6 +7,8 @@ a tool call (the agent loop then asks the model to try again)."""
 from __future__ import annotations
 
 import json
+import math
+import re
 import time
 from types import SimpleNamespace
 
@@ -19,6 +21,21 @@ _EFFORT = {"low": "low", "medium": "medium", "high": "high", "xhigh": "high", "m
 _STOP = {"tool_calls": "tool_use", "stop": "end_turn", "length": "max_tokens", "content_filter": "refusal"}
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 MAX_RETRIES = 4
+
+
+def estimate_tokens(body: dict) -> int:
+    """Conservative size of a request as Groq's per-minute limit counts it: prompt + reserved completion."""
+    return math.ceil(len(json.dumps(body, default=str)) / 3.5) + int(body.get("max_completion_tokens") or 0)
+
+
+def _seconds(value: str | None) -> float:
+    """Groq reset headers look like '7.66s', '1m2.5s' or '120ms'."""
+    if not value:
+        return 0.0
+    total = 0.0
+    for num, unit in re.findall(r"([\d.]+)(ms|m|s|h)", value):
+        total += float(num) * {"ms": 0.001, "s": 1, "m": 60, "h": 3600}[unit]
+    return total
 
 
 def _get(block, name):
@@ -68,10 +85,30 @@ class GroqLLM:
         pin, pout = settings.llm_price_input_per_mtok, settings.llm_price_output_per_mtok
         self.price = (pin, pout) if pin is not None and pout is not None else None
         self.usage = Usage()
+        self.tpm = settings.llm_tokens_per_minute
+        self._remaining: int | None = None
+        self._reset_at = 0.0
+
+    def _pace(self, body: dict) -> None:
+        need = estimate_tokens(body)
+        if self.tpm and need > self.tpm:
+            raise LLMUnavailable(f"request of ~{need} tokens exceeds the {self.tpm} tokens per minute limit; "
+                                 f"set LLM_COMPACT=1 or lower LLM_MAX_TOKENS")
+        wait = self._reset_at - time.monotonic()
+        if self._remaining is not None and need > self._remaining and wait > 0:
+            time.sleep(wait + 0.5)
+
+    def _note_limits(self, r: httpx.Response) -> None:
+        remaining = r.headers.get("x-ratelimit-remaining-tokens")
+        if remaining is not None:
+            self._remaining = int(float(remaining))
+            self._reset_at = time.monotonic() + _seconds(r.headers.get("x-ratelimit-reset-tokens"))
 
     def _post(self, body: dict) -> dict:
+        self._pace(body)
         for attempt in range(MAX_RETRIES + 1):
             r = self.http.post(self.url, json=body, headers=self.headers)
+            self._note_limits(r)
             if r.status_code < 400:
                 return r.json()
             if r.status_code not in RETRY_STATUSES or attempt == MAX_RETRIES:

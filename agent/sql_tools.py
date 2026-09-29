@@ -155,9 +155,12 @@ def record_exists(con, record_id: str) -> bool | None:
     return None
 
 
-def schema_summary(con) -> str:
+def schema_summary(con, columns: bool = True) -> str:
     names = [r[0] for r in con.execute(
         "SELECT name FROM main.sqlite_master WHERE type = 'table' AND name <> 'dataset_info' ORDER BY name")]
+    if not columns:
+        return ("Tables (query `SELECT * FROM <table> LIMIT 1` to see columns): " + ", ".join(names)
+                + ". decisions / commitments also contain live rows (source = 'live').")
     lines = []
     for n in names:
         cols = [r[1] for r in con.execute(f"PRAGMA main.table_info({n})")]
