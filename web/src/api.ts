@@ -206,6 +206,7 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+  if (res.status === 401 && !path.startsWith("/api/login")) window.dispatchEvent(new Event("scm:signed-out"));
   if (!res.ok) {
     let detail = res.statusText;
     try {
@@ -230,5 +231,8 @@ export const api = {
   doc: (id: string, asOf: string) => call<MemoryDoc>(`/api/docs/${id}?as_of=${encodeURIComponent(asOf)}`),
   results: () => call<Results>("/api/results"),
   resultCard: (id: string) => call<DecisionCard>(`/api/results/cards/${id}`),
+  session: () => call<{ auth_required: boolean; user: string | null }>("/api/session"),
+  login: (username: string, password: string) => call<{ ok: boolean; user: string | null }>("/api/login", { username, password }),
+  logout: () => call<{ ok: boolean }>("/api/logout", {}),
   resetLive: () => call<{ ok: boolean; message: string }>("/api/live/reset", {}),
 };

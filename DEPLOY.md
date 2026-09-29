@@ -34,6 +34,7 @@ git push -u origin feat/decision-agent
 DOMAIN=138-2-91-14.sslip.io
 UI_USER=demo
 UI_PASSWORD=choose-a-long-password
+UI_SESSION_SECRET=any-long-random-string
 MAX_CONCURRENT_RUNS=1
 ```
 
@@ -71,7 +72,7 @@ cd ~/SCAM
 bash deploy/deploy.sh
 ```
 
-The first build takes about 5–10 minutes: npm packages, the UI build, then Python dependencies. When `docker compose ps` shows both containers `Up`, open **https://138-2-91-14.sslip.io** and log in with `UI_USER` / `UI_PASSWORD`.
+The first build takes about 5–10 minutes: npm packages, the UI build, then Python dependencies. When `docker compose ps` shows both containers `Up`, open **https://138-2-91-14.sslip.io** and sign in on the login page with `UI_USER` / `UI_PASSWORD`.
 
 ## Updating after you change code
 

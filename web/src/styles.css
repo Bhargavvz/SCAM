@@ -192,3 +192,19 @@ details summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
 .cell.accent { background: var(--good-bg); border: 2px solid var(--good); }
 .cell.accent .cell-mark { color: var(--good); font-weight: 600; }
 .cell.muted { background: #f6f5f1; }
+
+/* ---------- sign-in ---------- */
+.login-page { min-height: 100vh; display: grid; grid-template-columns: 1.2fr 1fr; background: var(--paper); }
+.login-side { background: var(--ink); color: #e9e7e2; padding: 56px 64px; display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+.login-side .brand .mark { background: #e9e7e2; }
+.login-side .brand small { color: #9a9ea8; }
+.login-side h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; margin: 8px 0 0; max-width: 520px; color: #fff; }
+.login-side ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.login-side li { padding-left: 18px; position: relative; color: #cfd2d8; }
+.login-side li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 1px; background: #cfd2d8; }
+.login-side .muted { color: #8a8f99; }
+.login-card { align-self: center; justify-self: center; width: min(380px, 90%); background: var(--panel); border: 1px solid var(--rule); padding: 32px 30px; display: flex; flex-direction: column; gap: 14px; }
+.login-card h2 { margin: 0; font-size: 20px; font-weight: 600; }
+.login-card p { margin: -8px 0 4px; }
+.login-card .btn { padding: 10px 16px; margin-top: 4px; }
+@media (max-width: 860px) { .login-page { grid-template-columns: 1fr; } .login-side { padding: 36px 28px; } }

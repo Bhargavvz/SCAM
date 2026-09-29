@@ -3,6 +3,7 @@ import { api, Config } from "./api";
 import { AskView } from "./views/AskView";
 import { DecideView } from "./views/DecideView";
 import { DemoView } from "./views/DemoView";
+import { LoginView } from "./views/LoginView";
 import { OverviewView } from "./views/OverviewView";
 import { QuestionView } from "./views/QuestionView";
 import { ResultsView } from "./views/ResultsView";
@@ -24,9 +25,28 @@ export default function App() {
   const [offline, setOffline] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
+  // null = still checking; {required:false} = open site; user = signed-in name
+  const [auth, setAuth] = useState<{ required: boolean; user: string | null } | null>(null);
+
   useEffect(() => {
-    api.config().then(setConfig).catch(() => setOffline(true));
+    api.session().then((s) => setAuth({ required: s.auth_required, user: s.user })).catch(() => setOffline(true));
+    const onSignedOut = () => setAuth((a) => (a ? { ...a, user: null } : a));
+    window.addEventListener("scm:signed-out", onSignedOut);
+    return () => window.removeEventListener("scm:signed-out", onSignedOut);
   }, []);
+
+  const signedIn = auth !== null && (!auth.required || auth.user !== null);
+  useEffect(() => {
+    if (signedIn) api.config().then(setConfig).catch(() => setOffline(true));
+  }, [signedIn]);
+
+  const signOut = async () => {
+    await api.logout().catch(() => undefined);
+    setAuth((a) => (a ? { ...a, user: null } : a));
+  };
+
+  if (auth === null && !offline) return <div className="login-page"><div className="muted" style={{ margin: "auto" }}>Loading…</div></div>;
+  if (auth && auth.required && !auth.user) return <LoginView onSignedIn={(user) => setAuth({ required: true, user: user ?? "" })} />;
 
   const reset = async () => {
     try {
@@ -59,6 +79,7 @@ export default function App() {
               <span><span className="dot off" />{offline ? "API offline" : "connecting"}</span>
             )}
             <button className="linkbtn" onClick={reset} title="Delete decisions logged from this UI">reset log</button>
+            {auth?.required && <button className="linkbtn" onClick={signOut}>sign out {auth.user}</button>}
           </div>
         </div>
       </header>

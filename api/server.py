@@ -8,14 +8,17 @@ sync endpoints in a thread pool.
 from __future__ import annotations
 
 import base64
+import hashlib
+import hmac
 import json
 import os
 import secrets
 import threading
+import time
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -38,7 +41,8 @@ DEMO_LIVE_DB = ROOT / "demo" / "out" / "ui_demo_live.sqlite"
 WEB_DIST = ROOT / "web" / "dist"
 
 # Deployment knobs (all optional, set in .env):
-#   UI_USER / UI_PASSWORD   HTTP basic auth for the whole site when both are set (recommended on a public host)
+#   UI_USER / UI_PASSWORD   sign-in page + session cookie when both are set (recommended on a public host)
+#   UI_SESSION_SECRET       keeps sessions valid across restarts (random per start if unset)
 #   CORS_ORIGINS            comma-separated extra origins (the built UI is same-origin and needs none)
 #   MAX_CONCURRENT_RUNS     model-backed requests allowed at once (default 1: protects small LLM rate limits)
 #   RUN_QUEUE_TIMEOUT_S     how long a request waits for a free slot before a 503 (default 300)
@@ -51,19 +55,78 @@ app = FastAPI(title="Supply Chain Memory & Decision Agent")
 app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"])
 
 
+SESSION_COOKIE = "scm_session"
+SESSION_SECRET = (os.environ.get("UI_SESSION_SECRET") or secrets.token_hex(32)).encode()
+SESSION_TTL_S = int(os.environ.get("UI_SESSION_TTL_S", str(12 * 3600)))
+OPEN_PATHS = {"/api/health", "/api/login", "/api/logout", "/api/session"}
+
+
+def _auth_enabled() -> bool:
+    return bool(UI_USER and UI_PASSWORD)
+
+
+def _sign(user: str, expires: int) -> str:
+    msg = f"{user}|{expires}"
+    sig = hmac.new(SESSION_SECRET, msg.encode(), hashlib.sha256).hexdigest()
+    return base64.urlsafe_b64encode(f"{msg}|{sig}".encode()).decode()
+
+
+def _session_user(request: Request) -> str | None:
+    token = request.cookies.get(SESSION_COOKIE)
+    if not token:
+        return None
+    try:
+        user, expires, sig = base64.urlsafe_b64decode(token.encode()).decode().split("|")
+    except ValueError:
+        return None
+    good = hmac.new(SESSION_SECRET, f"{user}|{expires}".encode(), hashlib.sha256).hexdigest()
+    if not hmac.compare_digest(sig, good) or int(expires) < time.time():
+        return None
+    return user
+
+
 @app.middleware("http")
-async def basic_auth(request: Request, call_next):
-    if not (UI_USER and UI_PASSWORD) or request.url.path == "/api/health":
+async def require_login(request: Request, call_next):
+    """With UI_USER/UI_PASSWORD set, every /api call except login/session/health needs a signed session cookie.
+    The static UI itself is public so it can show the sign-in page."""
+    path = request.url.path
+    if not _auth_enabled() or not path.startswith("/api/") or path in OPEN_PATHS or _session_user(request):
         return await call_next(request)
-    header = request.headers.get("authorization", "")
-    if header.startswith("Basic "):
-        try:
-            user, _, pw = base64.b64decode(header[6:]).decode().partition(":")
-        except ValueError:
-            user, pw = "", ""
-        if secrets.compare_digest(user, UI_USER) and secrets.compare_digest(pw, UI_PASSWORD):
-            return await call_next(request)
-    return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="Supply Chain Memory"'})
+    return JSONResponse({"detail": "Please sign in."}, status_code=401)
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+@app.get("/api/session")
+def session(request: Request):
+    if not _auth_enabled():
+        return {"auth_required": False, "user": None}
+    return {"auth_required": True, "user": _session_user(request)}
+
+
+@app.post("/api/login")
+def login(req: LoginRequest, request: Request):
+    if not _auth_enabled():
+        return {"ok": True, "user": None}
+    ok = secrets.compare_digest(req.username, UI_USER) and secrets.compare_digest(req.password, UI_PASSWORD)
+    if not ok:
+        time.sleep(1)  # slow down guessing
+        raise HTTPException(status_code=401, detail="Wrong username or password.")
+    resp = JSONResponse({"ok": True, "user": req.username})
+    resp.set_cookie(SESSION_COOKIE, _sign(req.username, int(time.time()) + SESSION_TTL_S), max_age=SESSION_TTL_S,
+                    httponly=True, samesite="lax", secure=request.url.scheme == "https"
+                    or request.headers.get("x-forwarded-proto") == "https")
+    return resp
+
+
+@app.post("/api/logout")
+def logout():
+    resp = JSONResponse({"ok": True})
+    resp.delete_cookie(SESSION_COOKIE)
+    return resp
 
 
 @app.get("/api/health")
