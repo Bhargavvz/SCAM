@@ -125,3 +125,21 @@ def test_memory_failure_is_reported(settings, hs05):
     a, _, _ = agent(settings, [], fail=True)
     with pytest.raises(MemoryUnavailable, match="HINDSIGHT_BASE_URL"):
         a.run(hs05["day0_report"], as_of=hs05["day0"], context=holdout_context(hs05))
+
+
+class ReflectFailsMemory(FakeMemory):
+    def reflect(self, *a, **kw):
+        raise ConnectionError("connection reset")
+
+
+def test_reflect_failure_after_gather_is_reported(settings, hs05):
+    a = DecisionAgent(settings, FakeLLM([]), ReflectFailsMemory(), settings.live_db_path)
+    with pytest.raises(MemoryUnavailable, match="HINDSIGHT_BASE_URL"):
+        a.run(hs05["day0_report"], as_of=hs05["day0"], context=holdout_context(hs05))
+
+
+def test_report_without_leading_date_uses_default_as_of_with_warning(settings):
+    a, _, _ = agent(settings, [])
+    card = a.run("SUP0247 (RM0083) slipped to 2025-12-07; what now?")
+    assert card.as_of == settings.default_as_of
+    assert any("as_of" in w for w in card.warnings)

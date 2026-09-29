@@ -85,3 +85,12 @@ def test_render_capability(settings):
     render_capability(ask(agent, DEMO[5][0], as_of="2025-12-31"), console)
     out = console.export_text()
     assert "negotiation" in out and "RPO000412" in out and "negotiations" in out
+
+
+def test_ask_reports_memory_unavailable(settings):
+    from agent.agent_core import MemoryUnavailable
+    from tests.test_agent_core import ReflectFailsMemory
+
+    agent = DecisionAgent(settings, FakeLLM([]), ReflectFailsMemory(), settings.live_db_path)
+    with pytest.raises(MemoryUnavailable, match="HINDSIGHT_BASE_URL"):
+        ask(agent, DEMO[0][0], as_of="2025-12-31")

@@ -49,15 +49,31 @@ def check_query(query: str) -> str:
     return q
 
 
+def _asof_only_authorizer(action, arg1, arg2, db_name, inner_view):
+    """Deny direct reads of the dataset (`main`) or live tables; reads made by the as-of TEMP views
+    (inner_view is set) are allowed. This is the enforcement; the regexes above only give friendlier errors."""
+    if action == sqlite3.SQLITE_READ and db_name in ("main", "live") and inner_view is None:
+        return sqlite3.SQLITE_DENY
+    return sqlite3.SQLITE_OK
+
+
 def run_sql(con: sqlite3.Connection, query: str, *, max_rows: int = 200, timeout_s: float = 5.0) -> dict:
     q = check_query(query)
     deadline = time.monotonic() + timeout_s
     con.set_progress_handler(lambda: int(time.monotonic() > deadline), 10_000)
+    con.set_authorizer(_asof_only_authorizer)
     try:
-        cur = con.execute(q)
+        try:
+            cur = con.execute(q)
+        except sqlite3.DatabaseError as ex:
+            if "prohibited" in str(ex) or "not authorized" in str(ex):
+                raise SQLGuardError("direct access to dataset/live tables is not allowed; use plain table names so "
+                                    "the as-of filter applies") from ex
+            raise
         cols = [d[0] for d in cur.description]
         rows = cur.fetchmany(max_rows + 1)
     finally:
+        con.set_authorizer(None)
         con.set_progress_handler(None, 0)
     return {"columns": cols, "rows": [list(r) for r in rows[:max_rows]], "truncated": len(rows) > max_rows}
 

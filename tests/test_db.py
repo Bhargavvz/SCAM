@@ -73,3 +73,26 @@ def test_live_rows_are_unioned_and_append_only(settings, db_factory):
     assert _one(db_factory("2025-10-13"), "SELECT COUNT(*) FROM decisions WHERE decision_id='DECL00001'")[0] == 0
     token = live_token(settings.live_db_path)
     assert live_memory_ids(settings.live_db_path) == {f"DECL00001.{token}"}
+
+
+def test_ongoing_events_do_not_leak_whole_life_aggregates(db_factory):
+    # EVT01472 (SUP0247, detected 2024-07-19) is rolled up until 2025-12-23: title "... hits 86 RM lots",
+    # anchor_ids with RPOs ordered after 2025-10-14, lots_slipped=86 in event_impacts
+    con = db_factory("2025-10-14")
+    row = _one(con, "SELECT end_date, anchor_ids, title, severity FROM disruption_events WHERE event_id='EVT01472'")
+    assert row["end_date"] is None and row["anchor_ids"] is None and row["severity"] is None
+    assert "86" not in row["title"]
+    assert _one(con, "SELECT COUNT(*) FROM event_impacts WHERE event_id='EVT01472'")[0] == 0
+    assert _one(con, "SELECT COUNT(*) FROM disruption_events WHERE end_date > '2025-10-14'")[0] == 0
+    # closed events keep their details
+    assert _one(con, "SELECT anchor_ids FROM disruption_events WHERE event_id='EVT00185'")[0] is not None
+
+
+def test_dated_reference_tables_are_shadowed(db_factory):
+    con = db_factory("2025-06-30")
+    assert _one(con, "SELECT COUNT(*) FROM contracts WHERE valid_from > '2025-06-30'")[0] == 0
+    assert _one(con, "SELECT COUNT(*) FROM rm_supplier_catalog WHERE price_valid_from > '2025-06-30'")[0] == 0
+    assert _one(con, "SELECT COUNT(*) FROM bill_of_materials WHERE effective_from > '2025-06-30'")[0] == 0
+    assert _one(con, "SELECT COUNT(*) FROM bill_of_materials WHERE effective_to > '2025-06-30'")[0] == 0
+    # NEG00126 is still open on 2025-06-30; its resulting contract CTR0117 (valid from 2025-08-01) must not show
+    assert _one(con, "SELECT contract_id FROM negotiations WHERE negotiation_id='NEG00126'")[0] is None

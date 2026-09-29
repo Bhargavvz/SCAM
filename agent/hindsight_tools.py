@@ -100,15 +100,17 @@ class RetainLedger:
         with self.path.open("a") as fh:
             fh.write(json.dumps(entry, sort_keys=True) + "\n")
 
-    def _ok(self, bank_id: str) -> list[dict]:
-        return [e for e in self.entries() if e.get("status") == "ok" and e.get("bank_id") == bank_id]
+    def _attempted(self, bank_id: str) -> list[dict]:
+        # every attempt counts, whatever its status: a retain that timed out client-side may still have been
+        # committed on the server, so it must keep disabling native reflect for other live DBs
+        return [e for e in self.entries() if e.get("bank_id") == bank_id]
 
     def max_timestamp(self, bank_id: str) -> datetime | None:
-        ts = [parse_ts(e["timestamp"]) for e in self._ok(bank_id)]
+        ts = [parse_ts(e["timestamp"]) for e in self._attempted(bank_id)]
         return max(ts) if ts else None
 
     def doc_ids(self, bank_id: str) -> set[str]:
-        return {e["document_id"] for e in self._ok(bank_id)}
+        return {e["document_id"] for e in self._attempted(bank_id)}
 
 
 class HindsightMemory:
@@ -203,6 +205,8 @@ class HindsightMemory:
 
     def retain_experience(self, *, document_id: str, content: str, context: str, timestamp: str,
                           metadata: dict) -> str:
+        self.ledger.append({"bank_id": self.bank_id, "document_id": document_id, "timestamp": timestamp,
+                            "status": "pending", "logged_at": datetime.now(timezone.utc).isoformat()})
         try:
             _call(self.client.retain, bank_id=self.bank_id, content=content, context=context, timestamp=timestamp,
                   document_id=document_id, metadata=metadata, tags=["source:live"])

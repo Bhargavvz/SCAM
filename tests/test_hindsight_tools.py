@@ -148,3 +148,24 @@ def test_live_recall_is_resolvable(base_settings):
     r = mem.recall("Why did RPO003179 slip and what is its latest ETA?", "2023-06-11")
     assert r.hits, f"no visible hits: raw={r.raw_count} future={r.dropped_future} unresolved={r.dropped_unresolved}"
     assert any("RPO003179" in h.text for h in r.hits)
+
+
+def test_failed_or_pending_retains_still_disable_native_reflect(index, tmp_path):
+    mem = make(index, tmp_path, FakeHindsight())
+    mem.ledger.append({"bank_id": "bank", "document_id": "DECL00009.zz", "timestamp": "2025-10-01T12:00:00-05:00",
+                       "status": "error: read timeout"})
+    assert mem.native_reflect_allowed("2025-10-14") is False
+
+
+class FailingRetainClient(FakeHindsight):
+    def retain(self, **kw):
+        raise TimeoutError("read timeout")
+
+
+def test_retain_writes_pending_entry_before_calling_hindsight(index, tmp_path):
+    mem = make(index, tmp_path, FailingRetainClient())
+    status = mem.retain_experience(document_id="DECL00001.ab12", content="c", context="x",
+                                   timestamp="2025-10-14T12:00:00-05:00", metadata={})
+    assert status.startswith("error")
+    assert [e["status"] for e in mem.ledger.entries()][0] == "pending"
+    assert mem.native_reflect_allowed("2025-10-14") is False

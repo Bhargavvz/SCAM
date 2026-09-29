@@ -227,8 +227,14 @@ class DecisionAgent:
         self.llm.usage = Usage()
         ctx = context or {}
         ents = parse_report(report)
+        as_of_note = None
+        if not as_of and not ents.report_date:
+            as_of_note = (f"No --as-of given and the report does not start with a date; using as_of = "
+                          f"DEFAULT_AS_OF {self.settings.default_as_of}. Pass --as-of for the report's real date.")
         as_of = as_of or ents.report_date or self.settings.default_as_of
         card = DecisionCard(run_id=f"run-{uuid.uuid4().hex[:8]}", as_of=as_of, report=report, entities=ents.to_dict())
+        if as_of_note:
+            card.warnings.append(as_of_note)
         con = self._connect(as_of)
         state = None
         try:
@@ -272,8 +278,12 @@ class DecisionAgent:
 
             # 3. reflect
             ts = time.monotonic()
-            refl = self.memory.reflect(f"Regarding {ent_str}: what happened before, what was tried, what worked or failed "
-                                       f"and why, and what is still open or promised?", as_of)
+            try:
+                refl = self.memory.reflect(f"Regarding {ent_str}: what happened before, what was tried, what worked "
+                                           f"or failed and why, and what is still open or promised?", as_of)
+            except Exception as ex:  # any client/network error: refuse to continue without the synthesis
+                raise MemoryUnavailable(f"Hindsight reflect failed ({ex}); check HINDSIGHT_BASE_URL / "
+                                        f"HINDSIGHT_BANK_ID") from ex
             card.reflect_mode, card.reflection = refl.mode, refl.text
             self._trace(card.trace, "step", "reflect", refl.mode, refl.text or "", ts)
             hits, seen = [], set()

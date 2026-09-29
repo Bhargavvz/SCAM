@@ -211,7 +211,12 @@ def ask(agent, question: str, as_of: str | None = None) -> CapabilityAnswer:
         facts = json.dumps(gt, default=str)[:MAX_GROUND_TRUTH_CHARS] if gt else "(none for this question)"
         query = (f"{question}\n\nTask: {INSTRUCTIONS[cap]} {COMMON}\nAs of: {as_of}.\n"
                  f"Authoritative database records (quote their ids):\n{facts}")
-        refl = agent.memory.reflect(query, as_of, budget=ans.budget, response_schema=SCHEMAS.get(cap))
+        try:
+            refl = agent.memory.reflect(query, as_of, budget=ans.budget, response_schema=SCHEMAS.get(cap))
+        except Exception as ex:  # any client/network error: report it instead of a raw traceback
+            from agent.agent_core import MemoryUnavailable
+            raise MemoryUnavailable(f"Hindsight reflect failed ({ex}); check HINDSIGHT_BASE_URL / "
+                                    f"HINDSIGHT_BANK_ID") from ex
         ans.reflect_mode, ans.structured = refl.mode, refl.structured
         ans.answer = refl.text or ""
         text = ans.answer + (" " + json.dumps(refl.structured) if refl.structured else "")

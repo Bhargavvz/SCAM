@@ -103,10 +103,24 @@ def asof_views(as_of: str) -> dict[str, str]:
     A = f"'{as_of}'"
     resolved = "NULLIF(resolved_at, '')"
     concluded = "NULLIF(concluded_at, '')"
+    closed = f"NULLIF(end_date, '') <= {A}"  # events still running on as_of carry whole-life aggregates
     return {
-        "disruption_events": f"SELECT * FROM main.disruption_events WHERE detected_at <= {A}",
+        "disruption_events": f"""
+            SELECT event_id, event_type,
+                   CASE WHEN {closed} THEN title ELSE replace(event_type, '_', ' ') || ' (ongoing)' END AS title,
+                   start_date, CASE WHEN {closed} THEN end_date END AS end_date, detected_at,
+                   {_masked(("severity", "root_cause_text", "anchor_ids"), closed)},
+                   root_cause_code, origin_entity_type, origin_entity_id, anchor_type
+            FROM main.disruption_events WHERE detected_at <= {A}""",
         "event_impacts": f"""SELECT i.* FROM main.event_impacts i JOIN main.disruption_events e USING (event_id)
-                              WHERE e.detected_at <= {A}""",
+                              WHERE e.detected_at <= {A} AND NULLIF(e.end_date, '') <= {A}""",
+        "contracts": f"SELECT * FROM main.contracts WHERE valid_from <= {A}",
+        "rm_supplier_catalog": f"SELECT * FROM main.rm_supplier_catalog WHERE price_valid_from <= {A}",
+        "bill_of_materials": f"""
+            SELECT bom_id, product_id, rm_id, qty_per_unit, uom, scrap_pct, effective_from,
+                   CASE WHEN NULLIF(effective_to, '') <= {A} THEN effective_to END AS effective_to,
+                   bom_version, change_reason
+            FROM main.bill_of_materials WHERE effective_from <= {A}""",
         "event_links": f"""SELECT l.* FROM main.event_links l
                             JOIN main.disruption_events s ON s.event_id = l.src_event_id
                             JOIN main.disruption_events d ON d.event_id = l.dst_event_id
@@ -134,7 +148,8 @@ def asof_views(as_of: str) -> dict[str, str]:
                    commitment_text, quantity, due_date, penalty_or_credit, 'open', NULL, NULL, 'live'
             FROM live.commitments_live WHERE made_at <= {A}""",
         "negotiations": f"""
-            SELECT negotiation_id, supplier_id, rm_id, started_at, topic, our_ask, their_offer, contract_id,
+            SELECT negotiation_id, supplier_id, rm_id, started_at, topic, our_ask, their_offer,
+                   CASE WHEN {concluded} <= {A} THEN contract_id END AS contract_id,
                    CASE WHEN {concluded} <= {A} THEN concluded_at END AS concluded_at,
                    CASE WHEN {concluded} <= {A} THEN concessions_json END AS concessions_json,
                    CASE WHEN {concluded} <= {A} THEN final_terms END AS final_terms,

@@ -45,6 +45,7 @@ def _proposed_action(text: str) -> str | None:
 
 
 def parse_report(text: str) -> ReportEntities:
-    date = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
+    # only a leading date is the report date; any later date is content (e.g. a new ETA)
+    date = re.match(r"\s*(20\d{2}-\d{2}-\d{2})\b", text)
     ids = {k: list(dict.fromkeys(re.findall(p, text))) for k, p in _IDS.items()}
     return ReportEntities(report_date=date.group(1) if date else None, proposed_action=_proposed_action(text), **ids)

@@ -62,3 +62,8 @@ def test_ungrounded_numbers():
     bad = "Expedite would cost about $5,000 and cause 3 stockout days."
     assert ungrounded_numbers(bad, OPTS) == ["$5,000", "3 stockout days"]
     assert ungrounded_numbers("DEC00353 cost $11,555 in the end.", OPTS, extra_values=[11555.42]) == []
+
+
+def test_report_date_only_from_leading_date():
+    assert parse_report("SUP0192 moved RPO023175 to 2025-10-30. What now?").report_date is None
+    assert parse_report("  2025-10-01 - SUP0192 moved RPO023175 to 2025-10-30").report_date == "2025-10-01"

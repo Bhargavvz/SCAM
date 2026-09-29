@@ -88,3 +88,24 @@ def test_record_exists_respects_as_of(db_factory):
 def test_schema_summary_lists_tables(db_factory):
     s = st.schema_summary(db_factory("2025-12-31"))
     assert "commitments(" in s and "rm_purchase_orders(" in s and "decisions_live" not in s
+
+
+@pytest.mark.parametrize("q", [
+    'SELECT MAX(decided_at) FROM "main".decisions',
+    "SELECT MAX(decided_at) FROM [main].decisions",
+    "SELECT MAX(decided_at) FROM `main`.decisions",
+    "SELECT MAX(decided_at) FROM main/**/.decisions",
+    "SELECT MAX(decided_at) FROM main -- x\n.decisions",
+    'SELECT COUNT(*) FROM "live".decisions_live',
+])
+def test_run_sql_blocks_quoted_or_commented_schema_names(db_factory, q):
+    with pytest.raises(st.SQLGuardError):
+        st.run_sql(db_factory("2025-06-30"), q)
+
+
+def test_run_sql_still_reads_through_views_and_curated_lookups_still_work(db_factory):
+    con = db_factory("2025-06-30")
+    assert st.run_sql(con, "SELECT MAX(decided_at) FROM decisions")["rows"][0][0] <= "2025-06-30"
+    assert st.run_sql(con, "SELECT COUNT(*) FROM rm_purchase_orders")["rows"][0][0] > 0
+    assert st.prior_decisions(con, "SUP0247", "RM0083", "2025-06-30") is not None  # touches live.* after run_sql
+    assert "commitments(" in st.schema_summary(con)
