@@ -29,6 +29,12 @@ def print_card(c: dict, trace: bool = False):
     if len(sc):
         print(wrap(f"{s.supplier_id} scorecard {sc.month.iat[-1]}..{sc.month.iat[0]}: OTIF {sc.otif_rate.mean():.0%}, avg delay {sc.avg_delay_days.mean():.1f}d "
                    f"[supplier_scorecard_monthly]"))
+    print(f"\nDB QUERIES (allowlisted; {c['plan_note']})")
+    for n, df in c["db_rows"].items():
+        print(f"  {n}: {len(df)} row(s)")
+    print(f"  retained to memory ({len(c['retained_rows'])} rows):")
+    for r in c["retained_rows"]:
+        print(wrap(r[:220], "    "))
     print("\nPRECEDENTS (Hindsight recall)")
     if not c["memories"]:
         print("  (none - offline or nothing recalled)")
@@ -65,11 +71,11 @@ def main():
     ap.add_argument("report", nargs="?")
     ap.add_argument("--as-of", default=None)
     ap.add_argument("--offline", action="store_true")
-    ap.add_argument("--retain", action="store_true", help="retain the decision summary into the bank")
+    ap.add_argument("--no-retain", action="store_true", help="do not retain the query + DB rows into the bank")
     ap.add_argument("--trace", action="store_true")
     a = ap.parse_args()
     report = a.report or sys.stdin.read()
-    print_card(decide(report, a.as_of, use_memory=not a.offline, retain=a.retain), trace=a.trace)
+    print_card(decide(report, a.as_of, use_memory=not a.offline, retain=not a.no_retain), trace=a.trace)
 
 
 if __name__ == "__main__":

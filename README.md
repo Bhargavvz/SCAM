@@ -37,3 +37,12 @@ All DB reads are read-only and filtered to records dated on/before `--as-of`.
 Recall results dated after `--as-of` are dropped. Reflect text is shown as narrative only, with the memory ids it was based on.
 Token usage for every retain/recall/reflect call is appended to `logs/hindsight_usage.jsonl` (recall returns no usage, so its size is estimated).
 External actions are mocked; `--retain` optionally stores the decision summary back in the bank.
+
+### Memory design (what goes into Hindsight)
+- The bank (`scm-memory-conv`) holds only **conversations and discussions** (supplier calls, handovers, escalations,
+  decision memos, post-mortems, QBR and forecast-review notes) plus 4 **team playbooks**. It never holds DB records;
+  ETAs, prices, commitments and stock always come from SQLite.
+- Per query: `recall()` on the playbooks picks **which allowlisted named queries** to run (`queries.py`, read-only,
+  parameterised, max 5 rows each; recall never supplies SQL). The agent runs them, then `retain()`s the planner's query plus
+  **at most 5 DB rows** and the recommendation, so the next similar question recalls it. Use `--no-retain` to skip.
+- Cost seen so far: bank load ~494k tokens (184 items); per query ~4k recall + ~4k retain + ~120k reflect.
