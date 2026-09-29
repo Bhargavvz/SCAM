@@ -1,0 +1,15 @@
+.git
+.venv
+.env
+.superpowers
+**/__pycache__
+.pytest_cache
+data
+runtime
+web/node_modules
+web/dist
+demo/out/*.sqlite
+eval/out/*.sqlite
+docs
+tests
+article.md

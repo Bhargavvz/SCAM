@@ -1,0 +1,34 @@
+# Production stack: app (FastAPI + React UI) behind Caddy, which gets and renews HTTPS certificates automatically.
+# Set DOMAIN in .env (a real domain, or <public-ip>.sslip.io). Without DOMAIN the site is served on plain http :80.
+services:
+  app:
+    build: .
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - app-data:/app/data          # unzipped SQLite copy (created on first start)
+      - ./runtime:/app/runtime      # live decisions DB, retain ledger, retention log (bind mount, owned by uid 1000)
+      - app-demo:/app/demo/out
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:-:80}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  app-data:
+  app-demo:
+  caddy-data:
+  caddy-config:

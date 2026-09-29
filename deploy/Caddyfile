@@ -1,0 +1,11 @@
+# DOMAIN comes from docker-compose (.env). A hostname gets automatic HTTPS; ":80" serves plain HTTP.
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy app:8000 {
+		# a decision can take 1-2 minutes on a rate-limited LLM
+		transport http {
+			read_timeout 10m
+			write_timeout 10m
+		}
+	}
+}

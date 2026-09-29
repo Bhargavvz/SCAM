@@ -148,6 +148,10 @@ Suggested 5-minute demo:
 4. SUP0247 capability question.
 5. D5 in the walkthrough (closing the loop) .
 
+## Deploying to a server
+
+See [DEPLOY.md](DEPLOY.md): Docker Compose (app + Caddy with automatic HTTPS) on an Oracle Cloud Ubuntu instance, with optional login (`UI_USER` / `UI_PASSWORD`) and a limit on concurrent model runs.
+
 ## Helper scripts
 
 | Script | Purpose |

@@ -7,10 +7,15 @@ sync endpoints in a thread pool.
 """
 from __future__ import annotations
 
+import base64
 import json
+import os
+import secrets
+import threading
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -32,8 +37,39 @@ UI_LIVE_DB = ROOT / "runtime" / "ui_live.sqlite"
 DEMO_LIVE_DB = ROOT / "demo" / "out" / "ui_demo_live.sqlite"
 WEB_DIST = ROOT / "web" / "dist"
 
+# Deployment knobs (all optional, set in .env):
+#   UI_USER / UI_PASSWORD   HTTP basic auth for the whole site when both are set (recommended on a public host)
+#   CORS_ORIGINS            comma-separated extra origins (the built UI is same-origin and needs none)
+#   MAX_CONCURRENT_RUNS     model-backed requests allowed at once (default 1: protects small LLM rate limits)
+#   RUN_QUEUE_TIMEOUT_S     how long a request waits for a free slot before a 503 (default 300)
+UI_USER, UI_PASSWORD = os.environ.get("UI_USER", ""), os.environ.get("UI_PASSWORD", "")
+RUN_SLOTS = threading.BoundedSemaphore(int(os.environ.get("MAX_CONCURRENT_RUNS", "1")))
+RUN_QUEUE_TIMEOUT_S = float(os.environ.get("RUN_QUEUE_TIMEOUT_S", "300"))
+CORS_ORIGINS = ["http://localhost:5173"] + [o.strip() for o in os.environ.get("CORS_ORIGINS", "").split(",") if o.strip()]
+
 app = FastAPI(title="Supply Chain Memory & Decision Agent")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"])
+
+
+@app.middleware("http")
+async def basic_auth(request: Request, call_next):
+    if not (UI_USER and UI_PASSWORD) or request.url.path == "/api/health":
+        return await call_next(request)
+    header = request.headers.get("authorization", "")
+    if header.startswith("Basic "):
+        try:
+            user, _, pw = base64.b64decode(header[6:]).decode().partition(":")
+        except ValueError:
+            user, pw = "", ""
+        if secrets.compare_digest(user, UI_USER) and secrets.compare_digest(pw, UI_PASSWORD):
+            return await call_next(request)
+    return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="Supply Chain Memory"'})
+
+
+@app.get("/api/health")
+def health():
+    return {"ok": True, "db": SETTINGS.db_path.exists(), "bank_id": SETTINGS.hindsight_bank_id,
+            "llm": f"{SETTINGS.llm_provider}:{SETTINGS.llm_model}"}
 
 
 def _agent(live_db: Path = UI_LIVE_DB):
@@ -41,13 +77,17 @@ def _agent(live_db: Path = UI_LIVE_DB):
 
 
 def _guard(fn):
-    """Map agent / provider failures to HTTP errors with a readable message."""
+    """Run a model-backed request in a limited slot; map agent / provider failures to readable HTTP errors."""
+    if not RUN_SLOTS.acquire(timeout=RUN_QUEUE_TIMEOUT_S):
+        raise HTTPException(status_code=503, detail="The agent is busy with other requests - try again in a minute.")
     try:
         return fn()
     except (AgentError, LLMRefusal, LLMUnavailable) as ex:
         raise HTTPException(status_code=502, detail=f"{type(ex).__name__}: {ex}") from ex
     except ValueError as ex:
         raise HTTPException(status_code=400, detail=str(ex)) from ex
+    finally:
+        RUN_SLOTS.release()
 
 
 class DecideRequest(BaseModel):
