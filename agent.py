@@ -17,11 +17,13 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
+from queries import DEFAULT, LIMIT, QUERIES, run_query
+
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 
 BASE_URL = os.environ.get("HINDSIGHT_BASE_URL", "https://api.hindsight.vectorize.io")
-BANK_ID = os.environ.get("HINDSIGHT_BANK_ID", "scm-memory-proto")
+BANK_ID = os.environ.get("HINDSIGHT_BANK_ID", "scm-memory-conv")
 DB_PATH = Path(os.environ.get("SCM_DB_PATH", ROOT / "output" / "inventory-supply-chain-v1.0.0-extended.sqlite"))
 USAGE_LOG = ROOT / "logs" / "hindsight_usage.jsonl"
 
@@ -253,7 +255,9 @@ def simulate_action(action: str, s: Situation, ctx: dict) -> dict:
 def recall_history(hs, s: Situation) -> list[dict]:
     query = (f"supplier delay {s.supplier_id} {s.rm_id} at {s.plant_id}: past slips, ETA revisions, expedites, supplier switches, "
              f"outcomes and lessons, commitments with {s.supplier_id}")
-    r = hs.recall(bank_id=BANK_ID, query=query, budget="mid", max_tokens=3000, query_timestamp=f"{s.as_of}T12:00:00Z")
+    r = hs.recall(bank_id=BANK_ID, query=query, budget="mid", max_tokens=3000, query_timestamp=f"{s.as_of}T12:00:00Z",
+                  include_chunks=True, max_chunk_tokens=2000)
+    s.chunk_text = " ".join(getattr(c, "text", "") or "" for c in (r.chunks or {}).values()) if isinstance(r.chunks, dict) else ""
     items = []
     for x in r.results or []:
         when = str(x.occurred_start or x.mentioned_at or "")[:10]
@@ -282,9 +286,61 @@ def reflect_precedents(hs, s: Situation, db_summary: str):
     return r.text, facts
 
 
+# ------------------------------------------------------------------ recall -> which allowlisted DB queries to run
+def plan_queries(hs, report: str, s: Situation) -> tuple[list[str], list[dict], str]:
+    """Recall playbook memories for this kind of report; keep only query names that are on the allowlist."""
+    if hs is None:
+        return DEFAULT, [], "offline: default query set"
+    r = hs.recall(bank_id=BANK_ID, query=f"Which data checks does the playbook say to run for this report: {report}",
+                  budget="low", max_tokens=1500, include_chunks=True, max_chunk_tokens=1500, tags=["playbook"], tags_match="any")
+    texts = [x.text for x in r.results or []]
+    log_usage("recall(playbook)", est_tokens=sum(map(len, texts)) // 4, extra={"results": len(texts)})
+    # take query names from the highest-ranked playbook memories only (first two that name any allowlisted query)
+    names, used = [], 0
+    for t in texts:
+        found = [n for n in QUERIES if n in t.lower() or n.replace("_", " ") in t.lower()]
+        if found:
+            names += [n for n in found if n not in names]
+            used += 1
+        if used == 2:
+            break
+    hits = [{"id": x.id, "text": x.text[:160]} for x in (r.results or [])][:3]
+    if not names:
+        return DEFAULT, hits, "recall named no allowlisted query - fell back to the default set"
+    return names, hits, f"chosen by recall from {len(r.results or [])} playbook memories"
+
+
+def run_planned(names: list[str], s: Situation) -> dict[str, pd.DataFrame]:
+    params = {"po_id": s.po_id, "supplier_id": s.supplier_id, "rm_id": s.rm_id, "plant_id": s.plant_id, "as_of": s.as_of}
+    out = {}
+    with db() as con:
+        for n in names:
+            out[n] = run_query(con, n, params)
+    return out
+
+
+def rows_for_memory(rows: dict[str, pd.DataFrame], k: int = 5) -> list[str]:
+    """At most k rows, one per query first (in plan order), then the rest - compact 'query: col=val' lines."""
+    picked, i = [], 0
+    while len(picked) < k and any(i < len(df) for df in rows.values()):
+        for n, df in rows.items():
+            if i < len(df) and len(picked) < k:
+                r = df.iloc[i]
+                picked.append(f"{n}: " + ", ".join(f"{c}={v}" for c, v in r.items() if pd.notna(v)))
+        i += 1
+    return picked
+
+
 # ------------------------------------------------------------------ decision
-def decide(report: str, as_of: str | None = None, use_memory: bool = True, retain: bool = False, trace: bool = False) -> dict:
+def decide(report: str, as_of: str | None = None, use_memory: bool = True, retain: bool = True, trace: bool = False) -> dict:
     s = parse_report(report, as_of)
+    hs = client() if use_memory else None
+    plan, plan_hits, plan_note = plan_queries(hs, report, s)
+    db_rows = run_planned(plan, s)
+    for df in db_rows.values():
+        for c in df.columns:
+            if c.endswith("_id") and c not in ("supplier_id", "plant_id", "rm_id"):
+                s.evidence += df[c].dropna().astype(str).tolist()
     ctx = db_context(s)
     sims = [simulate_action(a, s, ctx) for a in ACTIONS]
     conflicts = commitment_conflicts(s, ctx)
@@ -297,19 +353,27 @@ def decide(report: str, as_of: str | None = None, use_memory: bool = True, retai
     rec = min(ok, key=lambda x: x["total_cost"])
     memories, reflect_text, reflect_facts = [], None, []
     if use_memory:
-        hs = client()
         memories = recall_history(hs, s)
         sc = ctx["scorecard"]
         dbs = (f"{s.supplier_id} last {len(sc)} months OTIF {sc.otif_rate.mean():.0%}, avg delay {sc.avg_delay_days.mean():.1f}d; "
                f"{len(ctx['open_commitments'])} open commitments") if len(sc) else "no scorecard history"
         reflect_text, reflect_facts = reflect_precedents(hs, s, dbs)
     card = {"situation": s, "ctx": ctx, "sims": sims, "conflicts": conflicts, "naive": naive, "recommendation": rec,
-            "memories": memories, "reflect": reflect_text, "reflect_facts": reflect_facts}
+            "memories": memories, "reflect": reflect_text, "reflect_facts": reflect_facts,
+            "plan": plan, "plan_note": plan_note, "plan_hits": plan_hits, "db_rows": db_rows}
     card["rationale"] = rationale(card)
+    card["retained_rows"] = rows_for_memory(db_rows)
     if retain and use_memory:
-        hs.retain_batch(bank_id=BANK_ID, items=[{"content": card["rationale"], "context": f"agent decision {s.po_id}",
-                                                 "timestamp": f"{s.as_of}T17:00:00Z", "document_id": f"agent-{s.po_id}-{s.as_of}"}])
-        log_usage("retain(decision)", est_tokens=len(card["rationale"]) // 4)
+        # the query + at most 5 DB rows + the outcome of this conversation become memory for next time
+        content = (f"Planner query ({s.as_of}): {report}\nData checked ({', '.join(plan)}):\n- " + "\n- ".join(card["retained_rows"]) +
+                   f"\nRecommendation: {rec['action']} (simulated {rec['total_cost']:,.0f}, {rec['stockout_days']} stockout days)"
+                   + (f"; switch flagged by {', '.join(k['commitment_id'] for k in conflicts)}" if conflicts else ""))
+        r = hs.retain_batch(bank_id=BANK_ID, items=[{"content": content, "context": f"planner query and DB rows - {s.po_id}",
+                                                     "timestamp": f"{s.as_of}T17:00:00Z", "document_id": f"query-{s.po_id}-{s.as_of}",
+                                                     "tags": ["planner_query", f"supplier:{s.supplier_id}"]}])
+        log_usage("retain(query+rows)", usage=r.usage, extra={"rows": len(card["retained_rows"])})
+    if hs is not None:
+        hs.close()
     return card
 
 
