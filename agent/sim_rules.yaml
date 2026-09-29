@@ -1,0 +1,17 @@
+# Constants and risk rules copied from the dataset generator so the simulator reproduces its
+# consequence model exactly (dataset/code/config.yaml + dataset/code/gen_eval.py::holdout_scenarios).
+# The four entity rules mirror planted patterns P01, P02, P07 and P08: the generator's own
+# consequence model uses them, so parity requires them. See README "Known limitations".
+stockout_cost_rate_per_day: 0.004      # config.yaml memory.stockout_cost_rate_per_day
+spot_price_premium: 0.12               # config.yaml rm_ops.spot_price_premium
+transfer_cost_per_unit_value: 0.04     # config.yaml rm_ops.transfer_cost_per_unit_value
+substitute_qa_days: 6
+substitute_fixed_cost: 3000
+cancel_fee_rate: 0.02
+volume_breach_rate: 0.06
+volume_breach_multiplier: 3
+q4_slip_supplier_id: SUP0247           # P01: slips a further 7-14 days in Nov-Dec
+feb_congestion_country: CN             # P02: February port congestion
+risky_substitute_rm_id: RM0016         # P07: substitute with incoming-reject history
+depleting_donor_plant_id: P03          # P08: transfers out of this plant leave it short
+region_xy: {West: [0, 0], Southwest: [1, -1], Midwest: [2, 0], Northeast: [4, 1], Southeast: [3, -1], Canada: [3, 2]}
