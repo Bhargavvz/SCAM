@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from agent.llm import LLM, LLMRefusal, Usage
+from agent.llm import LLM, LLMRefusal, Usage, make_llm
 
 
 def _resp(stop="end_turn", i=1000, o=100, cr=0, cw=0):
@@ -71,6 +71,6 @@ def test_refusal_raises(settings):
 
 @pytest.mark.live
 def test_live_round_trip(base_settings):
-    llm = LLM(base_settings)
+    llm = make_llm(base_settings)
     r = llm.create(system="Reply with the single word OK.", messages=[{"role": "user", "content": "ping"}])
     assert any(b.type == "text" for b in r.content) and llm.usage.calls == 1

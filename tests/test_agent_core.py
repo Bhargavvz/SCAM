@@ -143,3 +143,29 @@ def test_report_without_leading_date_uses_default_as_of_with_warning(settings):
     card = a.run("SUP0247 (RM0083) slipped to 2025-12-07; what now?")
     assert card.as_of == settings.default_as_of
     assert any("as_of" in w for w in card.warnings)
+
+
+def test_malformed_tool_inputs_are_returned_as_errors(settings, hs05):
+    # non-strict providers (Groq) can send tool calls with missing keys
+    a, llm, _ = agent(settings, [
+        response(tool_use("sql_query", {})),
+        response(tool_use("submit_recommendation", {"recommended_action": "switch_supplier"})),
+        response(tool_use("submit_recommendation", submission("switch_supplier"))),
+        response(text("ok"), stop="end_turn"),
+    ])
+    card = a.run(hs05["day0_report"], as_of=hs05["day0"], context=holdout_context(hs05))
+    assert "query" in json.loads(llm.calls[1]["messages"][-1]["content"][0]["content"])["error"]
+    missing = llm.calls[2]["messages"][-1]["content"][0]
+    assert missing["is_error"] is True and "situation_summary" in missing["content"]
+    assert card.recommended_action == "switch_supplier"
+
+
+def test_malformed_answer_submission_is_returned_as_error(settings):
+    a, llm, _ = agent(settings, [
+        response(tool_use("submit_answer", {"answer": "2023-06-08"})),
+        response(tool_use("submit_answer", {"answer": "2023-06-08", "cited_doc_ids": [], "cited_record_ids": [],
+                                            "confidence": "high"})),
+    ])
+    res = a.answer_question("What is the latest ETA for RPO003179?", "2023-06-11")
+    assert "cited_doc_ids" in llm.calls[1]["messages"][-1]["content"][0]["content"]
+    assert res.answer == "2023-06-08"

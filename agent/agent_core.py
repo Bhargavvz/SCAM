@@ -20,7 +20,7 @@ from agent.config import Settings
 from agent.db import connect, live_memory_ids
 from agent.guardrails import action_violations, split_citations, ungrounded_numbers
 from agent.hindsight_tools import build_memory
-from agent.llm import LLM, Usage
+from agent.llm import Usage, make_llm
 from agent.parsing import parse_report
 from agent.simulate import TAXONOMY, SimulationError, best_option, build_state, simulate_options
 
@@ -145,6 +145,13 @@ def annotate_commitments(commitments: list[dict], options: list[dict]) -> list[d
             for c in commitments]
 
 
+def _missing_fields(inp, tool: dict) -> list[str]:
+    """Required keys absent from a tool input (strict tool use guarantees them on Claude; Groq does not)."""
+    if not isinstance(inp, dict):
+        return list(tool["input_schema"]["required"])
+    return [k for k in tool["input_schema"]["required"] if k not in inp]
+
+
 def _short(obj, n: int = 600) -> str:
     s = obj if isinstance(obj, str) else _j(obj)
     return s if len(s) <= n else s[:n] + "..."
@@ -205,6 +212,8 @@ class DecisionAgent:
                 out = {"error": f"unknown tool {name}"}
         except (sql_tools.SQLGuardError, sqlite3.Error, SimulationError, AgentError) as ex:
             out = {"error": str(ex)}
+        except (KeyError, TypeError) as ex:  # non-strict providers can omit or mistype arguments
+            out = {"error": f"missing or invalid argument {ex} for {name}"}
         self._trace(trace, "tool", name, inp, out, t0)
         return _j(out)
 
@@ -367,6 +376,11 @@ class DecisionAgent:
                 if u.name != "submit_recommendation":
                     results.append(self._tool_result(u, self._run_tool(con, u, as_of, state, seen_docs, card.trace)))
                     continue
+                missing = _missing_fields(u.input, TOOL_SUBMIT)
+                if missing:
+                    results.append(self._tool_result(u, f"Missing required fields: {', '.join(missing)}. Call "
+                                                        f"submit_recommendation again with all fields.", error=True))
+                    continue
                 action = u.input["recommended_action"]
                 violations = action_violations(action, card.options)
                 if violations and rejections < MAX_REJECTIONS:
@@ -439,6 +453,11 @@ class DecisionAgent:
                 results, final = [], None
                 for u in uses:
                     if u.name == "submit_answer":
+                        missing = _missing_fields(u.input, TOOL_ANSWER)
+                        if missing:
+                            results.append(self._tool_result(u, f"Missing required fields: {', '.join(missing)}. "
+                                                                f"Call submit_answer again with all fields.", error=True))
+                            continue
                         final = u.input
                         results.append(self._tool_result(u, "accepted"))
                     else:
@@ -470,7 +489,7 @@ def make_synthesizer(llm, settings: Settings):
 
 def build_agent(settings: Settings, *, live_db_path: Path | None = None, llm=None, memory=None) -> DecisionAgent:
     live = live_db_path or settings.live_db_path
-    llm = llm or LLM(settings)
+    llm = llm or make_llm(settings)
     if memory is None:
         memory = build_memory(settings, lambda: live_memory_ids(live), synthesizer=make_synthesizer(llm, settings))
     return DecisionAgent(settings, llm, memory, live)

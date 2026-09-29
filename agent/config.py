@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
 EFFORTS = ("low", "medium", "high", "xhigh", "max")
+PROVIDERS = ("anthropic", "groq")
 
 
 def _path(value: str) -> Path:
@@ -43,6 +44,11 @@ class Settings:
     writeback_retain: bool
     retention_log_path: Path
     mental_models_in_reflect: bool
+    llm_provider: str = "anthropic"
+    groq_api_key: str | None = None
+    groq_base_url: str = "https://api.groq.com/openai/v1"
+    llm_price_input_per_mtok: float | None = None
+    llm_price_output_per_mtok: float | None = None
 
 
 def load_settings(env_file: Path | None = None) -> Settings:
@@ -69,7 +75,14 @@ def load_settings(env_file: Path | None = None) -> Settings:
         writeback_retain=e("WRITEBACK_RETAIN", "1") == "1",
         retention_log_path=_path(e("RETENTION_LOG_PATH", "runtime/retention_log.jsonl")),
         mental_models_in_reflect=e("MENTAL_MODELS_IN_REFLECT", "1") == "1",
+        llm_provider=e("LLM_PROVIDER", "anthropic"),
+        groq_api_key=e("GROQ_API_KEY") or None,
+        groq_base_url=e("GROQ_BASE_URL", "https://api.groq.com/openai/v1"),
+        llm_price_input_per_mtok=_float_or_none(e("LLM_PRICE_INPUT_PER_MTOK")),
+        llm_price_output_per_mtok=_float_or_none(e("LLM_PRICE_OUTPUT_PER_MTOK")),
     )
+    if s.llm_provider not in PROVIDERS:
+        raise ValueError(f"LLM_PROVIDER must be one of {PROVIDERS}, got {s.llm_provider!r}")
     for name in ("llm_structured_effort", "llm_rationale_effort"):
         if getattr(s, name) not in EFFORTS:
             raise ValueError(f"{name.upper()} must be one of {EFFORTS}, got {getattr(s, name)!r}")

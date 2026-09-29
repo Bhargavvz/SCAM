@@ -59,7 +59,7 @@ flowchart LR
 ```bash
 uv venv --python 3.11 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env   # then fill HINDSIGHT_API_LLM_API_KEY (Hindsight server) and Claude credentials
+cp .env.example .env   # then fill the Hindsight endpoint/key and the agent LLM (Claude, or LLM_PROVIDER=groq + GROQ_API_KEY)
 .venv/bin/python -m agent.setup_data
 ```
 
@@ -127,5 +127,7 @@ Fill this in from `eval/out/scorecard.md` and `demo/out/demo_report.md` after th
 - Native Hindsight reflect (and the Mental Models) runs only when nothing in the bank can post-date `as_of`. Otherwise reflect is recall plus a local synthesis using the bank's mission and directives; `reflect_mode` on each answer says which ran. If runtime retains exist in the bank from another live DB, native reflect is disabled for runs using a different live DB.
 - The Mental Models are standing questions built from the answer key's pattern list. The probe reports detection both with and without them.
 - Eval answer scoring is a deterministic key-fact match (ids, dates, numbers, status and action words, threshold 0.75). Use `--judge` for a semantic LLM check.
-- Current Claude models reject `temperature`, so "low vs normal temperature" is implemented as effort low vs high.
+- Current Claude models reject `temperature`, so "low vs normal temperature" is implemented as effort low vs high (Groq gpt-oss: `reasoning_effort` low/high).
+- The agent LLM is pluggable (`LLM_PROVIDER=anthropic|groq`). The brief names Claude; this deployment runs Groq `openai/gpt-oss-120b` at the user's request. Groq does not enforce strict tool schemas, so malformed tool calls come back to the model as tool errors. Groq per-token prices are not built in: set `LLM_PRICE_INPUT_PER_MTOK` / `LLM_PRICE_OUTPUT_PER_MTOK` for cost reporting, otherwise cost shows as unknown.
+- Hindsight runs on Hindsight Cloud (`HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io`); `scripts/start_hindsight.sh` is only for a local server.
 - The corpus has no records for corrosion, humidity, partial-shipment exceptions, customer churn or "cheaper supplier" switches. The corresponding capability demos can only answer "no record".

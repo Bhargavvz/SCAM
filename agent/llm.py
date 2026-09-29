@@ -31,7 +31,7 @@ class Usage:
     cache_write_tokens: int = 0
     cost_usd: float | None = 0.0
 
-    def add(self, u, model: str) -> None:
+    def add(self, u, model: str, price: tuple[float, float] | None = None) -> None:
         i = getattr(u, "input_tokens", 0) or 0
         o = getattr(u, "output_tokens", 0) or 0
         cr = getattr(u, "cache_read_input_tokens", 0) or 0
@@ -41,7 +41,7 @@ class Usage:
         self.output_tokens += o
         self.cache_read_tokens += cr
         self.cache_write_tokens += cw
-        price = PRICES.get(model)
+        price = price or PRICES.get(model)
         if price is None or self.cost_usd is None:
             self.cost_usd = None
         else:
@@ -84,3 +84,14 @@ class LLM:
         if resp.stop_reason == "max_tokens":
             raise RuntimeError("response hit max_tokens; raise LLM_MAX_TOKENS")
         return resp
+
+
+def make_llm(settings: Settings, client=None):
+    """LLM_PROVIDER=anthropic (default, Claude via the Anthropic API) or groq (OpenAI-compatible Groq API)."""
+    if settings.llm_provider == "groq":
+        from agent.llm_groq import GroqLLM
+
+        if not settings.groq_api_key:
+            raise ValueError("LLM_PROVIDER=groq but GROQ_API_KEY is empty - set it in .env")
+        return GroqLLM(settings, http_client=client)
+    return LLM(settings, client=client)
