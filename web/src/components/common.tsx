@@ -15,6 +15,8 @@ export function money(v?: number | null) {
   return v === null || v === undefined ? "-" : `$${Math.round(v).toLocaleString()}`;
 }
 
+const ID_RE = /^(?:[A-Z]{1,4}\d{2,}|\d{4}-\d{2}-\d{2}|\$?[\d,.]+)(?:, [A-Z]{1,4}\d{2,})*$/;
+
 export function DataTable({ rows, columns, rowClass }: { rows: Row[]; columns?: string[]; rowClass?: (r: Row) => string }) {
   if (!rows || rows.length === 0) return <div className="muted">none</div>;
   const cols = columns ?? Object.keys(rows[0]);
@@ -27,7 +29,10 @@ export function DataTable({ rows, columns, rowClass }: { rows: Row[]; columns?: 
         <tbody>
           {rows.map((r, i) => (
             <tr key={i} className={rowClass?.(r)}>
-              {cols.map((c) => <td key={c}>{fmt(r[c])}</td>)}
+              {cols.map((c) => {
+                const v = fmt(r[c]);
+                return <td key={c} className={ID_RE.test(v) ? "id" : undefined}>{v}</td>;
+              })}
             </tr>
           ))}
         </tbody>
@@ -40,8 +45,8 @@ export function Panel({ title, children, right }: { title?: string; children: Re
   return (
     <section className="panel">
       {(title || right) && (
-        <div className="row" style={{ justifyContent: "space-between", marginBottom: 8 }}>
-          {title && <h3 style={{ margin: 0 }}>{title}</h3>}
+        <div className="panel-head">
+          {title ? <h3>{title}</h3> : <span />}
           {right}
         </div>
       )}
@@ -62,8 +67,8 @@ export function Metric({ k, v, highlight }: { k: string; v: React.ReactNode; hig
 export function Alerts({ errors, warnings, infos }: { errors?: string[]; warnings?: string[]; infos?: string[] }) {
   return (
     <>
-      {(errors ?? []).map((e, i) => <div key={`e${i}`} className="alert error">🛡️ {e}</div>)}
-      {(warnings ?? []).map((w, i) => <div key={`w${i}`} className="alert warn">⚠️ {w}</div>)}
+      {(errors ?? []).map((e, i) => <div key={`e${i}`} className="alert error"><span className="tag">Guardrail</span>{e}</div>)}
+      {(warnings ?? []).map((w, i) => <div key={`w${i}`} className="alert warn"><span className="tag">Note</span>{w}</div>)}
       {(infos ?? []).map((m, i) => <div key={`i${i}`} className="alert info">{m}</div>)}
     </>
   );
@@ -89,11 +94,11 @@ export function Citations({ docs, records, unverifiable, asOf }: { docs: string[
     <div>
       <div className="row" style={{ alignItems: "flex-start" }}>
         <div style={{ flex: 1 }}>
-          <div className="muted">Cited memory documents (click to read)</div>
+          <div className="label">Memory documents</div>
           {docs.length ? docs.map((d) => <span key={d} className="pill accent link" onClick={() => show(d)}>{d}</span>) : <span className="muted">-</span>}
         </div>
         <div style={{ flex: 1 }}>
-          <div className="muted">Cited database records</div>
+          <div className="label">Database records</div>
           {records.length ? records.map((r) => <span key={r} className="pill good">{r}</span>) : <span className="muted">-</span>}
         </div>
       </div>
@@ -104,13 +109,13 @@ export function Citations({ docs, records, unverifiable, asOf }: { docs: string[
       {open && (
         <div style={{ marginTop: 10 }}>
           <div className="row" style={{ justifyContent: "space-between" }}>
-            <b>{open.doc_id} · {open.date} · {open.doc_type}</b>
+            <span><b className="mono">{open.doc_id}</b> <span className="muted">{open.date} · {open.doc_type.replace(/_/g, " ")}</span></span>
             <button className="btn ghost" onClick={() => setOpen(null)}>Close</button>
           </div>
           <div className="muted">{open.context}</div>
           {open.superseded_by.length > 0 && (
             <div className="alert warn" style={{ marginTop: 6 }}>
-              Superseded by {open.superseded_by.map((s) => `${s.doc_id} (${s.date})`).join(", ")}
+              <span className="tag">Superseded</span>by {open.superseded_by.map((s) => `${s.doc_id} (${s.date})`).join(", ")}
             </div>
           )}
           <pre className="doc">{open.content}</pre>
@@ -124,7 +129,7 @@ export function RunButton({ busy, onClick, label }: { busy: boolean; onClick: ()
   return (
     <button className="btn" disabled={busy} onClick={onClick}>
       {busy && <span className="spinner" />}
-      {busy ? "Working..." : label}
+      {busy ? "Running" : label}
     </button>
   );
 }

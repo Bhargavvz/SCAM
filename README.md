@@ -126,11 +126,11 @@ scripts/dev_ui.sh      # development: API with reload on :8000 + Vite hot reload
 
 | Page | What it shows |
 |---|---|
-| 🚨 Disruption decision | Pick a holdout scenario (traps are marked) or a free-text report, then **Decide**. The decision card shows: the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with clickable memory documents, and an optional "Initiate the response" write-back. |
-| 💬 Ask the memory | The 7 capability questions, or your own: the answer, database ground-truth tables, citations and the commitment check. |
-| 🕰️ History question | As-of QA examples, including supersession (RPO003179 before and after the expedite). |
-| 🎬 Demo walkthrough | The 12 scripted scenarios, each run with an expected-vs-actual PASS/FAIL table. |
-| 📊 Results | Eval scorecard, demo report and the saved holdout decision cards. |
+| Decide | Pick a holdout scenario (traps are marked) or a free-text report, then **Decide**. The decision card shows: the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with clickable memory documents, and an optional "Initiate the response" write-back. |
+| Ask | The 7 capability questions, or your own: the answer, database ground-truth tables, citations and the commitment check. |
+| History | As-of QA examples, including supersession (RPO003179 before and after the expedite). |
+| Walkthrough | The 12 scripted scenarios, each run with an expected-vs-actual PASS/FAIL table. |
+| Results | Eval scorecard, demo report and the saved holdout decision cards. |
 
 API endpoints (JSON):
 - `GET /api/config`, `GET /api/scenarios`

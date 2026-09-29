@@ -16,13 +16,15 @@ export function QuestionView() {
   const { busy, error, data, run } = useRunner<QAResult>();
   return (
     <div>
-      <h2>History question</h2>
-      <p className="lead">Ask about the past as of a date. Nothing dated after "as of" — memory or database — is visible to the agent.</p>
+      <div className="page-head">
+        <h2>History</h2>
+        <p className="lead">Ask what was known on a given date. Anything recorded after that date is hidden from the agent.</p>
+      </div>
       <Panel title="Examples">
         <div className="list">
           {EXAMPLES.map((e, i) => (
             <button key={i} className={question === e.q && asOf === e.asOf ? "on" : ""} onClick={() => { setQuestion(e.q); setAsOf(e.asOf); }}>
-              <b>{e.asOf}</b> — {e.q} <span className="muted">({e.note})</span>
+              <span className="key">{e.asOf}</span>{e.q} <span className="muted">— {e.note}</span>
             </button>
           ))}
         </div>
@@ -30,11 +32,11 @@ export function QuestionView() {
       <Panel>
         <label>Question<textarea value={question} onChange={(e) => setQuestion(e.target.value)} /></label>
         <div className="row" style={{ marginTop: 10, justifyContent: "space-between" }}>
-          <label style={{ width: 200 }}>As of<input value={asOf} onChange={(e) => setAsOf(e.target.value)} /></label>
+          <label style={{ width: 180 }}>As of<input className="mono" value={asOf} onChange={(e) => setAsOf(e.target.value)} /></label>
           <RunButton busy={busy} onClick={() => run(() => api.question(question, asOf))} label="Answer" />
         </div>
       </Panel>
-      {error && <div className="alert error">{error}</div>}
+      {error && <div className="alert error"><span className="tag">Error</span>{error}</div>}
       {data && <AnswerView res={data} />}
     </div>
   );

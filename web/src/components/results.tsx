@@ -22,19 +22,19 @@ export function DecisionCardView({ card }: { card: DecisionCard }) {
   return (
     <div>
       <div className="metrics">
-        <Metric k="Recommended action" v={rec ?? "no recommendation"} highlight={!!rec} />
+        <Metric k="Recommendation" v={rec ?? "none"} highlight={!!rec} />
         <Metric k="Simulator best" v={best ?? "-"} />
         <Metric k="Confidence" v={card.confidence} />
-        <Metric k="Latency · LLM calls" v={`${card.latency_s}s · ${card.usage?.calls ?? 0}`} />
+        <Metric k="Time · model calls" v={`${card.latency_s}s · ${card.usage?.calls ?? 0}`} />
       </div>
       <Alerts errors={card.guardrail_events} warnings={warnings} infos={card.situation_summary ? [card.situation_summary] : []} />
 
-      <Panel title="Candidate options · deterministic simulator" right={<span className="muted">★ recommended · ▲ simulator best · numbers never come from the LLM</span>}>
+      <Panel title="Options (simulated)" right={<span className="muted">★ recommended · ▲ lowest risk-adjusted score</span>}>
         <DataTable rows={options} rowClass={(r) => (String(r[""]).includes("★") ? "rec" : r.feasible ? "" : "dim")} />
       </Panel>
 
       <div className="grid cols-2">
-        <Panel title="Precedents · past decisions scored against today">
+        <Panel title="Precedents">
           <DataTable
             rows={card.precedents}
             columns={["decision_id", "decided_at", "decision_type", "outcome_label", "today_rank", "applies_today", "source", "note"]}
@@ -59,8 +59,8 @@ export function DecisionCardView({ card }: { card: DecisionCard }) {
       </Panel>
 
       {(card.writeback || card.mock_actions.length > 0) && (
-        <Panel title="Initiated response (write-back)">
-          {card.writeback && <div className="alert ok">Logged {fmt(card.writeback.decision_id)} + {fmt(card.writeback.commitment_id)}: {fmt(card.writeback.commitment_text)} · retain: {fmt(card.writeback.retain_status)}</div>}
+        <Panel title="Logged response">
+          {card.writeback && <div className="alert ok"><span className="tag">Logged</span>{fmt(card.writeback.decision_id)} + {fmt(card.writeback.commitment_id)}: {fmt(card.writeback.commitment_text)} · retain: {fmt(card.writeback.retain_status)}</div>}
           {card.mock_actions.map((m) => <div key={m} className="muted">{m}</div>)}
         </Panel>
       )}
@@ -87,14 +87,14 @@ export function DecisionCardView({ card }: { card: DecisionCard }) {
 }
 
 export function CapabilityView({ ans }: { ans: CapabilityAnswer }) {
-  const checked = ans.commitments_checked === null ? "n/a" : ans.commitments_checked ? "checked ✅" : "NOT checked ⚠️";
+  const checked = ans.commitments_checked === null ? "n/a" : ans.commitments_checked ? "checked" : "not checked";
   return (
     <div>
       <div className="metrics">
-        <Metric k="Capability" v={ans.capability.replace(/_/g, " ")} highlight />
+        <Metric k="Routed to" v={ans.capability.replace(/_/g, " ")} />
         <Metric k="Reflect" v={`${ans.reflect_mode ?? "-"} · ${ans.budget}`} />
         <Metric k="Confidence" v={ans.confidence} />
-        <Metric k="Open commitments" v={checked} />
+        <Metric k="Commitments" v={checked} />
       </div>
       <Alerts warnings={ans.warnings} />
       <Panel title="Answer">
@@ -110,7 +110,7 @@ export function CapabilityView({ ans }: { ans: CapabilityAnswer }) {
         </div>
       </Panel>
       {Object.entries(ans.ground_truth).map(([name, rows]) => (
-        <Panel key={name} title={`${name.replace(/_/g, " ")} · database as of ${ans.as_of}`}>
+        <Panel key={name} title={name.replace(/_/g, " ")} right={<span className="muted">database, as of {ans.as_of}</span>}>
           <DataTable rows={rows} />
         </Panel>
       ))}

@@ -21,13 +21,15 @@ export function AskView({ defaultAsOf }: { defaultAsOf: string }) {
 
   return (
     <div>
-      <h2>Ask the memory</h2>
-      <p className="lead">Any supply-chain question is routed to one of seven capabilities: supplier reliability, commitments, decision precedent, exceptions, quality root cause, negotiation, decision-outcome learning.</p>
+      <div className="page-head">
+        <h2>Ask</h2>
+        <p className="lead">Questions about suppliers, commitments, past decisions, negotiations and quality. Answers come from memory and are checked against the database.</p>
+      </div>
       <Panel title="Examples">
         <div className="list">
           {examples.map((e) => (
             <button key={e.id} className={question === e.question ? "on" : ""} onClick={() => setQuestion(e.question ?? "")}>
-              <b>{e.title.split(":")[0]}</b> — {e.question}
+              <span className="key">{e.id}</span>{e.question}
             </button>
           ))}
         </div>
@@ -35,11 +37,11 @@ export function AskView({ defaultAsOf }: { defaultAsOf: string }) {
       <Panel>
         <label>Question<textarea value={question} onChange={(e) => setQuestion(e.target.value)} /></label>
         <div className="row" style={{ marginTop: 10, justifyContent: "space-between" }}>
-          <label style={{ width: 200 }}>As of<input value={asOf} onChange={(e) => setAsOf(e.target.value)} /></label>
+          <label style={{ width: 180 }}>As of<input className="mono" value={asOf} onChange={(e) => setAsOf(e.target.value)} /></label>
           <RunButton busy={busy} onClick={() => run(() => api.ask(question, asOf || undefined))} label="Ask" />
         </div>
       </Panel>
-      {error && <div className="alert error">{error}</div>}
+      {error && <div className="alert error"><span className="tag">Error</span>{error}</div>}
       {data && <CapabilityView ans={data} />}
     </div>
   );

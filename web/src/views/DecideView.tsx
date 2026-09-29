@@ -54,48 +54,50 @@ export function DecideView() {
 
   return (
     <div>
-      <h2>Disruption decision</h2>
-      <p className="lead">Recall history, connect it to ground truth, simulate every option deterministically, check open commitments, and recommend with citations.</p>
+      <div className="page-head">
+        <h2>Disruption</h2>
+        <p className="lead">Report a supply disruption. The agent checks what happened last time, what is still promised, and what each response would cost.</p>
+      </div>
       <Panel>
         <div className="row" style={{ marginBottom: 12 }}>
           <div className="seg">
-            <button className={mode === "scenario" ? "on" : ""} onClick={() => setMode("scenario")}>Holdout scenario</button>
-            <button className={mode === "free" ? "on" : ""} onClick={() => setMode("free")}>Free-text report</button>
+            <button className={mode === "scenario" ? "on" : ""} onClick={() => setMode("scenario")}>Holdout case</button>
+            <button className={mode === "free" ? "on" : ""} onClick={() => setMode("free")}>Own report</button>
           </div>
           {mode === "scenario" && (
             <select value={sid} onChange={(e) => setSid(e.target.value)}>
               {scenarios.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.id} · {s.day0} · {s.supplier_id} / {s.rm_id}{s.trap ? " · TRAP" : ""}
+                  {s.id}  {s.day0}  {s.supplier_id} / {s.rm_id}{s.trap ? "  (trap)" : ""}
                 </option>
               ))}
             </select>
           )}
         </div>
         {mode === "scenario" && current?.trap && (
-          <div className="alert info">
-            Trap scenario: the most similar precedent {current.trap.its_decision_id} ({current.trap.its_action}, {current.trap.its_outcome}) is misleading — {current.trap.why_misleading}
+          <div className="alert warn">
+            <span className="tag">Trap</span>The closest precedent, {current.trap.its_decision_id} ({current.trap.its_action.replace(/_/g, " ")}, {current.trap.its_outcome}), no longer fits: {current.trap.why_misleading}
           </div>
         )}
         <label>
-          Disruption report
+          Report
           <textarea value={report} onChange={(e) => setReport(e.target.value)} />
         </label>
         <div className="grid cols-4" style={{ marginTop: 10 }}>
-          <label>As of<input value={asOf} onChange={(e) => setAsOf(e.target.value)} placeholder="YYYY-MM-DD" /></label>
-          <label>RPO<input value={rpo} onChange={(e) => setRpo(e.target.value)} /></label>
-          <label>Affected runs (first needs the RM)<input value={runs} onChange={(e) => setRuns(e.target.value)} /></label>
-          <label>Raw material<input value={rm} onChange={(e) => setRm(e.target.value)} /></label>
+          <label>As of<input className="mono" value={asOf} onChange={(e) => setAsOf(e.target.value)} placeholder="YYYY-MM-DD" /></label>
+          <label>Purchase order<input className="mono" value={rpo} onChange={(e) => setRpo(e.target.value)} /></label>
+          <label>Affected runs<input className="mono" value={runs} onChange={(e) => setRuns(e.target.value)} /></label>
+          <label>Raw material<input className="mono" value={rm} onChange={(e) => setRm(e.target.value)} /></label>
         </div>
         <div className="row" style={{ marginTop: 14, justifyContent: "space-between" }}>
-          <label style={{ flexDirection: "row", alignItems: "center", gap: 8, color: "var(--ink)", fontSize: 14 }}>
+          <label className="check">
             <input type="checkbox" checked={writeback} onChange={(e) => setWriteback(e.target.checked)} />
-            Initiate the response (log decision + commitment, retain a summary in memory)
+            Log the decision and remember it for next time
           </label>
           <RunButton busy={busy} onClick={decide} label="Decide" />
         </div>
       </Panel>
-      {error && <div className="alert error">{error}</div>}
+      {error && <div className="alert error"><span className="tag">Error</span>{error}</div>}
       {data && <DecisionCardView card={data} />}
     </div>
   );

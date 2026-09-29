@@ -26,17 +26,19 @@ export function DemoView() {
 
   return (
     <div>
-      <h2>Demo walkthrough</h2>
-      <p className="lead">Scripted scenarios — routine decision, trap, commitment conflict, supersession, closing the loop, and one question per capability — each checked against its expected behaviour.</p>
+      <div className="page-head">
+        <h2>Walkthrough</h2>
+        <p className="lead">Twelve scripted cases, each run live and compared with what it should do.</p>
+      </div>
       <div className="grid" style={{ gridTemplateColumns: "340px 1fr", alignItems: "start" }}>
-        <Panel title="Scenarios">
+        <Panel title="Cases">
           <div className="list">
             {specs.map((s) => {
               const o = outcomes[s.id];
               const passed = o ? o.checks.filter((c) => c.ok).length : 0;
               return (
                 <button key={s.id} className={s.id === selected ? "on" : ""} onClick={() => setSelected(s.id)}>
-                  <b>{s.id}</b> {s.title}
+                  <span className="key">{s.id}</span>{s.title}
                   {o && (
                     <span className={`pill ${passed === o.checks.length ? "good" : "bad"}`} style={{ marginLeft: 6 }}>
                       {passed}/{o.checks.length}
@@ -50,7 +52,7 @@ export function DemoView() {
         <div>
           {spec && (
             <Panel title={`${spec.id} · ${spec.title}`} right={<RunButton busy={busy} onClick={runOne} label="Run scenario" />}>
-              <div className="muted">Expected</div>
+              <div className="label">Expected</div>
               <div>
                 {Object.entries(spec.expect).map(([k, v]) => (
                   <span key={k} className="pill">{k}: {fmt(v)}</span>
@@ -58,10 +60,10 @@ export function DemoView() {
               </div>
             </Panel>
           )}
-          {error && <div className="alert error">{error}</div>}
+          {error && <div className="alert error"><span className="tag">Error</span>{error}</div>}
           {outcome && (
             <>
-              <Panel title="Expected vs actual">
+              <Panel title="Checks">
                 <DataTable
                   rows={outcome.checks.map((c) => ({ check: c.check, expected: c.expected, actual: c.actual, result: c.ok ? "PASS" : "FAIL" }))}
                   rowClass={(r) => (r.result === "PASS" ? "rec" : "")}
