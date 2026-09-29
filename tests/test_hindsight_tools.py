@@ -169,3 +169,25 @@ def test_retain_writes_pending_entry_before_calling_hindsight(index, tmp_path):
     assert status.startswith("error")
     assert [e["status"] for e in mem.ledger.entries()][0] == "pending"
     assert mem.native_reflect_allowed("2025-10-14") is False
+
+
+class TemporalWindowBrokenClient(FakeHindsight):
+    """Hindsight Cloud 500s on temporal_window ("'TemporalWindow' object is not subscriptable")."""
+
+    def recall(self, bank_id, query, budget="mid", max_tokens=4096, types=None, query_timestamp=None,
+               temporal_window=None):
+        self.calls.append(("recall", dict(temporal_window=temporal_window)))
+        if temporal_window is not None:
+            raise RuntimeError("(500) Failed to search memories (TypeError): 'TemporalWindow' object is not subscriptable")
+        return SimpleNamespace(results=self.results)
+
+
+def test_temporal_window_falls_back_to_client_side_window(index, tmp_path):
+    # DOC000248 is 2023-06-02, DOC000041 is 2023-02-26; a 30-day window before 2023-06-11 keeps only DOC000248
+    client = TemporalWindowBrokenClient([hit("slip", document_id="DOC000248"), hit("old", document_id="DOC000041")])
+    mem = make(index, tmp_path, client)
+    r = mem.recall("q", "2023-06-11", window_days=30)
+    assert [h.doc_id for h in r.hits] == ["DOC000248"]
+    assert client.calls[0][1]["temporal_window"] is not None and client.calls[1][1]["temporal_window"] is None
+    # without a window nothing is filtered by date range
+    assert len(mem.recall("q", "2023-06-11").hits) == 2

@@ -153,12 +153,22 @@ class HindsightMemory:
         end = as_of_end(as_of)
         kw = dict(bank_id=self.bank_id, query=query, budget=budget, max_tokens=max_tokens,
                   types=["world", "experience"], query_timestamp=end.isoformat())
-        if window_days:
-            kw["temporal_window"] = {"start": (end - timedelta(days=window_days)).isoformat(), "end": end.isoformat()}
-        raw = list(_field(_call(self.client.recall, **kw), "results") or [])
+        start = end - timedelta(days=window_days) if window_days else None
+        if start is not None:
+            kw["temporal_window"] = {"start": start.isoformat(), "end": end.isoformat()}
+        try:
+            resp = _call(self.client.recall, **kw)
+        except Exception as ex:  # Hindsight Cloud 500s on temporal_window; retry without it, window applied below
+            if "temporal_window" not in kw or "TemporalWindow" not in str(ex):
+                raise
+            kw.pop("temporal_window")
+            resp = _call(self.client.recall, **kw)
+        raw = list(_field(resp, "results") or [])
         hits, future, unresolved = [], 0, 0
         for r in raw:
             h, why = self._resolve(r, as_of)
+            if h and start is not None and h.doc_date and h.doc_date < start.date().isoformat():
+                continue  # outside the requested window (client-side, so it holds even without server support)
             if h:
                 hits.append(h)
             elif why == "future":
