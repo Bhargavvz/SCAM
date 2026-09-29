@@ -42,7 +42,7 @@ export function OverviewView({ onOpen }: { onOpen: (tab: "decide" | "demo" | "re
     <div>
       <section className="hero">
         <div>
-          <div className="eyebrow">Hackathon prototype · supply chain memory</div>
+          <div className="eyebrow">Supply chain memory</div>
           <h1>Decisions that remember what happened last time.</h1>
           <p>
             When a supplier slips, the agent recalls the history, checks what was promised, simulates every response and
