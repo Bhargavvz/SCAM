@@ -11,7 +11,6 @@ import json
 import sqlite3
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from agent import sql_tools
@@ -222,9 +221,8 @@ class DecisionAgent:
                    "entity": (f"History of disruptions, decisions, negotiations and commitments involving {ent_str}", None),
                    "recent": (f"Recent problems, promises and changes for {ent_str}", 120)}
         try:
-            with ThreadPoolExecutor(max_workers=3) as ex:
-                futs = {k: ex.submit(self.memory.recall, q, as_of, window_days=w) for k, (q, w) in queries.items()}
-                return {k: f.result() for k, f in futs.items()}
+            # sequential on purpose: hindsight-client's sync API wraps an aiohttp loop and is not thread-safe
+            return {k: self.memory.recall(q, as_of, window_days=w) for k, (q, w) in queries.items()}
         except Exception as ex:  # any client/network error: refuse to continue on empty memory
             raise MemoryUnavailable(f"Hindsight recall failed ({ex}); check HINDSIGHT_BASE_URL / "
                                     f"HINDSIGHT_BANK_ID") from ex

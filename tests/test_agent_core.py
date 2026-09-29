@@ -169,3 +169,20 @@ def test_malformed_answer_submission_is_returned_as_error(settings):
     res = a.answer_question("What is the latest ETA for RPO003179?", "2023-06-11")
     assert "cited_doc_ids" in llm.calls[1]["messages"][-1]["content"][0]["content"]
     assert res.answer == "2023-06-08"
+
+
+class MainThreadOnlyMemory(FakeMemory):
+    """hindsight-client's sync API wraps an aiohttp loop and breaks when called from worker threads."""
+
+    def recall(self, *a, **kw):
+        import threading
+        assert threading.current_thread() is threading.main_thread(), "recall called from a worker thread"
+        return super().recall(*a, **kw)
+
+
+def test_recalls_run_on_the_calling_thread(settings, hs05):
+    a = DecisionAgent(settings, FakeLLM([response(tool_use("submit_recommendation", submission("switch_supplier"))),
+                                         response(text("ok"), stop="end_turn")]),
+                      MainThreadOnlyMemory(), settings.live_db_path)
+    card = a.run(hs05["day0_report"], as_of=hs05["day0"], context=holdout_context(hs05))
+    assert card.recommended_action == "switch_supplier"
