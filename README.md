@@ -146,7 +146,7 @@ Suggested 5-minute demo:
 2. Free-text report (commitment conflict with CMT00560).
 3. History question (supersession).
 4. SUP0247 capability question.
-5. D5 in the walkthrough (closing the loop).
+5. D5 in the walkthrough (closing the loop) .
 
 ## Helper scripts
 
