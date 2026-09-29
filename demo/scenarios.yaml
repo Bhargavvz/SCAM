@@ -1,0 +1,95 @@
+# Scripted walkthrough. kind: holdout | report | question | chain | ask
+- id: D1
+  title: Routine slip - memory, ground truth and simulator agree
+  kind: holdout
+  scenario: HS01
+  expect:
+    recommended_action: switch_supplier
+    commitments_flagged: [CMT00786, CMT00802]
+- id: D2
+  title: Trap - the most similar precedent (accept_delay worked in Aug-Oct) is misleading in Nov-Dec
+  kind: holdout
+  scenario: HS05
+  expect:
+    recommended_action: switch_supplier
+    not_action: accept_delay
+    precedent_not_applicable: accept_delay
+- id: D3
+  title: Open-commitment conflict - the naive cancel would breach volume commitment CMT00560
+  kind: report
+  as_of: "2025-01-13"
+  report: >-
+    2025-01-13 - Supplier 169 (SUP0169) just moved RPO016183 (Elastic Film Laminate, RM0100) for Eastfield Plant (P03)
+    to 2025-03-10 citing weather force majeure. Run PR0016522 is planned 2025-02-17 and needs this material.
+    The buyer proposes cancelling RPO016183 and re-buying elsewhere. What should we do?
+  context: {rpo_id: RPO016183, run_ids: [PR0016522], rm_id: RM0100}
+  expect:
+    recommended_action_in: [switch_supplier, reallocate_stock]
+    not_action: cancel_po
+    guardrail_mentions: CMT00560
+- id: D4
+  title: Contradiction / supersession - the later ETA wins
+  kind: question
+  as_of: "2023-06-11"
+  question: What is the latest ETA for RPO003179?
+  expect:
+    answer_contains: ["2023-06-08"]
+    cites_doc: DOC000254
+- id: D5
+  title: Closing the loop - today's logged decision is a precedent for the next disruption
+  kind: chain
+  steps: [HS05, HS08]
+  expect:
+    second_has_live_precedent: true
+- id: D6
+  title: "Capability 1 - supplier reliability: SUP0247 in November-December"
+  kind: ask
+  question: What is SUP0247's delivery track record in November and December? Should we trust their current promise for a November delivery?
+  expect:
+    capability: supplier_reliability
+    answer_matches: ["nov|dec", "late|delay|slip"]
+    has_citations: true
+- id: D7
+  title: "Capability 2 - commitments: what a switch away from SUP0091 would breach"
+  kind: ask
+  question: What open commitments do we have with SUP0091? If we switch suppliers, what obligations would we breach?
+  expect:
+    capability: commitments
+    commitments_checked: true
+    has_citations: true
+- id: D8
+  title: "Capability 3 - decision precedent (no supplier named: commitments cannot be checked)"
+  kind: ask
+  question: Our primary RM supplier just had a 35% supply reduction. We're deciding between prioritizing high-margin products vs. switching to the backup supplier. What happened last time we faced this?
+  expect:
+    capability: decision_precedent
+    commitments_checked: false
+    grounded_or_declines: true
+- id: D9
+  title: "Capability 4 - exception memory (not in the corpus: honest 'no record' expected)"
+  kind: ask
+  question: Have we ever accepted partial shipments from suppliers? How many times has this exception been granted this quarter, and should we escalate for a policy review?
+  expect:
+    capability: exceptions
+    grounded_or_declines: true
+- id: D10
+  title: "Capability 5 - quality root cause (corrosion is not in the corpus: honest 'no record' expected)"
+  kind: ask
+  question: We're seeing corrosion on steel components from a supplier that had humidity issues before. Are their corrective controls still in place, or has the problem recurred?
+  expect:
+    capability: quality_root_cause
+    grounded_or_declines: true
+- id: D11
+  title: "Capability 6 - negotiation memory: SUP0179"
+  kind: ask
+  question: We need to renegotiate with SUP0179 whose lead times keep getting longer. What negotiation strategies have worked with them before?
+  expect:
+    capability: negotiation
+    has_citations: true
+- id: D12
+  title: "Capability 7 - decision outcome learning: switch-supplier projections"
+  kind: ask
+  question: How accurate have our past 'switch to cheaper supplier' decisions been? Should we trust our cost-savings projections?
+  expect:
+    capability: decision_outcome_learning
+    has_citations: true
