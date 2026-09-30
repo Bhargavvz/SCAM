@@ -235,3 +235,67 @@ def ask(agent, question: str, as_of: str | None = None) -> CapabilityAnswer:
         ans.confidence = "high" if n_cites >= 3 else "medium"
     ans.latency_s = round(time.monotonic() - t0, 2)
     return ans
+
+
+# ------------------------------------------------------------------------------------------------ entity briefs
+BRIEF_QUESTIONS = {
+    "SUP": ("What is the history of {id}: delivery reliability and delays (by season if there is a pattern), "
+            "quality issues, negotiations and concessions, decisions we took about it and how they worked out, and "
+            "open commitments either way? What should a planner watch for right now?"),
+    "RPO": ("What is the history of purchase order {id}: every date change and its reason, the latest expected date "
+            "and which earlier dates were superseded, related disruptions, decisions and commitments?"),
+    "RM": ("What is the supply history of raw material {id}: shortages, which suppliers failed and why, substitutes "
+           "or transfers that were tried and whether they worked, and open risks?"),
+    "P": ("What is the recent history of plant {id}: shortages, blocked production runs and their root causes, "
+          "maintenance or scheduling issues, and inter-plant transfers?"),
+    "PR": ("Why is production run {id} at risk or delayed, which material and purchase orders are involved, and what "
+           "was done about it?"),
+}
+
+
+def _brief_ground_truth(con, entity_id: str, as_of: str) -> dict:
+    if entity_id.startswith("SUP"):
+        return {"delay_by_promised_month": _delay_by_promised_month(con, entity_id),
+                "scorecard_recent": sql_tools.supplier_scorecard(con, entity_id, 6),
+                "open_commitments": sql_tools.open_commitments(con, [entity_id], as_of),
+                "prior_decisions": sql_tools.prior_decisions(con, entity_id, None, as_of)}
+    if entity_id.startswith("RPO"):
+        return {"revisions": _q(con, """SELECT revision_id, revised_at, old_expected_at, new_expected_at, reason_code
+                                         FROM rm_po_revisions WHERE rm_po_id = ? ORDER BY revised_at""", (entity_id,)),
+                "purchase_order": _q(con, "SELECT * FROM rm_purchase_orders WHERE rm_purchase_order_id = ?", (entity_id,))}
+    if entity_id.startswith("RM"):
+        return {"recent_events": sql_tools.prior_events(con, None, entity_id, None, limit=8),
+                "prior_decisions": sql_tools.prior_decisions(con, None, entity_id, as_of)}
+    return {}
+
+
+def brief(agent, entity_id: str, as_of: str | None = None) -> CapabilityAnswer:
+    """Memory brief about one entity (supplier, PO, material, plant, run), grounded in the as-of database."""
+    t0 = time.monotonic()
+    as_of = as_of or agent.settings.default_as_of
+    prefix = next((p for p in ("SUP", "RPO", "RM", "PR", "P") if entity_id.startswith(p)), None)
+    if prefix is None:
+        raise ValueError(f"no memory brief available for {entity_id}")
+    question = BRIEF_QUESTIONS[prefix].format(id=entity_id)
+    ans = CapabilityAnswer(question=question, capability="entity_brief", as_of=as_of, budget="mid")
+    con = agent._connect(as_of)
+    try:
+        gt = _brief_ground_truth(con, entity_id, as_of)
+        ans.ground_truth = gt
+        facts = json.dumps(gt, default=str)[:MAX_GROUND_TRUTH_CHARS] if gt else "(none)"
+        query = (f"{question}\n\nTask: {COMMON} Be concise: 5-8 bullet points, most decision-relevant first.\n"
+                 f"As of: {as_of}.\nAuthoritative database records (quote their ids):\n{facts}")
+        try:
+            refl = agent.memory.reflect(query, as_of, budget="mid")
+        except Exception as ex:  # any client/network error: report it instead of a raw traceback
+            from agent.agent_core import MemoryUnavailable
+            raise MemoryUnavailable(f"Hindsight reflect failed ({ex})") from ex
+        ans.reflect_mode, ans.answer = refl.mode, refl.text or ""
+        ans.cited_doc_ids, ans.cited_record_ids, ans.unverifiable_citations = _verify(
+            con, agent.memory, ans.answer, set(refl.doc_ids), as_of)
+    finally:
+        con.close()
+    n = len(ans.cited_doc_ids) + len(ans.cited_record_ids)
+    ans.confidence = "high" if n >= 3 else "medium" if n else "low"
+    ans.latency_s = round(time.monotonic() - t0, 2)
+    return ans

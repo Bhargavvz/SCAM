@@ -67,7 +67,7 @@ def _next_id(con, table: str, prefix: str) -> str:
 
 
 def log_decision(settings: Settings, live_db_path: Path, memory, card: DecisionCard,
-                 state: ScenarioState | None) -> tuple[dict, list[str]]:
+                 state: ScenarioState | None, event_ref: str | None = None) -> tuple[dict, list[str]]:
     if card.recommended_action is None or state is None:
         raise ValueError("nothing to log: the card has no recommendation or no scenario state")
     option = next(o for o in card.options if o["action"] == card.recommended_action)
@@ -83,7 +83,7 @@ def log_decision(settings: Settings, live_db_path: Path, memory, card: DecisionC
                            decided_at, decided_by_role, decision_type, options_considered_json, chosen_option,
                            rationale_text, expected_cost, expected_stockout_days, evidence_doc_ids,
                            evidence_record_ids, run_id, logged_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                        (dec_id, f"LIVE:{state.rpo_id}", state.supplier_id, state.rm_id, state.plant_id, state.rpo_id,
+                        (dec_id, event_ref or f"LIVE:{state.rpo_id}", state.supplier_id, state.rm_id, state.plant_id, state.rpo_id,
                          card.as_of, "Decision Agent (prototype)", card.recommended_action,
                          json.dumps([o for o in card.options if o.get("feasible")], sort_keys=True),
                          card.recommended_action, card.rationale, option["cost"], option["stockout_days"],

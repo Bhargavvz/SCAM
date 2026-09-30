@@ -115,38 +115,41 @@ RUN_LIVE=1 .venv/bin/python -m pytest -m live          # needs Hindsight + Claud
 
 All eval scripts write into `eval/out/` and regenerate `eval/out/scorecard.md`.
 
-## Web demo (React UI)
+## The application (Meridian)
 
-A React + TypeScript single-page app (`web/`, Vite) on top of a FastAPI backend (`api/server.py`) that wraps the agent.
+A supply chain management application with the memory agent built into every screen. React + TypeScript (`web/`, Vite) on FastAPI (`api/server.py` + `api/scm.py`).
 
 ```bash
 scripts/run_ui.sh      # first run: npm install + build; then serves UI + API on http://localhost:8000
 scripts/dev_ui.sh      # development: API with reload on :8000 + Vite hot reload on http://localhost:5173
 ```
 
-| Page | What it shows |
-|---|---|
-| Overview | Hackathon summary built from the real eval results: held-out accuracy, traps avoided, simulator parity, commitments surfaced, scenario grid, question accuracy by type, pattern grid, pipeline, guarantees, data coverage. |
-| Decide | Pick a holdout scenario (traps are marked) or a free-text report, then **Decide**. The decision card shows: the simulated options table, precedents scored against today, open commitments, guardrail events, a cited rationale with clickable memory documents, and an optional "Initiate the response" write-back. |
-| Ask | The 7 capability questions, or your own: the answer, database ground-truth tables, citations and the commitment check. |
-| History | As-of QA examples, including supersession (RPO003179 before and after the expedite). |
-| Walkthrough | The 12 scripted scenarios, each run with an expected-vs-actual PASS/FAIL table. |
-| Results | Eval scorecard, demo report and the saved holdout decision cards. |
+**Business date.** The date in the top bar (default `APP_TODAY=2025-10-14`) drives every page. The database is read through the as-of views and memory recall drops anything dated later. Moving the date back replays the business exactly as it looked then; ±7d steps through it.
 
-API endpoints (JSON):
-- `GET /api/config`, `GET /api/scenarios`
-- `POST /api/decide`, `POST /api/ask`, `POST /api/question`
-- `GET /api/demo/specs`, `POST /api/demo/run`
-- `GET /api/docs/{doc_id}?as_of=`
-- `GET /api/results`, `GET /api/results/cards/{id}`
-- `POST /api/live/reset`
+| Area | Page | Where memory is used |
+|---|---|---|
+| Operate | Control tower: KPIs, disruption and OTIF trends, supplier watchlist, runs short of material, commitments due, decisions made with the agent | links into every record |
+| | Disruptions: list and detail with impact, related events and affected runs | **Resolve with agent** derives the slipped order, material and runs from the event's evidence, then recalls precedents, simulates every response and checks commitments. **Accept and log** writes the decision and its commitment (append-only) and retains it to Hindsight, so the next disruption can learn from it. |
+| | Purchase orders: slipped, overdue or open; lines, revisions, receipts, dependent runs | **Change this order** runs the guardrail before any ERP change. For example, cancelling RPO023907 on 2025-10-14 is blocked by volume commitment CMT00717. ERP calls are mocks. |
+| | Production: 30-day plan by plant, material shortfalls, delay reasons | |
+| Plan | Materials: stock by plant, 26-week trend, qualified suppliers, substitutes | memory brief |
+| | Suppliers: scorecard trend, lead-time trend, contracts, negotiations, catalog | memory brief (seasonality, quality history, how past decisions turned out) |
+| | Demand: forecast vs actual by category, forecast bias | |
+| Govern | Commitments: open, due, overdue, fulfilled, breached; agent-made ones marked | enforced by the guardrail |
+| | Decision log: expected vs actual cost by response type; each decision's options, rationale and lesson | the precedents the agent recalls |
+| Intelligence | Ask memory: the 7 capabilities or as-of fact lookup | |
+| Evaluation | Scorecard, walkthrough, decision sandbox, history QA, full results (the earlier demo views) | |
+
+Agent work runs as background jobs (`POST /api/agent/resolve|brief|ask`, then poll `GET /api/jobs/{id}`). Results are cached under `runtime/cache/`, so a page resolved once opens instantly. Holdout events opened on their scenario date reuse the evaluation run's decision card.
+
+Operational endpoints (all accept `?as_of=`): `/api/app`, `/api/dashboard`, `/api/disruptions[/{id}]`, `/api/pos[/{id}]`, `POST /api/pos/{id}/check-action`, `/api/suppliers[/{id}]`, `/api/materials[/{id}]`, `/api/production`, `/api/demand`, `/api/commitments`, `/api/decisions[/{id}]`, `/api/search`, `POST /api/agent/accept`.
 
 Suggested 5-minute demo:
-1. HS05 (trap).
-2. Free-text report (commitment conflict with CMT00560).
-3. History question (supersession).
-4. SUP0247 capability question.
-5. D5 in the walkthrough (closing the loop) .
+1. Control tower on 2025-10-14, then open the supplier watchlist and ask memory about the top supplier.
+2. Set the date to 2025-10-01 and open EVT02610: the agent's recommendation with simulated options and cited precedents.
+3. Purchase order RPO023907 on 2025-10-14: **Cancel order** is blocked by CMT00717, **Expedite** is allowed as a mock ERP action.
+4. Accept a recommendation, then show it in the Decision log and Commitments (marked "agent").
+5. Evaluation → Agent scorecard for the numbers.
 
 ## Deploying to a server
 

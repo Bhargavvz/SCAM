@@ -8,3 +8,4 @@ runtime/
 eval/out/*.sqlite
 eval/out/cards/
 demo/out/*.sqlite
+.claude/

@@ -36,7 +36,7 @@ from demo.run_demo import check_expectations, load_specs, run_spec
 
 SETTINGS = load_settings()
 ensure_db(SETTINGS)
-UI_LIVE_DB = ROOT / "runtime" / "ui_live.sqlite"
+UI_LIVE_DB = SETTINGS.live_db_path  # one live DB: decisions accepted anywhere in the app are shared
 DEMO_LIVE_DB = ROOT / "demo" / "out" / "ui_demo_live.sqlite"
 WEB_DIST = ROOT / "web" / "dist"
 
@@ -281,6 +281,10 @@ def reset_live():
     UI_LIVE_DB.unlink(missing_ok=True)
     return {"ok": True, "message": "UI live DB cleared (Hindsight retains are not deleted)"}
 
+
+from api.scm import router as scm_router  # noqa: E402
+
+app.include_router(scm_router)
 
 if WEB_DIST.exists():
     app.mount("/assets", StaticFiles(directory=WEB_DIST / "assets"), name="assets")
