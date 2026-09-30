@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { PackageOpen, Undo2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -93,6 +94,7 @@ export function ReturnDetail() {
           ) : r.status === "authorized" ? <div className="muted">Receive the goods first.</div> : <div className="muted">Closed as <b>{fmt.label(r.disposition)}</b>.</div>}
         </Card>
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={r.product_id} title={`Memory: ${r.product_id} (${r.brand_family})`} /></div>
       {d!.history.length > 0 && (
         <Card title="History"><ul className="timeline">{d!.history.map((h: Row, i: number) => <li key={i}><div>{h.summary}</div><div className="t">{fmt.ago(h.at)} · {h.actor}</div></li>)}</ul></Card>
       )}

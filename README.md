@@ -30,7 +30,36 @@ dataset), and optionally `UI_USER` / `UI_PASSWORD` / `UI_SESSION_SECRET` to requ
 | 12 | **Reports & dashboards** | Operations dashboard with the flow; sales, inventory, costs and supplier reports, each table exportable as CSV. |
 | + | **AI Insights** | Detectors find what changed (carrier decline, return spikes, supplier OTIF drops, replenishment vs demand, forecast bias, demand shifts, overdue POs, material risk, customers slipping). Groq writes the daily briefing and per-finding action plans from those numbers only; any figure not in the evidence is flagged. |
 | + | **Ask Meridian** | Natural-language questions answered by read-only SQL on the live database (write statements are blocked by an authorizer). Every query it ran is shown. |
+| + | **Risk & disruptions** | Disruption events. The memory-backed decision agent recommends a response, and accepting it executes the change. |
 | + | **Data & sync** | Proves the database is the dataset plus audited app changes (see below), and how the memory corpus maps onto it. |
+
+## Memory (Hindsight)
+
+Meridian's long-term memory is a Hindsight bank (`HINDSIGHT_BASE_URL`, `HINDSIGHT_API_KEY`, `HINDSIGHT_BANK_ID` or
+`MERIDIAN_BANK_ID` in `.env`). It holds the 2,500-document supply chain corpus plus every change made in Meridian.
+
+**Keeping memory in sync with the database.** `app.db.audit()` writes each change and its memory document to `memory_outbox`
+in the same SQLite transaction (a transactional outbox), so no committed change can be missing from the queue. A background
+worker (`app/memory/outbox.py`) sends queued documents with **async `retain_batch`**, including tags (`source:meridian`,
+`module:*`, `entity:*`), entities, metadata and the business-date timestamp. It then follows each Hindsight **operation** until it
+completes and retries failures with backoff (up to 6 attempts). Synchronous retain is not used, because extraction takes longer than the gateway's 60 s
+limit. **Backfill** sends dataset memories that never reached the bank through the same pipeline, keeping their original dates.
+
+| Where | Hindsight capability |
+|---|---|
+| Every record page (supplier, product, customer, order, PO, warehouse, shipment, return, run) | **reflect** with `response_schema` → structured brief (summary, patterns, risks, past decisions, commitments, recommendations, confidence, evidence); **recall** with entities, as-of filtering; planner **notes** → retain |
+| Creating a PO, changing or cancelling a PO, choosing a carrier, accepting an agent decision | **advice**: structured reflect → proceed / caution / stop, with reasons, precedents, commitments at risk and an alternative |
+| Risk & disruptions | the decision agent (vendored in `backend/agent`) **recalls** precedents as of the business date, simulates every response and checks commitments. Accepting executes the action (revises the date, places a spot PO, cancels, transfers or reschedules), records the decision and commitment, and retains it |
+| AI Insights "Explain" | recall of past episodes → "Has this happened before?" |
+| Ask Meridian | tool calling with `run_sql` **and** `search_memory` (recall) |
+| Memory hub | health, bank stats (units by fact type, links by type), sync pipeline, outbox, **operations** (list/retry/cancel), corpus coverage via **documents**, **timeseries** |
+| Explorer | recall playground (types, budget, as-of, temporal window, tags, prefer observations), reflect playground (structured presets, directives, mental models), **list_memories**, **documents** with chunks and extracted units, **entity graph** |
+| Mental models | 12 Meridian models (supplier reliability, seasonal slippage, disruption playbook, carrier performance, …): create, edit, refresh, dry-run, history, delete |
+| Knowledge base | playbook pages written by Hindsight and refreshed daily: folders, pages, search, delete |
+| Directives & settings | directives (create, toggle, edit, delete), bank config (missions, observations, retrieval switches, dispositions), **export** the bank |
+
+The directives, mental models and playbooks are created idempotently at startup (`MEMORY_BOOTSTRAP=1`), or from Memory → Run setup.
+Set `MEMORY_SYNC=0` to pause the outbox worker.
 
 ## Data and sync
 

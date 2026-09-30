@@ -1,0 +1,1613 @@
+{
+  "note": "Q4 disruptions whose narrative docs are split=holdout (not ingested). Consequences use consequences.py over the data as of day 0.",
+  "scenarios": [
+    {
+      "event_id": "EVT02610",
+      "day0": "2025-10-01",
+      "day0_report": "2025-10-01 - Supplier 192 (SUP0192) just moved RPO023175 (PP Impact Copolymer Grade B, RM0079) for Riverbend Plant (P04) to 2025-10-30. We have about 111.9 kg on hand vs safety stock 105.2; run PR0021648 is planned 2025-10-21 and needs 178.0 kg. 1 run(s) and ~598 FG units for W012 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0192",
+        "rm_id": "RM0079",
+        "plant_id": "P04",
+        "runs": [
+          "PR0021648"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02535",
+        "EVT02238",
+        "EVT02048"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00786",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021600 the day the Process Cyan Ink lot clears QA (planned start was 2025-10-19)",
+          "due_date": "2025-10-24"
+        },
+        {
+          "commitment_id": "CMT00802",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021090 the day the SAP Surface-crosslinked Grade Grade C lot clears QA (planned start was 2025-09-26)",
+          "due_date": "2025-10-07"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-10-30",
+          "stockout_days": 9,
+          "cost": 25386.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 25386.0,
+          "service_impact_units": 598
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-05",
+          "stockout_days": 0,
+          "cost": 88.0,
+          "risk": "medium",
+          "note": "air premium 22% of lot value",
+          "score": 101.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-10-21",
+          "stockout_days": 0,
+          "cost": 31.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0177",
+          "score": 36.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": false,
+          "note": "no other plant holds enough of this material"
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-10-21",
+          "stockout_days": 0,
+          "cost": 39.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 45.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (36) with 0 stockout days; accept_delay 25,386; expedite 101; cancel_po 45",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 9
+      },
+      "scenario_id": "HS01"
+    },
+    {
+      "event_id": "EVT02594",
+      "day0": "2025-10-02",
+      "day0_report": "2025-10-02 - Supplier 247 (SUP0247) just moved RPO022888 (Water-based Varnish, RM0074) for Northgate Plant (P05) to 2025-11-01. We have about 3.3 kg on hand vs safety stock 3.2; run PR0021640 is planned 2025-10-21 and needs 1.4 kg. 3 run(s) and ~1,390 FG units for W004, W009, W010 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0247",
+        "rm_id": "RM0074",
+        "plant_id": "P05",
+        "runs": [
+          "PR0021640",
+          "PR0021686",
+          "PR0021836"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02501",
+        "EVT02515",
+        "EVT02488"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00783",
+          "commitment_text": "Air expedite of RPO022104 booked; Supplier 247 (SUP0247) and forwarder committed delivery to Eastfield Plant (P03) by 2025-10-03",
+          "due_date": "2025-10-03"
+        },
+        {
+          "commitment_id": "CMT00785",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022272 (Process Cyan Ink (RM0072)) will arrive at Riverbend Plant (P04) by 2025-10-23",
+          "due_date": "2025-10-23"
+        },
+        {
+          "commitment_id": "CMT00800",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022396 (UV Flexo White (RM0075)) will arrive at Maplewood Plant (P02) by 2025-11-07",
+          "due_date": "2025-11-07"
+        },
+        {
+          "commitment_id": "CMT00817",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022888 (Water-based Varnish (RM0074)) will arrive at Northgate Plant (P05) by 2025-11-01",
+          "due_date": "2025-11-01"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-11-01",
+          "stockout_days": 11,
+          "cost": 56891.0,
+          "risk": "high",
+          "note": "supplier historically slips a further 7-14 days in Nov-Dec",
+          "score": 79647.0,
+          "service_impact_units": 1390
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-07",
+          "stockout_days": 0,
+          "cost": 48.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 55.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-10-23",
+          "stockout_days": 2,
+          "cost": 10347.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0062",
+          "score": 11899.0,
+          "service_impact_units": 1390
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-06",
+          "stockout_days": 0,
+          "cost": 8.0,
+          "risk": "high",
+          "note": "donor on hand 1.7 vs SS 3.3; transfers from this plant have repeatedly left it short",
+          "score": 11.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0072",
+          "arrival": "2025-10-08",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-10-23",
+          "stockout_days": 2,
+          "cost": 10351.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 11904.0,
+          "service_impact_units": 1390
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (11) with 0 stockout days; accept_delay 79,647; expedite 55; switch_supplier 11,899; substitute_rm 3,450; cancel_po 11,904",
+      "trap": {
+        "most_similar_event_id": "EVT02501",
+        "its_decision_id": "DEC00353",
+        "its_action": "accept_delay",
+        "its_outcome": "success",
+        "why_misleading": "accept delay worked on 2025-08-28 but now scores worse than reallocate stock (supplier Q4 slip pattern)."
+      },
+      "what_actually_happened": {
+        "decision_ids": [
+          "DEC00373"
+        ],
+        "blocked_days": 11
+      },
+      "scenario_id": "HS02"
+    },
+    {
+      "event_id": "EVT02586",
+      "day0": "2025-10-04",
+      "day0_report": "2025-10-04 - Supplier 143 (SUP0143) just moved RPO022375 (Citrus Burst Oil, RM0012) for Maplewood Plant (P02) to 2025-10-27. We have about 98.1 kg on hand vs safety stock 75.9; run PR0021724 is planned 2025-10-25 and needs 7.3 kg. 4 run(s) and ~1,521 FG units for W001, W006, W010 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0143",
+        "rm_id": "RM0012",
+        "plant_id": "P02",
+        "runs": [
+          "PR0021724",
+          "PR0021667",
+          "PR0021727",
+          "PR0021730"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02461",
+        "EVT02371",
+        "EVT02399"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00768",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021259 the day the SAP Sodium Polyacrylate Grade B lot clears QA (planned start was 2025-10-03)",
+          "due_date": "2025-10-07"
+        },
+        {
+          "commitment_id": "CMT00794",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021310 the day the Carbon Steel Strip 1075 lot clears QA (planned start was 2025-10-06)",
+          "due_date": "2025-10-14"
+        },
+        {
+          "commitment_id": "CMT00801",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021850 the day the UV Flexo White lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-08"
+        },
+        {
+          "commitment_id": "CMT00813",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021854 the day the EPDM Gasket Compound lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-03"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-10-27",
+          "stockout_days": 2,
+          "cost": 8939.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 8939.0,
+          "service_impact_units": 1521
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-09",
+          "stockout_days": 0,
+          "cost": 1363.0,
+          "risk": "medium",
+          "note": "air premium 28% of lot value",
+          "score": 1567.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": false,
+          "note": "no other qualified source in the catalog at day 0"
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-07",
+          "stockout_days": 0,
+          "cost": 196.0,
+          "risk": "high",
+          "note": "donor on hand 78.9 vs SS 26.5; transfers from this plant have repeatedly left it short",
+          "score": 274.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0023",
+          "arrival": "2025-10-10",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": null,
+          "stockout_days": 2,
+          "cost": 9037.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 10393.0,
+          "service_impact_units": 1521
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (274) with 0 stockout days; accept_delay 8,939; expedite 1,567; substitute_rm 3,450; cancel_po 10,393",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 2
+      },
+      "scenario_id": "HS03"
+    },
+    {
+      "event_id": "EVT02601",
+      "day0": "2025-10-09",
+      "day0_report": "2025-10-09 - Supplier 248 (SUP0248) just moved RPO022946 (Cocamidopropyl Betaine, RM0067) for Eastfield Plant (P03) to 2025-11-07. We have about 1,157.3 kg on hand vs safety stock 823.2; run PR0021915 is planned 2025-11-02 and needs 592.5 kg. 2 run(s) and ~623 FG units for W007 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0248",
+        "rm_id": "RM0067",
+        "plant_id": "P03",
+        "runs": [
+          "PR0021915",
+          "PR0021911"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02478",
+        "EVT02459",
+        "EVT02349"
+      ],
+      "open_commitments": [],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-11-07",
+          "stockout_days": 5,
+          "cost": 14669.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 14669.0,
+          "service_impact_units": 623
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-14",
+          "stockout_days": 0,
+          "cost": 2837.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 3263.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-10-20",
+          "stockout_days": 0,
+          "cost": 214.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0243",
+          "score": 246.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P02",
+          "arrival": "2025-10-12",
+          "stockout_days": 0,
+          "cost": 451.0,
+          "risk": "medium",
+          "note": "donor on hand 6,998.5 vs SS 974.3",
+          "score": 519.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0064",
+          "arrival": "2025-10-15",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-10-20",
+          "stockout_days": 0,
+          "cost": 439.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 505.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (246) with 0 stockout days; accept_delay 14,669; expedite 3,263; reallocate_stock 519; substitute_rm 3,450; cancel_po 505",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 5
+      },
+      "scenario_id": "HS04"
+    },
+    {
+      "event_id": "EVT02622",
+      "day0": "2025-10-14",
+      "day0_report": "2025-10-14 - Supplier 247 (SUP0247) just moved RPO023030 (Stretch Wrap 23um Grade B, RM0083) for Lakeshore Plant (P01) to 2025-12-07. We have about 1,180.3 m2 on hand vs safety stock 471.1; run PR0022467 is planned 2025-11-27 and needs 118.0 m2. 3 run(s) and ~847 FG units for W004, W005, W011 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0247",
+        "rm_id": "RM0083",
+        "plant_id": "P01",
+        "runs": [
+          "PR0022467",
+          "PR0022545",
+          "PR0022558"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02515",
+        "EVT02501",
+        "EVT02488"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00785",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022272 (Process Cyan Ink (RM0072)) will arrive at Riverbend Plant (P04) by 2025-10-23",
+          "due_date": "2025-10-23"
+        },
+        {
+          "commitment_id": "CMT00800",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022396 (UV Flexo White (RM0075)) will arrive at Maplewood Plant (P02) by 2025-11-07",
+          "due_date": "2025-11-07"
+        },
+        {
+          "commitment_id": "CMT00817",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022888 (Water-based Varnish (RM0074)) will arrive at Northgate Plant (P05) by 2025-11-01",
+          "due_date": "2025-11-01"
+        },
+        {
+          "commitment_id": "CMT00825",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022945 (UV Flexo White (RM0075)) will arrive at Eastfield Plant (P03) by 2025-11-26",
+          "due_date": "2025-11-26"
+        },
+        {
+          "commitment_id": "CMT00828",
+          "commitment_text": "Air expedite of RPO022944 booked; Supplier 247 (SUP0247) and forwarder committed delivery to Eastfield Plant (P03) by 2025-10-30",
+          "due_date": "2025-10-30"
+        },
+        {
+          "commitment_id": "CMT00835",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO023030 (Stretch Wrap 23um Grade B (RM0083)) will arrive at Lakeshore Plant (P01) by 2025-12-07",
+          "due_date": "2025-12-07"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-07",
+          "stockout_days": 10,
+          "cost": 22733.0,
+          "risk": "high",
+          "note": "supplier historically slips a further 7-14 days in Nov-Dec",
+          "score": 31826.0,
+          "service_impact_units": 847
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-19",
+          "stockout_days": 0,
+          "cost": 45.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 52.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-10-31",
+          "stockout_days": 0,
+          "cost": 2.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0047",
+          "score": 2.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-19",
+          "stockout_days": 0,
+          "cost": 7.0,
+          "risk": "high",
+          "note": "donor on hand 1,442.4 vs SS 749.6; transfers from this plant have repeatedly left it short",
+          "score": 10.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0003",
+          "arrival": "2025-10-20",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-10-31",
+          "stockout_days": 0,
+          "cost": 6.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 7.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (2) with 0 stockout days; accept_delay 31,826; expedite 52; reallocate_stock 10; substitute_rm 3,450; cancel_po 7",
+      "trap": {
+        "most_similar_event_id": "EVT02501",
+        "its_decision_id": "DEC00353",
+        "its_action": "accept_delay",
+        "its_outcome": "success",
+        "why_misleading": "accept delay worked on 2025-08-28 but now scores worse than switch supplier (supplier Q4 slip pattern)."
+      },
+      "what_actually_happened": {
+        "decision_ids": [
+          "DEC00381"
+        ],
+        "blocked_days": 10
+      },
+      "scenario_id": "HS05"
+    },
+    {
+      "event_id": "EVT02641",
+      "day0": "2025-10-16",
+      "day0_report": "2025-10-16 - Supplier 143 (SUP0143) just moved RPO022721 (Citrus Burst Oil, RM0012) for Maplewood Plant (P02) to 2025-11-15. We have about 54.5 kg on hand vs safety stock 75.9; run PR0022116 is planned 2025-11-12 and needs 38.0 kg. 1 run(s) and ~583 FG units for W005 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0143",
+        "rm_id": "RM0012",
+        "plant_id": "P02",
+        "runs": [
+          "PR0022116"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02461",
+        "EVT02371",
+        "EVT02399"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00801",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021850 the day the UV Flexo White lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-08"
+        },
+        {
+          "commitment_id": "CMT00813",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021854 the day the EPDM Gasket Compound lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-03"
+        },
+        {
+          "commitment_id": "CMT00824",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0022101 the day the TPE Overmold Grade Grade B lot clears QA (planned start was 2025-11-10)",
+          "due_date": "2025-11-18"
+        },
+        {
+          "commitment_id": "CMT00845",
+          "commitment_text": "Supplier 143 (SUP0143) re-promised RPO023257 for 2025-11-15 (was 2025-11-14; transport disruption)",
+          "due_date": "2025-11-15"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-11-15",
+          "stockout_days": 3,
+          "cost": 10273.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 10273.0,
+          "service_impact_units": 583
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-21",
+          "stockout_days": 0,
+          "cost": 1530.0,
+          "risk": "medium",
+          "note": "air premium 28% of lot value",
+          "score": 1759.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": false,
+          "note": "no other qualified source in the catalog at day 0"
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-19",
+          "stockout_days": 0,
+          "cost": 220.0,
+          "risk": "high",
+          "note": "donor on hand 77.4 vs SS 26.5; transfers from this plant have repeatedly left it short",
+          "score": 308.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": null,
+          "stockout_days": 3,
+          "cost": 10383.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 11940.0,
+          "service_impact_units": 583
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (308) with 0 stockout days; accept_delay 10,273; expedite 1,759; cancel_po 11,940",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 3
+      },
+      "scenario_id": "HS06"
+    },
+    {
+      "event_id": "EVT02631",
+      "day0": "2025-10-17",
+      "day0_report": "2025-10-17 - Supplier 089 (SUP0089) just moved RPO023395 (SAP Surface-crosslinked Grade Grade B, RM0056) for Maplewood Plant (P02) to 2025-11-07. We have about 199.4 kg on hand vs safety stock 123.1; run PR0021865 is planned 2025-10-31 and needs 51.1 kg. 1 run(s) and ~141 FG units for W006 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0089",
+        "rm_id": "RM0056",
+        "plant_id": "P02",
+        "runs": [
+          "PR0021865"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02487",
+        "EVT02454",
+        "EVT02294"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00801",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021850 the day the UV Flexo White lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-08"
+        },
+        {
+          "commitment_id": "CMT00813",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021854 the day the EPDM Gasket Compound lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-03"
+        },
+        {
+          "commitment_id": "CMT00824",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0022101 the day the TPE Overmold Grade Grade B lot clears QA (planned start was 2025-11-10)",
+          "due_date": "2025-11-18"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-11-07",
+          "stockout_days": 7,
+          "cost": 3952.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 3952.0,
+          "service_impact_units": 141
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-21",
+          "stockout_days": 0,
+          "cost": 98.0,
+          "risk": "medium",
+          "note": "air premium 22% of lot value",
+          "score": 113.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-11-06",
+          "stockout_days": 6,
+          "cost": 3402.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0129",
+          "score": 3912.0,
+          "service_impact_units": 141
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-20",
+          "stockout_days": 0,
+          "cost": 18.0,
+          "risk": "high",
+          "note": "donor on hand 469.2 vs SS 98.8; transfers from this plant have repeatedly left it short",
+          "score": 25.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-11-06",
+          "stockout_days": 6,
+          "cost": 3411.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 3923.0,
+          "service_impact_units": 141
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (25) with 0 stockout days; accept_delay 3,952; expedite 113; switch_supplier 3,912; cancel_po 3,923",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 7
+      },
+      "scenario_id": "HS07"
+    },
+    {
+      "event_id": "EVT02669",
+      "day0": "2025-10-19",
+      "day0_report": "2025-10-19 - Supplier 247 (SUP0247) just moved RPO023188 (Stretch Wrap 23um Grade B, RM0083) for Riverbend Plant (P04) to 2025-12-12. We have about 1,848.6 m2 on hand vs safety stock 605.3; run PR0022519 is planned 2025-11-29 and needs 93.7 m2. 1 run(s) and ~216 FG units for W002 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0247",
+        "rm_id": "RM0083",
+        "plant_id": "P04",
+        "runs": [
+          "PR0022519"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02515",
+        "EVT02501",
+        "EVT02488"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00785",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022272 (Process Cyan Ink (RM0072)) will arrive at Riverbend Plant (P04) by 2025-10-23",
+          "due_date": "2025-10-23"
+        },
+        {
+          "commitment_id": "CMT00786",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021600 the day the Process Cyan Ink lot clears QA (planned start was 2025-10-19)",
+          "due_date": "2025-10-24"
+        },
+        {
+          "commitment_id": "CMT00800",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022396 (UV Flexo White (RM0075)) will arrive at Maplewood Plant (P02) by 2025-11-07",
+          "due_date": "2025-11-07"
+        },
+        {
+          "commitment_id": "CMT00817",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022888 (Water-based Varnish (RM0074)) will arrive at Northgate Plant (P05) by 2025-11-01",
+          "due_date": "2025-11-01"
+        },
+        {
+          "commitment_id": "CMT00825",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO022945 (UV Flexo White (RM0075)) will arrive at Eastfield Plant (P03) by 2025-11-26",
+          "due_date": "2025-11-26"
+        },
+        {
+          "commitment_id": "CMT00828",
+          "commitment_text": "Air expedite of RPO022944 booked; Supplier 247 (SUP0247) and forwarder committed delivery to Eastfield Plant (P03) by 2025-10-30",
+          "due_date": "2025-10-30"
+        },
+        {
+          "commitment_id": "CMT00832",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021619 the day the Corrugated Divider lot clears QA (planned start was 2025-10-20)",
+          "due_date": "2025-10-26"
+        },
+        {
+          "commitment_id": "CMT00835",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO023030 (Stretch Wrap 23um Grade B (RM0083)) will arrive at Lakeshore Plant (P01) by 2025-12-07",
+          "due_date": "2025-12-07"
+        },
+        {
+          "commitment_id": "CMT00837",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0022040 the day the SAP Sodium Polyacrylate Grade D lot clears QA (planned start was 2025-11-07)",
+          "due_date": "2025-11-15"
+        },
+        {
+          "commitment_id": "CMT00839",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO023231 (Process Cyan Ink (RM0072)) will arrive at Northgate Plant (P05) by 2025-11-12",
+          "due_date": "2025-11-12"
+        },
+        {
+          "commitment_id": "CMT00843",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021880 the day the SAP Surface-crosslinked Grade Grade C lot clears QA (planned start was 2025-10-31)",
+          "due_date": "2025-11-05"
+        },
+        {
+          "commitment_id": "CMT00846",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO023186 (Process Cyan Ink (RM0072)) will arrive at Riverbend Plant (P04) by 2025-11-12",
+          "due_date": "2025-11-12"
+        },
+        {
+          "commitment_id": "CMT00847",
+          "commitment_text": "Riverbend Plant (P04) committed to run PR0021956 the day the Process Cyan Ink lot clears QA (planned start was 2025-11-04)",
+          "due_date": "2025-11-13"
+        },
+        {
+          "commitment_id": "CMT00848",
+          "commitment_text": "Supplier 247 (SUP0247) confirmed RPO023188 (Stretch Wrap 23um Grade B (RM0083)) will arrive at Riverbend Plant (P04) by 2025-12-12",
+          "due_date": "2025-12-12"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-12",
+          "stockout_days": 13,
+          "cost": 4666.0,
+          "risk": "high",
+          "note": "supplier historically slips a further 7-14 days in Nov-Dec",
+          "score": 6532.0,
+          "service_impact_units": 216
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-24",
+          "stockout_days": 0,
+          "cost": 67.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 77.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-11-05",
+          "stockout_days": 0,
+          "cost": 2.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0047",
+          "score": 2.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P01",
+          "arrival": "2025-10-22",
+          "stockout_days": 0,
+          "cost": 11.0,
+          "risk": "high",
+          "note": "donor on hand 461.4 vs SS 471.1",
+          "score": 15.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0003",
+          "arrival": "2025-10-25",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-11-05",
+          "stockout_days": 0,
+          "cost": 7.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 8.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (2) with 0 stockout days; accept_delay 6,532; expedite 77; reallocate_stock 15; substitute_rm 3,450; cancel_po 8",
+      "trap": {
+        "most_similar_event_id": "EVT02501",
+        "its_decision_id": "DEC00353",
+        "its_action": "accept_delay",
+        "its_outcome": "success",
+        "why_misleading": "accept delay worked on 2025-08-28 but now scores worse than switch supplier (supplier Q4 slip pattern)."
+      },
+      "what_actually_happened": {
+        "decision_ids": [
+          "DEC00397"
+        ],
+        "blocked_days": 2
+      },
+      "scenario_id": "HS08"
+    },
+    {
+      "event_id": "EVT02632",
+      "day0": "2025-10-19",
+      "day0_report": "2025-10-19 - Supplier 143 (SUP0143) just moved RPO022917 (Fresh Linen Accord Grade B, RM0018) for Maplewood Plant (P02) to 2025-11-21. We have about 36.5 kg on hand vs safety stock 21.6; run PR0022206 is planned 2025-11-15 and needs 24.2 kg. 1 run(s) and ~430 FG units for W004 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0143",
+        "rm_id": "RM0018",
+        "plant_id": "P02",
+        "runs": [
+          "PR0022206"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02461",
+        "EVT02371",
+        "EVT02399"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00801",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021850 the day the UV Flexo White lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-08"
+        },
+        {
+          "commitment_id": "CMT00813",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0021854 the day the EPDM Gasket Compound lot clears QA (planned start was 2025-10-30)",
+          "due_date": "2025-11-03"
+        },
+        {
+          "commitment_id": "CMT00824",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0022101 the day the TPE Overmold Grade Grade B lot clears QA (planned start was 2025-11-10)",
+          "due_date": "2025-11-18"
+        },
+        {
+          "commitment_id": "CMT00845",
+          "commitment_text": "Supplier 143 (SUP0143) re-promised RPO023257 for 2025-11-15 (was 2025-11-14; transport disruption)",
+          "due_date": "2025-11-15"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-11-21",
+          "stockout_days": 6,
+          "cost": 12975.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 12975.0,
+          "service_impact_units": 430
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-24",
+          "stockout_days": 0,
+          "cost": 395.0,
+          "risk": "medium",
+          "note": "air premium 27% of lot value",
+          "score": 454.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": false,
+          "note": "no other qualified source in the catalog at day 0"
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P01",
+          "arrival": "2025-10-22",
+          "stockout_days": 0,
+          "cost": 58.0,
+          "risk": "high",
+          "note": "donor on hand 43.0 vs SS 46.6",
+          "score": 81.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": null,
+          "stockout_days": 6,
+          "cost": 13003.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 14953.0,
+          "service_impact_units": 430
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (81) with 0 stockout days; accept_delay 12,975; expedite 454; cancel_po 14,953",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 6
+      },
+      "scenario_id": "HS09"
+    },
+    {
+      "event_id": "EVT02630",
+      "day0": "2025-10-26",
+      "day0_report": "2025-10-26 - Supplier 179 (SUP0179) just moved RPO023355 (SAP Surface-crosslinked Grade Grade C, RM0058) for Lakeshore Plant (P01) to 2025-12-07. We have about 393.0 kg on hand vs safety stock 487.3; run PR0022310 is planned 2025-11-20 and needs 42.6 kg. 6 run(s) and ~2,563 FG units for W001, W003, W006, W008 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0179",
+        "rm_id": "RM0058",
+        "plant_id": "P01",
+        "runs": [
+          "PR0022310",
+          "PR0022246",
+          "PR0022262",
+          "PR0022309",
+          "PR0022315",
+          "PR0022399"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02508",
+        "EVT02448",
+        "EVT02453"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00708",
+          "commitment_text": "Supplier 179 (SUP0179) delivers >= 92% of RM lots within 1 day of the promised date from 2025-06-15 to 2025-12-14",
+          "due_date": "2025-12-14"
+        },
+        {
+          "commitment_id": "CMT00820",
+          "commitment_text": "Supplier 179 (SUP0179) confirmed RPO022954 (SAP Surface-crosslinked Grade Grade C (RM0058)) will arrive at Riverbend Plant (P04) by 2025-11-17",
+          "due_date": "2025-11-17"
+        },
+        {
+          "commitment_id": "CMT00834",
+          "commitment_text": "Supplier 179 (SUP0179) confirmed RPO023170 (SAP Sodium Polyacrylate Grade D (RM0059)) will arrive at Riverbend Plant (P04) by 2025-11-13",
+          "due_date": "2025-11-13"
+        },
+        {
+          "commitment_id": "CMT00836",
+          "commitment_text": "Lakeshore Plant (P01) committed to run PR0022467 the day the Stretch Wrap 23um Grade B lot clears QA (planned start was 2025-11-27)",
+          "due_date": "2025-12-08"
+        },
+        {
+          "commitment_id": "CMT00856",
+          "commitment_text": "Supplier 179 (SUP0179) confirmed RPO023355 (SAP Surface-crosslinked Grade Grade C (RM0058)) will arrive at Lakeshore Plant (P01) by 2025-12-07",
+          "due_date": "2025-12-07"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-07",
+          "stockout_days": 17,
+          "cost": 68782.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 68782.0,
+          "service_impact_units": 2563
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-10-30",
+          "stockout_days": 0,
+          "cost": 351.0,
+          "risk": "medium",
+          "note": "air premium 23% of lot value",
+          "score": 404.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-11-01",
+          "stockout_days": 0,
+          "cost": 15.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0139",
+          "score": 17.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-10-31",
+          "stockout_days": 0,
+          "cost": 62.0,
+          "risk": "high",
+          "note": "donor on hand 42.8 vs SS 502.4; transfers from this plant have repeatedly left it short",
+          "score": 87.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-11-01",
+          "stockout_days": 0,
+          "cost": 46.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 53.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (17) with 0 stockout days; accept_delay 68,782; expedite 404; reallocate_stock 87; cancel_po 53",
+      "trap": {
+        "most_similar_event_id": "EVT02508",
+        "its_decision_id": "DEC00356",
+        "its_action": "accept_delay",
+        "its_outcome": "success",
+        "why_misleading": "accept delay worked on 2025-09-05 but now scores worse than switch supplier (different stock / sourcing position at day 0)."
+      },
+      "what_actually_happened": {
+        "decision_ids": [
+          "DEC00391"
+        ],
+        "blocked_days": 6
+      },
+      "scenario_id": "HS10"
+    },
+    {
+      "event_id": "EVT02673",
+      "day0": "2025-11-04",
+      "day0_report": "2025-11-04 - Supplier 067 (SUP0067) just moved RPO023671 (rPET Food Grade Flake, RM0089) for Lakeshore Plant (P01) to 2025-12-19. We have about 122.4 kg on hand vs safety stock 55.3; run PR0022565 is planned 2025-12-01 and needs 64.0 kg. 1 run(s) and ~576 FG units for W002 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0067",
+        "rm_id": "RM0089",
+        "plant_id": "P01",
+        "runs": [
+          "PR0022565"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02374",
+        "EVT02295",
+        "EVT02228"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00836",
+          "commitment_text": "Lakeshore Plant (P01) committed to run PR0022467 the day the Stretch Wrap 23um Grade B lot clears QA (planned start was 2025-11-27)",
+          "due_date": "2025-12-08"
+        },
+        {
+          "commitment_id": "CMT00855",
+          "commitment_text": "Supplier 067 (SUP0067) confirmed RPO023546 (rPET Food Grade Flake (RM0089)) will arrive at Northgate Plant (P05) by 2025-12-05",
+          "due_date": "2025-12-05"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-19",
+          "stockout_days": 18,
+          "cost": 18156.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 18156.0,
+          "service_impact_units": 576
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-11-09",
+          "stockout_days": 0,
+          "cost": 39.0,
+          "risk": "medium",
+          "note": "air premium 24% of lot value",
+          "score": 45.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-11-19",
+          "stockout_days": 0,
+          "cost": 12.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0022",
+          "score": 14.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-11-09",
+          "stockout_days": 0,
+          "cost": 6.0,
+          "risk": "high",
+          "note": "donor on hand 284.4 vs SS 120.9; transfers from this plant have repeatedly left it short",
+          "score": 8.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-11-19",
+          "stockout_days": 0,
+          "cost": 15.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 17.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (8) with 0 stockout days; accept_delay 18,156; expedite 45; switch_supplier 14; cancel_po 17",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 3
+      },
+      "scenario_id": "HS11"
+    },
+    {
+      "event_id": "EVT02676",
+      "day0": "2025-11-11",
+      "day0_report": "2025-11-11 - Supplier 143 (SUP0143) just moved RPO023347 (Fresh Linen Accord, RM0011) for Lakeshore Plant (P01) to 2025-12-21. We have about 150.7 kg on hand vs safety stock 94.6; run PR0022570 is planned 2025-12-02 and needs 18.6 kg. 3 run(s) and ~1,036 FG units for W002, W012 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0143",
+        "rm_id": "RM0011",
+        "plant_id": "P01",
+        "runs": [
+          "PR0022570",
+          "PR0022578",
+          "PR0022592"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02461",
+        "EVT02421",
+        "EVT02371"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00836",
+          "commitment_text": "Lakeshore Plant (P01) committed to run PR0022467 the day the Stretch Wrap 23um Grade B lot clears QA (planned start was 2025-11-27)",
+          "due_date": "2025-12-08"
+        },
+        {
+          "commitment_id": "CMT00845",
+          "commitment_text": "Supplier 143 (SUP0143) re-promised RPO023257 for 2025-11-15 (was 2025-11-14; transport disruption)",
+          "due_date": "2025-11-15"
+        },
+        {
+          "commitment_id": "CMT00867",
+          "commitment_text": "Lakeshore Plant (P01) committed to run PR0022310 the day the SAP Surface-crosslinked Grade Grade C lot clears QA (planned start was 2025-11-20)",
+          "due_date": "2025-11-27"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-21",
+          "stockout_days": 19,
+          "cost": 59929.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 59929.0,
+          "service_impact_units": 1036
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-11-16",
+          "stockout_days": 0,
+          "cost": 1213.0,
+          "risk": "medium",
+          "note": "air premium 28% of lot value",
+          "score": 1395.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-12-03",
+          "stockout_days": 1,
+          "cost": 3211.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0163",
+          "score": 3693.0,
+          "service_impact_units": 1036
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P02",
+          "arrival": "2025-11-14",
+          "stockout_days": 0,
+          "cost": 174.0,
+          "risk": "high",
+          "note": "donor on hand 28.1 vs SS 19.7",
+          "score": 244.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": false,
+          "note": "no qualified substitute in stock at the plant"
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-12-03",
+          "stockout_days": 1,
+          "cost": 3298.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 3793.0,
+          "service_impact_units": 1036
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (244) with 0 stockout days; accept_delay 59,929; expedite 1,395; switch_supplier 3,693; cancel_po 3,793",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 5
+      },
+      "scenario_id": "HS12"
+    },
+    {
+      "event_id": "EVT02679",
+      "day0": "2025-11-16",
+      "day0_report": "2025-11-16 - Supplier 248 (SUP0248) just moved RPO023630 (Cocamidopropyl Betaine, RM0067) for Eastfield Plant (P03) to 2025-12-18. We have about 812.3 kg on hand vs safety stock 823.2; run PR0022658 is planned 2025-12-06 and needs 660.5 kg. 1 run(s) and ~543 FG units for W006 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0248",
+        "rm_id": "RM0067",
+        "plant_id": "P03",
+        "runs": [
+          "PR0022658"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02478",
+        "EVT02459",
+        "EVT02349"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00826",
+          "commitment_text": "Eastfield Plant (P03) committed to run PR0022321 the day the UV Flexo White lot clears QA (planned start was 2025-11-21)",
+          "due_date": "2025-11-27"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-18",
+          "stockout_days": 12,
+          "cost": 16661.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 16661.0,
+          "service_impact_units": 543
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-11-21",
+          "stockout_days": 0,
+          "cost": 1655.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 1903.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": true,
+          "arrival": "2025-11-27",
+          "stockout_days": 0,
+          "cost": 239.0,
+          "risk": "medium",
+          "note": "spot lot from SUP0243",
+          "score": 275.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P01",
+          "arrival": "2025-11-21",
+          "stockout_days": 0,
+          "cost": 263.0,
+          "risk": "medium",
+          "note": "donor on hand 2,687.1 vs SS 609.4",
+          "score": 302.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0064",
+          "arrival": "2025-11-22",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": "2025-11-27",
+          "stockout_days": 0,
+          "cost": 371.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 427.0,
+          "service_impact_units": 0
+        }
+      ],
+      "gold_best_action": "switch_supplier",
+      "gold_reasoning": "switch supplier has the lowest risk-adjusted cost (275) with 0 stockout days; accept_delay 16,661; expedite 1,903; reallocate_stock 302; substitute_rm 3,450; cancel_po 427",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 12
+      },
+      "scenario_id": "HS13"
+    },
+    {
+      "event_id": "EVT02695",
+      "day0": "2025-11-28",
+      "day0_report": "2025-11-28 - Supplier 182 (SUP0182) just moved RPO024268 (Corrugated Divider, RM0092) for Maplewood Plant (P02) to 2025-12-24. We have about 251.8 ea on hand vs safety stock 104.7; run PR0022874 is planned 2025-12-18 and needs 26.4 ea. 1 run(s) and ~369 FG units for W011 depend on it. What should we do?",
+      "entities": {
+        "supplier_id": "SUP0182",
+        "rm_id": "RM0092",
+        "plant_id": "P02",
+        "runs": [
+          "PR0022874"
+        ]
+      },
+      "gold_precedent_event_ids": [
+        "EVT02507",
+        "EVT02516",
+        "EVT02486"
+      ],
+      "open_commitments": [
+        {
+          "commitment_id": "CMT00859",
+          "commitment_text": "Maplewood Plant (P02) committed to run PR0022864 the day the UV Flexo White lot clears QA (planned start was 2025-12-17)",
+          "due_date": "2025-12-25"
+        },
+        {
+          "commitment_id": "CMT00881",
+          "commitment_text": "Supplier 182 (SUP0182) confirmed RPO023622 (Corrugated Divider (RM0092)) will arrive at Eastfield Plant (P03) by 2025-12-23",
+          "due_date": "2025-12-23"
+        }
+      ],
+      "candidate_actions": [
+        {
+          "action": "accept_delay",
+          "feasible": true,
+          "arrival": "2025-12-24",
+          "stockout_days": 6,
+          "cost": 9166.0,
+          "risk": "low",
+          "note": "supplier date",
+          "score": 9166.0,
+          "service_impact_units": 369
+        },
+        {
+          "action": "expedite",
+          "feasible": true,
+          "arrival": "2025-12-03",
+          "stockout_days": 0,
+          "cost": 128.0,
+          "risk": "medium",
+          "note": "air premium 25% of lot value",
+          "score": 147.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "switch_supplier",
+          "feasible": false,
+          "note": "no other qualified source in the catalog at day 0"
+        },
+        {
+          "action": "reallocate_stock",
+          "feasible": true,
+          "donor_plant": "P03",
+          "arrival": "2025-12-01",
+          "stockout_days": 0,
+          "cost": 21.0,
+          "risk": "high",
+          "note": "donor on hand 35.4 vs SS 112.0; transfers from this plant have repeatedly left it short",
+          "score": 29.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "substitute_rm",
+          "feasible": true,
+          "substitute": "RM0002",
+          "arrival": "2025-12-04",
+          "stockout_days": 0,
+          "cost": 3000.0,
+          "risk": "medium",
+          "note": "QA approval ~6 days",
+          "score": 3450.0,
+          "service_impact_units": 0
+        },
+        {
+          "action": "cancel_po",
+          "feasible": true,
+          "arrival": null,
+          "stockout_days": 6,
+          "cost": 9176.0,
+          "risk": "medium",
+          "note": "cancel and re-buy elsewhere",
+          "score": 10552.0,
+          "service_impact_units": 369
+        }
+      ],
+      "gold_best_action": "reallocate_stock",
+      "gold_reasoning": "reallocate stock has the lowest risk-adjusted cost (29) with 0 stockout days; accept_delay 9,166; expedite 147; substitute_rm 3,450; cancel_po 10,552",
+      "trap": null,
+      "what_actually_happened": {
+        "decision_ids": [],
+        "blocked_days": 6
+      },
+      "scenario_id": "HS14"
+    }
+  ]
+}

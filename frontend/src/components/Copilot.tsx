@@ -10,6 +10,8 @@ const EXAMPLES = [
   "How many returns did we get per reason in the last 90 days?",
   "Which carrier has the worst on-time rate this quarter?",
   "Show products below minimum stock at W003 with their on-order quantity.",
+  "Why does SUP0247 keep slipping, and what did we do about it last time?",
+  "What lessons have we learned about expediting by air?",
 ];
 
 type Turn = { q: string; a?: Row; error?: string };
@@ -44,7 +46,7 @@ export function Copilot({ open, onClose }: { open: boolean; onClose: () => void 
       {turns.length === 0 && (
         <div className="stack">
           <div className="note">
-            Meridian answers by writing read-only SQL against the live operational database, then explains the result.
+            Meridian answers by writing read-only SQL against the live operational database and by searching the organisation's long-term memory in Hindsight (notes, emails, past decisions and their outcomes), then explains the result.
             Every query it ran is shown under the answer, and figures that do not appear in the query results are flagged.
           </div>
           <div className="chips">{EXAMPLES.map((e) => <button key={e} className="chip" onClick={() => ask(e)}>{e}</button>)}</div>
@@ -65,7 +67,7 @@ export function Copilot({ open, onClose }: { open: boolean; onClose: () => void 
                 <summary className="small muted" style={{ cursor: "pointer" }}><Database size={12} /> {t.a.queries.length} queries · {t.a.latency_s}s · {t.a.model}</summary>
                 {t.a.queries.map((qq: Row, j: number) => (
                   <pre key={j} className="mono" style={{ whiteSpace: "pre-wrap", background: "var(--surface)", padding: 8, borderRadius: 6, border: "1px solid var(--border)" }}>
-                    {qq.sql}{"\n"}→ {qq.error ? `error: ${qq.error}` : `${qq.rows} rows`}
+                    {qq.tool === "memory" ? "🧠 " : ""}{qq.sql}{"\n"}→ {qq.error ? `error: ${qq.error}` : `${qq.rows} ${qq.tool === "memory" ? "memories" : "rows"}`}
                   </pre>
                 ))}
               </details>

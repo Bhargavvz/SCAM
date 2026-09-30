@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { Package, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -101,6 +102,7 @@ export function ProductDetail() {
           ]} />
         </Card>
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={id} /></div>
       <div className="grid g2">
         <Card title="Recent purchase orders" flush>
           <DataTable rows={d!.purchase_orders} empty="No purchase orders." cols={[

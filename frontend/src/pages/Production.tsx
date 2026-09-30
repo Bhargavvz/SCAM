@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { CalendarClock, CalendarPlus, Factory, Play, CheckCircle2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -124,6 +125,7 @@ export function RunDetail() {
         <Kpi label="Delay" value={r.delay_days ? `${r.delay_days} days` : "–"} tone={r.delay_days ? "warn" : "good"} sub={fmt.label(r.delay_reason_code ?? "")} />
         <Kpi label="Material check" value={short.length ? `${short.length} short` : "All available"} tone={short.length ? "bad" : "good"} sub={`snapshot ${d!.snapshot_date}`} />
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={r.product_id} title={`Memory: ${r.product_id} production`} /></div>
       <Card title="Material requirements" sub="bill of materials × planned quantity vs plant stock" flush>
         <DataTable rows={d!.materials} empty="No bill of materials in effect." cols={[
           { key: "rm_id", label: "Material", render: (x) => <span className="mono">{x.rm_id}</span> }, { key: "rm_name", label: "Name" },

@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { MapPin, Truck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -123,6 +124,7 @@ export function ShipmentDetail() {
           )}
         </Card>
       </div>
+      <MemoryPanel entityId={s.carrier_id} title={`Memory: ${s.carrier_name}`} />
     </div>
   );
 }

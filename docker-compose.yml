@@ -7,6 +7,5 @@ services:
     volumes:
       - meridian-data:/app/data                                   # operational database: keeps app records across restarts
       - ../sc_memory_extension/data:/source:ro                    # the source dataset (never written)
-      - ../sc_memory_extension/dataset:/dataset:ro                # memory corpus, for the sync page
 volumes:
   meridian-data:

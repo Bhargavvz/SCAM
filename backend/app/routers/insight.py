@@ -326,7 +326,7 @@ def sync_status(con=Depends(get_db)):
             if pref and scalar(con, f"SELECT 1 FROM {check[pref][0]} WHERE {check[pref][1]} = ?", (rid,)):
                 ok += 1
         mem["record_refs_resolved"] = ok
-    ledger = settings.dataset_dir.parent / "runtime" / "retention_log.jsonl"
+    ledger = settings.db_path.parent / "retention_log.jsonl"
     hs = {"ledger_found": ledger.exists(), "retained": 0, "failed": 0}
     if ledger.exists():
         seen = {}

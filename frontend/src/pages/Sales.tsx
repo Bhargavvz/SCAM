@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { ArrowRight, Plus, ShoppingCart, Trash2, Undo2, Users, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -145,6 +146,7 @@ export function OrderDetail() {
           {d!.next && o.status !== "cancelled" && <button className="btn primary" disabled={!!busy} onClick={advance}>{NEXT_LABEL[d!.next]}<ArrowRight size={14} /></button>}
         </>} />
       {o.status !== "cancelled" && <Card><Steps steps={FLOW} current={o.status} /></Card>}
+      {d!.next === "shipped" && <div style={{ marginTop: 14 }}><AdviceBox action={`ship sales order ${id} with carrier ${carrier}`} entityIds={[carrier, o.warehouse_id, o.customer_id]} details={`Promised delivery ${o.promised_date}.`} /></div>}
       <div style={{ height: 14 }} />
       <div className="grid g-main">
         <Card title="Lines" flush>
@@ -162,6 +164,7 @@ export function OrderDetail() {
           {d!.shipment && <div style={{ marginTop: 14 }}>Shipment <EntityLink id={d!.shipment.shipment_id} /> via {d!.shipment.carrier_name} · <Status value={d!.shipment.status} /><div className="small muted mono">{d!.shipment.tracking_no}</div></div>}
         </Card>
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={o.customer_id} title={`Memory: ${o.customer_name}`} /></div>
       <div className="grid g3">
         <Card title="Warehouse tasks" flush><DataTable rows={d!.tasks} empty="No tasks." cols={[{ key: "task_id", label: "Task", render: (r) => <span className="mono">{r.task_id}</span> }, { key: "task_type", label: "Type" }, { key: "bin" }, { key: "status", render: (r) => <Status value={r.status} /> }]} /></Card>
         <Card title="Returns" flush><DataTable rows={d!.returns} empty="No returns." cols={[{ key: "rma_id", label: "RMA" }, { key: "product_id", label: "Product" }, { key: "qty", num: true }, { key: "status", render: (r) => <Status value={r.status} /> }]} /></Card>
@@ -233,6 +236,7 @@ export function CustomerDetail() {
         <Kpi label="Open orders" value={fmt.n(c.open_orders)} />
         <Kpi label="Credit limit" value={fmt.money(c.credit_limit)} sub={`${c.payment_terms} · ${c.discount_pct}% discount`} />
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={id} /></div>
       <div className="grid g-main">
         <Card title="Monthly revenue"><Bars data={d!.monthly} x="month" series={[{ key: "revenue", name: "Revenue", color: "#0e7490" }]} yFmt={fmt.money} height={220} /></Card>
         <Card title="Top products" flush><DataTable rows={d!.top_products} cols={[{ key: "product_id", label: "Product" }, { key: "sku", label: "SKU" }, { key: "units", num: true }, { key: "revenue", num: true, render: (r) => fmt.money(r.revenue) }]} /></Card>

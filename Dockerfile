@@ -12,8 +12,9 @@ WORKDIR /app
 COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
 COPY backend/ backend/
+COPY dataset/ dataset/
 COPY --from=web /web/dist frontend/dist
-ENV SOURCE_DB=/source/inventory_supply_chain_v1_1_ext.sqlite DATASET_DIR=/dataset MERIDIAN_DB=/app/data/meridian.sqlite MANIFEST_PATH=/app/data/manifest.json
+ENV SOURCE_DB=/source/inventory_supply_chain_v1_1_ext.sqlite MERIDIAN_DATASET_DIR=/app/dataset MERIDIAN_DB=/app/data/meridian.sqlite MANIFEST_PATH=/app/data/manifest.json
 WORKDIR /app/backend
 EXPOSE 8100
 CMD ["sh", "-c", "[ -f $MERIDIAN_DB ] || python -m app.build_db; exec uvicorn app.main:app --host 0.0.0.0 --port 8100"]

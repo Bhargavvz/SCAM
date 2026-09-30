@@ -37,6 +37,7 @@ export const api = {
   get: <T = Row>(path: string, params?: Record<string, unknown>) => request<T>("GET", params ? `${path}?${qs(params)}` : path),
   post: <T = Row>(path: string, body: unknown = {}) => request<T>("POST", path, body),
   patch: <T = Row>(path: string, body: unknown) => request<T>("PATCH", path, body),
+  delete: <T = Row>(path: string) => request<T>("DELETE", path),
 };
 
 export function qs(p: Record<string, unknown>) {
@@ -153,6 +154,7 @@ const ROUTES: [RegExp, (id: string) => string][] = [
   [/^PR\d+$/, (id) => `/production/${id}`],
   [/^RM\d+$/, (id) => `/inventory?tab=materials&q=${id}`],
   [/^CR\d+$/, (id) => `/logistics?carrier=${id}`],
+  [/^EVT\d+$/, (id) => `/risk/${id}`],
 ];
 
 export function routeFor(id: string): string | null {
@@ -160,4 +162,42 @@ export function routeFor(id: string): string | null {
   return hit ? hit[1](id) : null;
 }
 
-export const ID_PATTERN = /\b((?:IP|SUP|CUS|SO|RPO|PO|SH|RMA|PR|RM|CR)\d{2,}|W\d{3})\b/;
+export const ID_PATTERN = /\b((?:IP|SUP|CUS|SO|RPO|PO|SH|RMA|PR|RM|CR|EVT)\d{2,}|W\d{3})\b/;
+
+// ---------------------------------------------------------------- background jobs (memory reflect, agent runs)
+export type Job<T = Row> = { id: string; status: "queued" | "running" | "done" | "error"; result: T | null; error: string | null; elapsed_s: number; cached: boolean };
+
+export function useJob<T = Row>() {
+  const [job, setJob] = useState<Job<T> | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const timer = useRef<number | null>(null);
+  const alive = useRef(true);
+  useEffect(() => () => {
+    alive.current = false;
+    if (timer.current) window.clearTimeout(timer.current);
+  }, []);
+  const poll = useCallback((j: Job<T>) => {
+    if (!alive.current) return;
+    setJob(j);
+    if (j.status === "queued" || j.status === "running") {
+      timer.current = window.setTimeout(async () => {
+        try {
+          poll(await api.get<Job<T>>(`/jobs/${j.id}`));
+        } catch (e) {
+          if (alive.current) setError((e as Error).message);
+        }
+      }, 1500);
+    }
+  }, []);
+  const start = useCallback(async (fn: () => Promise<Job<T>>) => {
+    if (timer.current) window.clearTimeout(timer.current);
+    setError(null);
+    try {
+      poll(await fn());
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, [poll]);
+  const running = job?.status === "queued" || job?.status === "running";
+  return { job, result: job?.status === "done" ? job.result : null, running, error: error ?? (job?.status === "error" ? job.error : null), start, reset: () => setJob(null) };
+}

@@ -1,0 +1,548 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "P01",
+      "name": "Supplier slips 7+ days every Nov-Dec",
+      "description": "RM deliveries from SUP0247 promised in November-December arrive 7-14 days late every year.",
+      "entities": {
+        "supplier_id": "SUP0247"
+      },
+      "detection": "rm_purchase_orders x lines, delay = received_at - promised_at, grouped by promised month",
+      "metric": "mean delay Nov-Dec minus other months (days)",
+      "effect": {
+        "nov_dec_mean": 12.87,
+        "other_mean": 4.13,
+        "diff_days": 8.74,
+        "cohens_d": 0.97,
+        "n": [
+          239,
+          1193
+        ]
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00607",
+        "EVT00712",
+        "EVT00776",
+        "EVT00800",
+        "EVT00824",
+        "EVT00829",
+        "EVT00830",
+        "EVT00860",
+        "EVT00881",
+        "EVT00893",
+        "EVT00896",
+        "EVT01472",
+        "EVT01729",
+        "EVT01764",
+        "EVT01780",
+        "EVT01785",
+        "EVT01789",
+        "EVT01809",
+        "EVT01822",
+        "EVT01833",
+        "EVT01856",
+        "EVT01861",
+        "EVT01876",
+        "EVT01877",
+        "EVT01878",
+        "EVT01896",
+        "EVT01902",
+        "EVT01903",
+        "EVT01925",
+        "EVT02622",
+        "EVT02634",
+        "EVT02645",
+        "EVT02652",
+        "EVT02664",
+        "EVT02669",
+        "EVT02677",
+        "EVT02685"
+      ]
+    },
+    {
+      "pattern_id": "P02",
+      "name": "February port congestion for one origin country",
+      "description": "RM lots from CN-based suppliers promised in February arrive 5-12 days late.",
+      "entities": {
+        "country_code": "CN"
+      },
+      "detection": "RM deliveries from suppliers with country_code, delay by promised month",
+      "metric": "mean delay Feb minus other months (days)",
+      "effect": {
+        "feb_mean": 8.26,
+        "other_mean": 3.31,
+        "diff_days": 4.95,
+        "cohens_d": 0.58,
+        "n": [
+          224,
+          3067
+        ]
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00008",
+        "EVT00012",
+        "EVT00028",
+        "EVT00056",
+        "EVT00065",
+        "EVT00078",
+        "EVT00094",
+        "EVT00912",
+        "EVT00998",
+        "EVT01011",
+        "EVT01022",
+        "EVT01065",
+        "EVT01116",
+        "EVT01851",
+        "EVT01945",
+        "EVT01948",
+        "EVT01953",
+        "EVT01978",
+        "EVT01980",
+        "EVT01984",
+        "EVT01993",
+        "EVT02004",
+        "EVT02006",
+        "EVT02032",
+        "EVT02053",
+        "EVT02068",
+        "EVT02086"
+      ]
+    },
+    {
+      "pattern_id": "P03",
+      "name": "Single-source RM shortage recurs after price spikes",
+      "description": "RM0046 (single source SUP0223) runs short 3-11 weeks after each price increase.",
+      "entities": {
+        "rm_id": "RM0046",
+        "supplier_id": "SUP0223",
+        "spike_dates": [
+          "2023-09-01",
+          "2024-09-06",
+          "2025-07-09"
+        ]
+      },
+      "detection": "rm_supplier_catalog price steps vs production_runs with rm_shortage_rm_id",
+      "metric": "RM-shortage runs per day inside post-spike windows vs outside",
+      "effect": {
+        "rate_in_window": 0.0169,
+        "rate_outside": 0.0,
+        "rate_ratio": null,
+        "runs_in": 3,
+        "runs_out": 0,
+        "spikes_followed_by_shortage": 3
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00596",
+        "EVT01586",
+        "EVT01675",
+        "EVT02367",
+        "EVT02446"
+      ]
+    },
+    {
+      "pattern_id": "P04",
+      "name": "Supplier keeps promises only on small POs",
+      "description": "SUP0091 delivers small RM orders on time but misses most large ones.",
+      "entities": {
+        "supplier_id": "SUP0091"
+      },
+      "detection": "RM lines of the supplier split at the median line value; on-time = received_at <= promised_at and in full",
+      "metric": "on-time rate small minus large",
+      "effect": {
+        "small_on_time": 0.813,
+        "large_on_time": 0.283,
+        "median_line_value": 74.97,
+        "n": [
+          283,
+          276
+        ],
+        "commitments_kept_rate": 0.74
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": []
+    },
+    {
+      "pattern_id": "P05",
+      "name": "Expedites into one warehouse cost ~2x",
+      "description": "FG expedites delivered into W005 cost about twice the usual premium.",
+      "entities": {
+        "warehouse_id": "W005"
+      },
+      "detection": "decisions (expedite) -> footprint receipt movement -> PO line value; cost / value by warehouse",
+      "metric": "mean cost rate at warehouse / elsewhere",
+      "effect": {
+        "rate_at_warehouse": 0.12,
+        "rate_elsewhere": 0.06,
+        "ratio": 2.0,
+        "n": [
+          57,
+          3
+        ]
+      },
+      "p_value": 2.9e-05,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00004",
+        "EVT00005",
+        "EVT00010",
+        "EVT00017",
+        "EVT00143",
+        "EVT00152",
+        "EVT00177",
+        "EVT00239",
+        "EVT00265",
+        "EVT00288",
+        "EVT00297",
+        "EVT00298",
+        "EVT00317",
+        "EVT00318",
+        "EVT00343",
+        "EVT00346",
+        "EVT00413",
+        "EVT00520",
+        "EVT00530",
+        "EVT00539",
+        "EVT00553",
+        "EVT00586",
+        "EVT00587",
+        "EVT00590",
+        "EVT00605",
+        "EVT00664",
+        "EVT00726",
+        "EVT00748",
+        "EVT00810",
+        "EVT00870",
+        "EVT00958",
+        "EVT00993",
+        "EVT01085",
+        "EVT01128",
+        "EVT01170",
+        "EVT01199",
+        "EVT01205",
+        "EVT01318",
+        "EVT01319",
+        "EVT01357",
+        "EVT01401",
+        "EVT01512",
+        "EVT01606",
+        "EVT01770",
+        "EVT01825",
+        "EVT02036",
+        "EVT02122",
+        "EVT02126",
+        "EVT02262",
+        "EVT02284",
+        "EVT02403",
+        "EVT02549",
+        "EVT02593",
+        "EVT02637",
+        "EVT02658",
+        "EVT02663",
+        "EVT02696"
+      ]
+    },
+    {
+      "pattern_id": "P06",
+      "name": "Plant maintenance overruns at quarter start",
+      "description": "Runs at P02 planned in weeks 1-2 of each quarter are delayed by maintenance overruns.",
+      "entities": {
+        "plant_id": "P02"
+      },
+      "detection": "production_runs delay_reason_code by plant and week-of-quarter",
+      "metric": "share of delayed runs with maintenance_overrun",
+      "effect": {
+        "share_in_segment": 0.696,
+        "share_elsewhere": 0.0,
+        "n": [
+          539,
+          16769
+        ]
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00002",
+        "EVT00153",
+        "EVT00430",
+        "EVT00687",
+        "EVT00947",
+        "EVT01188",
+        "EVT01416",
+        "EVT01662",
+        "EVT01905",
+        "EVT02121",
+        "EVT02340",
+        "EVT02570"
+      ]
+    },
+    {
+      "pattern_id": "P07",
+      "name": "Substitute RM raises incoming rejects",
+      "description": "After IP00973 switched RM0022 -> RM0016 on 2024-06-19, incoming QA rejects of RM0016 at P02 jumped.",
+      "entities": {
+        "product_id": "IP00973",
+        "old_rm": "RM0022",
+        "new_rm": "RM0016",
+        "plant_id": "P02"
+      },
+      "detection": "rm_inventory_movements scrap / receipt by rm and plant; bill_of_materials version change",
+      "metric": "reject rate of substitute after change vs all other rm-plant combos",
+      "effect": {
+        "reject_rate_after": 0.0447,
+        "median_other": 0.0008,
+        "p95_other": 0.0029
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00728",
+        "EVT01422",
+        "EVT01423",
+        "EVT01517",
+        "EVT01740",
+        "EVT01741",
+        "EVT01848",
+        "EVT01968",
+        "EVT02176",
+        "EVT02354",
+        "EVT02624"
+      ]
+    },
+    {
+      "pattern_id": "P08",
+      "name": "Stock transfers out of one plant leave it short",
+      "description": "Inter-plant RM transfers sourced from P03 push P03 below safety stock within 3 weeks; other donor plants stay covered.",
+      "entities": {
+        "plant_id": "P03"
+      },
+      "detection": "rm_inventory_movements transfer (outbound) + rm_inventory_snapshots_weekly on_hand vs safety_stock in the next 21 days",
+      "metric": "share of outbound transfers followed by donor on-hand < safety stock",
+      "effect": {
+        "share_donor": 0.6,
+        "share_other_donors": 0.111,
+        "n": [
+          15,
+          36
+        ]
+      },
+      "p_value": 0.000131,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT01760",
+        "EVT02656",
+        "EVT01275",
+        "EVT00185",
+        "EVT01604",
+        "EVT01412",
+        "EVT01270",
+        "EVT02471",
+        "EVT02472",
+        "EVT00310",
+        "EVT02419",
+        "EVT02179",
+        "EVT02544",
+        "EVT02482",
+        "EVT02433"
+      ]
+    },
+    {
+      "pattern_id": "P09",
+      "name": "Supplier misses its own recovery dates",
+      "description": "When SUP0237 re-promises a late RM lot it usually misses the new date too.",
+      "entities": {
+        "supplier_id": "SUP0237"
+      },
+      "detection": "rm_po_revisions followed by another revision or a later receipt",
+      "metric": "share of re-promised dates broken",
+      "effect": {
+        "broken_share": 0.479,
+        "others": 0.079,
+        "n": [
+          71,
+          6465
+        ]
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT00184",
+        "EVT00461",
+        "EVT00976",
+        "EVT01473",
+        "EVT01933",
+        "EVT02375"
+      ]
+    },
+    {
+      "pattern_id": "P10",
+      "name": "Systematic forecast over-bias in one category",
+      "description": "Forecasts for category 'consumables' run materially above actual demand.",
+      "entities": {
+        "category": "consumables"
+      },
+      "detection": "product_demand_weekly: sum(forecast)/sum(actual)-1 by category (non-promo, non-shock weeks)",
+      "metric": "bias by category",
+      "effect": {
+        "components": -0.049,
+        "consumables": 0.121,
+        "finished_goods": -0.038,
+        "packaging": -0.004,
+        "spares": 0.005
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": []
+    },
+    {
+      "pattern_id": "P11",
+      "name": "Lead-time creep at one supplier",
+      "description": "Actual lead times from SUP0179 lengthen month after month from 2025-01-01.",
+      "entities": {
+        "supplier_id": "SUP0179"
+      },
+      "detection": "RM deliveries: delay vs promised month in 2025",
+      "metric": "slope of delay (days/month) in 2025 and mean delay 2025 vs before",
+      "effect": {
+        "slope_days_per_month": 0.83,
+        "mean_2025": 10.0,
+        "mean_before": 2.13
+      },
+      "p_value": 0.0,
+      "recoverable": true,
+      "related_event_ids": [
+        "EVT01901",
+        "EVT01927",
+        "EVT01928",
+        "EVT01988",
+        "EVT01999",
+        "EVT02026",
+        "EVT02089",
+        "EVT02106",
+        "EVT02125",
+        "EVT02130",
+        "EVT02143",
+        "EVT02152",
+        "EVT02160",
+        "EVT02264",
+        "EVT02265",
+        "EVT02288",
+        "EVT02293",
+        "EVT02302",
+        "EVT02344",
+        "EVT02410",
+        "EVT02411",
+        "EVT02448",
+        "EVT02453",
+        "EVT02508",
+        "EVT02522",
+        "EVT02538",
+        "EVT02569",
+        "EVT02574",
+        "EVT02591",
+        "EVT02608",
+        "EVT02625",
+        "EVT02630",
+        "EVT02659",
+        "EVT02667"
+      ]
+    },
+    {
+      "pattern_id": "P12",
+      "name": "Recurring same-month FG lateness (mined)",
+      "description": "SUP0005 FG POs due in month 4 were late in every year of the window.",
+      "entities": {
+        "supplier_id": "SUP0005",
+        "month": 4
+      },
+      "detection": "existing purchase_orders delay by expected month",
+      "metric": "late rate in month vs other months",
+      "effect": {
+        "late_rate_month": 0.889,
+        "late_rate_other": 0.528,
+        "by_year": {
+          "2023": 0.8,
+          "2024": 1.0,
+          "2025": 1.0
+        }
+      },
+      "p_value": 0.021338,
+      "recoverable": true,
+      "note": "anchored in v1.0.0 rows (not injected)",
+      "related_event_ids": [
+        "EVT00197",
+        "EVT01219",
+        "EVT02131"
+      ]
+    }
+  ],
+  "plan": {
+    "P01": {
+      "supplier_id": "SUP0247"
+    },
+    "P02": {
+      "country_code": "CN"
+    },
+    "P03": {
+      "rm_id": "RM0046",
+      "supplier_id": "SUP0223",
+      "spike_dates": [
+        "2023-09-01",
+        "2024-09-06",
+        "2025-07-09"
+      ]
+    },
+    "P04": {
+      "supplier_id": "SUP0091"
+    },
+    "P09": {
+      "supplier_id": "SUP0237"
+    },
+    "P11": {
+      "supplier_id": "SUP0179",
+      "from": "2025-01-01"
+    },
+    "P08": {
+      "plant_id": "P03"
+    },
+    "P06": {
+      "plant_id": "P02",
+      "weeks_of_quarter": [
+        1,
+        2
+      ]
+    },
+    "P07": {
+      "product_id": "IP00973",
+      "old_rm": "RM0022",
+      "new_rm": "RM0016",
+      "date": "2024-06-19"
+    }
+  },
+  "extra": {
+    "P05": {
+      "warehouse_id": "W005",
+      "multiplier": 2.0
+    },
+    "P12": {
+      "supplier_id": "SUP0005",
+      "month": 4,
+      "yearly_late_rate": {
+        "2023": 0.8,
+        "2024": 1.0,
+        "2025": 1.0
+      }
+    },
+    "fg_transfer_source_note": {
+      "warehouse_id": "W012",
+      "source_depletion_rate": 0.341,
+      "other_rate": 0.311
+    }
+  }
+}

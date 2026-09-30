@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { Building2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -87,6 +88,7 @@ export function SupplierDetail() {
             series={[{ key: "actual_lead_days", name: "Lead time", color: "#0f172a" }, { key: "avg_late_days", name: "Days late", color: "#dc2626" }]} />
         </Card>
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={id} /></div>
       <Tabs value={tab} onChange={setTab} options={[["orders", `Purchase orders (${d!.purchase_orders.length})`], ["contracts", `Contracts (${d!.contracts.length})`], ["catalog", "Catalog"], ["negotiations", "Negotiations"], ["commitments", "Commitments"], ["disruptions", `Disruptions (${d!.disruptions.length})`]]} />
       <Card flush>
         {tab === "orders" && <DataTable rows={d!.purchase_orders} cols={[

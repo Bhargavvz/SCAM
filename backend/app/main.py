@@ -5,6 +5,7 @@ import base64
 import hashlib
 import hmac
 import json
+import os
 import secrets
 import time
 from pathlib import Path
@@ -18,7 +19,9 @@ from pydantic import BaseModel
 
 from app.config import ROOT, settings
 from app.db import TODAY, connect
-from app.routers import catalog, insight, operations, procurement, sales
+from app.routers import catalog, insight, memory, operations, procurement, risk, sales
+from app.memory import bootstrap, outbox
+from app.memory import service as mem
 from app.services import alerts as alert_engine
 from app.services import llm
 
@@ -87,19 +90,24 @@ def logout():
 
 @app.get("/api/health")
 def health():
-    return {"ok": settings.db_path.exists(), "business_date": TODAY, "ai": llm.available(), "model": settings.groq_model}
+    return {"ok": settings.db_path.exists(), "business_date": TODAY, "ai": llm.available(), "model": settings.groq_model,
+            "memory": mem.enabled(), "bank_id": settings.bank_id, "memory_worker": outbox.state.get("running", False)}
 
 
 @app.on_event("startup")
 def startup():
     con = connect()
     try:
+        outbox.migrate(con)
         print("alerts:", alert_engine.refresh(con))
     finally:
         con.close()
+    print("memory sync worker:", "started" if outbox.start() else "off")
+    if os.environ.get("MEMORY_BOOTSTRAP", "1") == "1":
+        bootstrap.start()
 
 
-for r in (catalog.router, procurement.router, sales.router, operations.router, insight.router):
+for r in (catalog.router, procurement.router, sales.router, operations.router, insight.router, memory.router, risk.router):
     app.include_router(r)
 
 DIST = ROOT / "frontend" / "dist"

@@ -345,12 +345,31 @@ def explain(con, insight_id: str) -> dict:
     f = next((i for i in data["insights"] if i["id"] == insight_id), None)
     if not f:
         raise KeyError(insight_id)
-    evidence = json.dumps(f, default=str)
+    memories = _memory_context(f)
+    evidence = json.dumps({"finding": f, "institutional_memory": memories}, default=str)
     msgs = [{"role": "system", "content": SYSTEM.format(today=TODAY)},
-            {"role": "user", "content": f"Finding (JSON evidence):\n{evidence}\n\nExplain in markdown with three short sections: "
-                                         "**What is happening**, **Why it matters** (operational and financial impact), "
-                                         "**What to do now** (3 concrete numbered steps naming the records involved)."}]
-    return _cached_llm(con, f"explain:{insight_id}:{data['generated_at'][:13]}:{hash(evidence)}", msgs, evidence)
+            {"role": "user", "content": f"Evidence (JSON: the finding plus what the organisation's memory recalls about it):\n{evidence}\n\n"
+                                         "Explain in markdown with four short sections: **What is happening**, **Has this happened before** "
+                                         "(use institutional_memory; cite dates and document ids, say so if nothing relevant), "
+                                         "**Why it matters** (operational and financial impact), **What to do now** (3 concrete numbered "
+                                         "steps naming the records involved, informed by what worked before)."}]
+    out = _cached_llm(con, f"explain:{insight_id}:{data['generated_at'][:13]}:{hash(evidence)}", msgs, evidence)
+    return {**out, "memories": memories}
+
+
+def _memory_context(finding: dict, k: int = 8) -> list[dict]:
+    """What the memory bank recalls about a finding (fast recall, dated on or before the business date)."""
+    from app.memory import intel
+    from app.memory import service as mem
+    if not mem.enabled():
+        return []
+    q = f"{finding['title']}. " + " ".join(e.get("id", "") for e in finding.get("entities", [])[:6])
+    try:
+        r = mem.recall(q, as_of=TODAY, budget="mid", max_tokens=1500, include_entities=False)
+    except mem.MemoryError_:
+        return []
+    return [{k2: v for k2, v in intel.resolve(h).items() if k2 in ("text", "type", "when", "document_id", "records")}
+            for h in r["results"][:k]]
 
 
 def briefing(con, kpis: dict) -> dict:
@@ -403,7 +422,25 @@ def schema(con) -> str:
 
 TOOLS = [{"type": "function", "function": {
     "name": "run_sql", "description": "Run one read-only SQLite SELECT against the Meridian database. Returns up to 60 rows.",
-    "parameters": {"type": "object", "properties": {"sql": {"type": "string"}}, "required": ["sql"]}}}]
+    "parameters": {"type": "object", "properties": {"sql": {"type": "string"}}, "required": ["sql"]}}},
+    {"type": "function", "function": {
+    "name": "search_memory", "description": "Search the organisation's long-term memory (Hindsight): buyer notes, supplier emails, "
+    "meeting notes, past decisions and their outcomes, lessons, consolidated observations, and every action recorded in Meridian. "
+    "Use it for why/how/history/lessons questions that the tables cannot answer. Returns dated memories with document ids.",
+    "parameters": {"type": "object", "properties": {"query": {"type": "string"},
+                   "types": {"type": "array", "items": {"type": "string", "enum": ["world", "experience", "observation"]}}},
+                   "required": ["query"]}}}]
+
+
+def _search_memory(query: str, types: list[str] | None = None) -> dict:
+    from app.memory import intel
+    from app.memory import service as mem
+    try:
+        r = mem.recall(query, types=types or None, as_of=TODAY, budget="mid", max_tokens=2000, include_entities=False)
+    except mem.MemoryError_ as ex:
+        return {"error": str(ex)}
+    return {"memories": [{k: v for k, v in intel.resolve(h).items() if k in ("text", "type", "when", "document_id", "records")}
+                         for h in r["results"][:15]]}
 
 
 def ask(con, question: str) -> dict:
@@ -413,6 +450,7 @@ def ask(con, question: str) -> dict:
            "on_hand - allocated; an open purchase order has status IN ('open','partial') (cancelled/received/draft are not open); "
            "overdue = open and expected_at < business date; sales_orders.order_value is revenue (exclude status 'cancelled'); "
            "shipments are on time when delivered_at <= promised_date; supplier_scorecard_monthly.month is the first day of the month. "
+           "For history, reasons, lessons or anything qualitative, also call search_memory and cite memory document ids. "
            "Then answer in concise markdown with a small table when useful, and state which tables you used."
            f"\n\nSchema:\n{schema(con)}")
     msgs = [{"role": "system", "content": sys}, {"role": "user", "content": question}]
@@ -427,11 +465,17 @@ def ask(con, question: str) -> dict:
                     "latency_s": round(time.time() - t0, 1), "model": settings.groq_model}
         for c in calls:
             try:
-                sql = json.loads(c["function"]["arguments"]).get("sql", "")
+                args = json.loads(c["function"]["arguments"])
             except (ValueError, KeyError):
-                sql = ""
-            res = _readonly_sql(sql) if sql else {"error": "missing sql"}
-            queries.append({"sql": sql, "rows": len(res.get("rows", [])), "error": res.get("error")})
+                args = {}
+            if c["function"].get("name") == "search_memory":
+                res = _search_memory(args.get("query", ""), args.get("types"))
+                queries.append({"tool": "memory", "sql": f"recall: {args.get('query', '')}", "rows": len(res.get("memories", [])),
+                                "error": res.get("error")})
+            else:
+                sql = args.get("sql", "")
+                res = _readonly_sql(sql) if sql else {"error": "missing sql"}
+                queries.append({"tool": "sql", "sql": sql, "rows": len(res.get("rows", [])), "error": res.get("error")})
             evidence.append(res)
             msgs.append({"role": "tool", "tool_call_id": c["id"], "content": json.dumps(res, default=str)[:6000]})
     return {"answer": "I could not finish within the query budget. Try a narrower question.", "queries": queries,

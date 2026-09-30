@@ -1,5 +1,5 @@
 import {
-  BarChart3, Bell, Boxes, Building2, CalendarDays, ClipboardList, Database, Factory, LayoutDashboard, LineChart, Menu, Moon,
+  AlertOctagon, BarChart3, Bell, BookOpen, BrainCircuit, Library, SearchCode, Settings2, Boxes, Building2, CalendarDays, ClipboardList, Database, Factory, LayoutDashboard, LineChart, Menu, Moon,
   Package, PanelLeftClose, RotateCcw, Search, ShoppingCart, Sparkles, Sun, Truck, Undo2, Users, Warehouse,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +18,8 @@ import { ProductDetail, ProductsPage } from "./pages/Products";
 import { ProductionPage, RunDetail } from "./pages/Production";
 import { PODetail, PurchasingPage } from "./pages/Purchasing";
 import { ReportsPage } from "./pages/Reports";
+import { KnowledgeBase, MemoryExplorer, MemoryHub, MemorySettings, MentalModels } from "./pages/Memory";
+import { RiskDetail, RiskPage } from "./pages/Risk";
 import { ReturnDetail, ReturnsPage } from "./pages/Returns";
 import { CustomerDetail, CustomersPage, OrderDetail, SalesPage } from "./pages/Sales";
 import { SupplierDetail, SuppliersPage } from "./pages/Suppliers";
@@ -26,10 +28,11 @@ import { WarehouseDetail, WarehousesPage } from "./pages/Warehouses";
 
 const NAV = [
   { label: "Overview", items: [["/", "Dashboard", LayoutDashboard], ["/insights", "AI Insights", Sparkles], ["/alerts", "Alerts", Bell]] },
-  { label: "Source", items: [["/suppliers", "Suppliers", Building2], ["/purchasing", "Purchasing", ClipboardList]] },
+  { label: "Source", items: [["/suppliers", "Suppliers", Building2], ["/purchasing", "Purchasing", ClipboardList], ["/risk", "Risk & disruptions", AlertOctagon]] },
   { label: "Store", items: [["/products", "Products", Package], ["/inventory", "Inventory", Boxes], ["/warehouses", "Warehouses", Warehouse]] },
   { label: "Make", items: [["/forecasting", "Demand forecast", LineChart], ["/production", "Production", Factory]] },
   { label: "Deliver", items: [["/sales", "Sales orders", ShoppingCart], ["/sales/customers", "Customers", Users], ["/logistics", "Logistics", Truck], ["/returns", "Returns", Undo2]] },
+  { label: "Memory", items: [["/memory", "Memory hub", BrainCircuit], ["/memory/explore", "Explorer", SearchCode], ["/memory/models", "Mental models", Library], ["/memory/knowledge", "Knowledge base", BookOpen], ["/memory/settings", "Directives & settings", Settings2]] },
   { label: "Analyze", items: [["/reports", "Reports", BarChart3], ["/system", "Data & sync", Database]] },
 ] as const;
 
@@ -136,7 +139,7 @@ function Shell({ user, authRequired, onSignOut }: { user: string; authRequired: 
           <div key={g.label} className="nav-group">
             <div className="nav-label">{g.label}</div>
             {g.items.map(([to, label, Icon]) => (
-              <NavLink key={to} to={to} end={to === "/" || to === "/sales"} title={label}>
+              <NavLink key={to} to={to} end={to === "/" || to === "/sales" || to === "/memory"} title={label}>
                 <Icon size={16} /><span>{label}</span>
                 {to === "/alerts" && counts.critical > 0 && <span className="count">{counts.critical}</span>}
                 {to === "/insights" && <span className="count ai">AI</span>}
@@ -147,6 +150,7 @@ function Shell({ user, authRequired, onSignOut }: { user: string; authRequired: 
         <div className="nav-foot">
           <div><span className={`dot ${health?.ok ? "" : "off"}`} />{health?.ok ? "Database online" : "Connecting…"}</div>
           <div><span className={`dot ${health?.ai ? "" : "off"}`} />{health?.ai ? `AI · ${String(health.model).split("/").pop()}` : "AI offline"}</div>
+          <div><span className={`dot ${health?.memory ? "" : "off"}`} />{health?.memory ? `Memory · ${health.bank_id}` : "Memory offline"}</div>
           {authRequired && <button className="btn ghost sm" style={{ color: "var(--nav-text)", padding: 0, justifyContent: "flex-start" }} onClick={onSignOut}>Sign out {user}</button>}
         </div>
       </nav>
@@ -192,6 +196,13 @@ function Shell({ user, authRequired, onSignOut }: { user: string; authRequired: 
             <Route path="/returns" element={<ReturnsPage />} />
             <Route path="/returns/:id" element={<ReturnDetail />} />
             <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/risk" element={<RiskPage />} />
+            <Route path="/risk/:id" element={<RiskDetail />} />
+            <Route path="/memory" element={<MemoryHub />} />
+            <Route path="/memory/explore" element={<MemoryExplorer />} />
+            <Route path="/memory/models" element={<MentalModels />} />
+            <Route path="/memory/knowledge" element={<KnowledgeBase />} />
+            <Route path="/memory/settings" element={<MemorySettings />} />
             <Route path="/system" element={<SystemPage />} />
             <Route path="*" element={<div className="empty"><RotateCcw size={18} /> Page not found.</div>} />
           </Routes>

@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { ClipboardList, PackageCheck, Plus, Send, Trash2, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -40,6 +41,8 @@ export function CreatePO({ open, onClose, preset }: { open: boolean; onClose: (i
         <label className="field">Expected date<input className="input" type="date" min={lk?.today} value={expected} onChange={(e) => setExpected(e.target.value)} /></label>
       </div>
       <div className="small muted">Leave the date empty to use the supplier's contracted lead time. Unit costs default to the product's standard cost.</div>
+      {/^SUP\d{4}$/.test(supplier) && <AdviceBox action="place a new purchase order" entityIds={[supplier, ...(wh ? [wh] : [])]}
+        details={`Deliver to ${wh || "a warehouse"}.`} />}
       <Card title="Lines" flush actions={<button className="btn sm" onClick={() => setLines([...lines, { product_id: "", quantity: 1 }])}><Plus size={13} />Add line</button>}>
         <table>
           <thead><tr><th>Product id</th><th className="num">Quantity</th><th /></tr></thead>
@@ -175,6 +178,10 @@ export function PODetail() {
           {d!.shipment && <div style={{ marginTop: 14 }}>Inbound shipment <EntityLink id={d!.shipment.shipment_id} /> · <Status value={d!.shipment.status} /></div>}
         </Card>
       </div>
+      {["draft", "open", "partial"].includes(po.status) && (
+        <div style={{ marginBottom: 14 }}><AdviceBox action={`change or cancel purchase order ${id}`} entityIds={[id, po.supplier_id]} details={`Expected ${po.expected_at}, ${po.days_late > 0 ? `${po.days_late} days late` : "on schedule"}.`} auto={false} /></div>
+      )}
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={po.supplier_id} title={`Memory: ${po.supplier_name}`} /></div>
       <div className="grid g2">
         <Card title="Receipts" flush>
           <DataTable rows={d!.receipts} empty="Nothing received yet." cols={[{ key: "movement_id", label: "Movement", render: (r) => <span className="mono">{r.movement_id}</span> }, { key: "movement_at", label: "Date" }, { key: "item_id", label: "Item" }, { key: "quantity_change", label: "Qty", num: true }]} />

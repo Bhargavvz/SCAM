@@ -1,3 +1,4 @@
+import { AdviceBox, MemoryPanel } from "../components/Memory";
 import { CheckCircle2, Warehouse as WarehouseIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -63,6 +64,7 @@ export function WarehouseDetail() {
         </Card>
         <Card title="Stock by category"><Donut data={d!.by_category} nameKey="category" valueKey="value" height={170} fmtValue={fmt.money} /></Card>
       </div>
+      <div style={{ marginBottom: 14 }}><MemoryPanel entityId={id} /></div>
       <Tabs value={tab} onChange={setTab} options={[["receiving", `Receiving (${d!.receiving.length})`], ["picking", `Pick & pack (${d!.picking.length})`], ["shipping", "Shipping"], ["tasks", `Tasks (${openTasks.length} open)`]]} />
       <Card flush>
         {tab === "receiving" && <DataTable rows={d!.receiving} empty="Nothing due in the next 14 days." onRow={(r) => nav(`/purchasing/${r.purchase_order_id}`)} cols={[

@@ -132,10 +132,15 @@ def created(con, table: str, record_id: str) -> None:
 
 def audit(con, *, module: str, action: str, entity_type: str, entity_id: str, summary: str,
           payload: Any = None, actor: str = "planner") -> None:
-    con.execute("""INSERT INTO audit_log (at, business_date, actor, module, action, entity_type, entity_id, summary, payload)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (now_iso(), TODAY, actor, module, action, entity_type, entity_id, summary,
-                 json.dumps(payload, default=str) if payload is not None else None))
+    at = now_iso()
+    body = json.dumps(payload, default=str) if payload is not None else None
+    cur = con.execute("""INSERT INTO audit_log (at, business_date, actor, module, action, entity_type, entity_id, summary, payload)
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                      (at, TODAY, actor, module, action, entity_type, entity_id, summary, body))
+    # transactional outbox: the memory document is queued in the same transaction as the change it describes
+    from app.memory.outbox import enqueue_event
+    enqueue_event(con, audit_id=cur.lastrowid, at=at, business_date=TODAY, actor=actor, module=module, action=action,
+                  entity_type=entity_type, entity_id=entity_id, summary=summary, payload=body)
 
 
 def post_movement(con, *, product_id: str, warehouse_id: str, qty: int, movement_type: str,

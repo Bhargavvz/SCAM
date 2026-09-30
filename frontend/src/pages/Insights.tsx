@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { EntityLink, ErrorBox, Loading, Markdown, PageHead, Seg, Spinner, Status } from "../components/ui";
 import { api, fmt, Row, useQuery } from "../lib/api";
 import { Briefing } from "./Dashboard";
+import { MemoryHit } from "../components/Memory";
 
 function InsightCard({ i }: { i: Row }) {
   const [exp, setExp] = useState<Row | null>(null);
@@ -45,6 +46,10 @@ function InsightCard({ i }: { i: Row }) {
           <h5><Sparkles size={12} />AI analysis</h5>
           <Markdown text={exp.text} />
           {exp.ungrounded_numbers?.length > 0 && <div className="small warn-t">Not in evidence: {exp.ungrounded_numbers.join(", ")}</div>}
+          {exp.memories?.length > 0 && (
+            <details style={{ marginTop: 8 }}><summary className="small" style={{ cursor: "pointer" }}>Recalled from memory ({exp.memories.length})</summary>
+              {exp.memories.map((m: Row, k: number) => <MemoryHit key={k} h={m} compact />)}</details>
+          )}
         </div>
       ) : (
         <div><button className="btn sm ai" disabled={busy} onClick={explain}>{busy ? <Spinner /> : <Wand2 size={13} />}Explain & plan actions</button></div>
