@@ -11,7 +11,7 @@ It also answers any supply-chain question through seven capabilities: supplier r
 
 The dataset (`dataset/`) is a read-only input. See `dataset/README.md`.
 
-## Architecture
+## Architecturee
 
 ```mermaid
 flowchart LR
